@@ -1,0 +1,238 @@
+/* Header.css */
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header-nav {
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+}
+
+.header-logo {
+  flex-shrink: 0;
+}
+
+.header-logo-img {
+  height: 60px;
+  cursor: pointer;
+}
+
+.header-desktop-nav {
+  display: none;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .header-desktop-nav {
+    display: flex;
+  }
+}
+
+.header-nav-link {
+  color: #374151;
+  transition: color 200ms ease;
+  text-decoration: none;
+}
+
+.header-nav-btn {
+  background: none;
+  border: none;
+  color: #374151;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  cursor: pointer;
+  transition: color 200ms ease;
+  font-size: 1rem;
+  padding: 0;
+}
+
+.header-nav-link:hover,
+.header-nav-btn:hover {
+  color: #2b4194;
+}
+
+.header-quote-btn-container {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .header-quote-btn-container {
+    display: block;
+  }
+}
+
+.header-quote-btn {
+  background-color: #2b4194;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 500;
+  transition: background-color 200ms ease;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-quote-btn:hover {
+  background-color: #1e2e78;
+}
+
+.header-mobile-btn {
+  color: #2b4194;
+}
+
+@media (min-width: 768px) {
+  .header-mobile-btn {
+    display: none;
+  }
+}
+
+.header-mobile-nav {
+  background-color: #fff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+  .header-mobile-nav {
+    display: none;
+  }
+}
+
+.mobile-nav-link {
+  display: block;
+  color: #374151;
+  padding: 0.5rem 0;
+  transition: color 200ms ease;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.mobile-nav-link:hover {
+  color: #2b4194;
+}
+
+.mobile-quote-btn {
+  background-color: #2b4194;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 500;
+  transition: background-color 200ms ease;
+  cursor: pointer;
+  margin-top: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mobile-quote-btn:hover {
+  background-color: #1e2e78;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #4b5563;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #2b4194;
+  text-align: center;
+}
+
+.modal-subtitle {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: #2b4194;
+  box-shadow: 0 0 0 3px rgba(43, 65, 148, 0.1);
+}
+
+.modal-submit-btn {
+  background-color: #2b4194;
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 1rem;
+}
+
+.modal-submit-btn:hover {
+  background-color: #1e2e78;
+}
