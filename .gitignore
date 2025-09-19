@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+.env
+.env.*            # ignore all env files (e.g. .env.local, .env.development)
+!.env.example     # keep an example file tracked
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

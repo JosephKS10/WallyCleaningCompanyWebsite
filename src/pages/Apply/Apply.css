@@ -1,0 +1,260 @@
+/* Apply.css (modern, responsive, sleek) */
+
+/* Theme variables */
+:root{
+  --bg: #f6f8fb;
+  --card-bg: #ffffff;
+  --primary: #27419a; /* deep blue */
+  --primary-600: #1e2e78;
+  --muted: #6b7280;
+  --accent: #06b6d4;
+  --danger: #ef4444;
+  --surface-shadow: 0 8px 24px rgba(19, 24, 39, 0.06);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --glass: rgba(255,255,255,0.6);
+  --max-width: 1100px;
+  --gap: 18px;
+  --font-sans: 'Montserrat', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Page background + layout */
+body {
+  background: linear-gradient(180deg, #f7f9fc 0%, var(--bg) 100%);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.apply-container {
+  padding: 28px;
+  max-width: var(--max-width);
+  margin: 64px auto;
+  min-height: calc(100vh - 120px);
+  box-sizing: border-box;
+}
+
+/* Header */
+.apply-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.apply-header h1 {
+  color: var(--primary);
+  font-size: 1.9rem;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+.apply-header p {
+  color: var(--muted);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Form container */
+.apply-form {
+  width: 100%;
+}
+
+/* Card wrapper */
+.boxContent {
+  background: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--surface-shadow);
+  margin-bottom: 18px;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+/* Slight lift on hover for desktop */
+@media (hover: hover) {
+  .boxContent:hover { transform: translateY(-3px); box-shadow: 0 12px 34px rgba(19,24,39,0.08); }
+}
+
+/* Grid layout for rows */
+.lineContainer {
+  display: grid;
+  grid-template-columns: 36% 1fr;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+/* When input should span full width, add .fullwide to row (see suggestions below) */
+.lineContainer.fullwide {
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+}
+
+/* Small variant for multi-line question blocks */
+.lineContainer1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.Question, .QuestionLine {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  line-height: 1.2;
+}
+
+/* Question width for desktop */
+.QuestionLine { width: 100%; }
+
+.answerLine {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-weight: 500;
+  color: #2f3741;
+  font-size: 15px;
+}
+
+/* Vertical checkbox column */
+.answerLineVerticalCheckBox {
+  display: grid;
+  grid-auto-rows: min-content;
+  gap: 10px;
+  font-weight: 700;
+  color: #3b3f47;
+  margin-left: 0;
+}
+
+/* Inputs */
+.inputLine, .dateLine, textarea.inputLine, .time-input {
+  width: 100%;
+  height: 44px;
+  border: 1px solid #e6e9ef;
+  background: linear-gradient(180deg,#fbfdff,#f9fbff);
+  color: #1f2937;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 0 rgba(16,24,40,0.02) inset;
+  transition: box-shadow .12s ease, border-color .12s ease, transform .08s ease;
+  box-sizing: border-box;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+/* textareas */
+textarea.inputLine {
+  min-height: 110px;
+  padding: 12px;
+  resize: vertical;
+}
+
+/* Focus states */
+.inputLine:focus, .dateLine:focus, textarea.inputLine:focus, .time-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 6px 18px rgba(6,182,212,0.08);
+  transform: translateY(-1px);
+}
+
+/* Time inputs */
+.time-container { margin-bottom: 8px; }
+.time-label { font-weight: 600; margin-bottom: 6px; color: #374151; font-size: 14px; }
+.time-inputs-container { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.time-input { padding: 8px 10px; width: 140px; height: 40px; }
+
+/* Checkbox / radio appearance - improved */
+input[type="checkbox"].checkbox, input[type="radio"].checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  outline: none;
+  margin-right: 8px;
+}
+
+/* Custom small label text */
+.answerText { font-size: 15px; display: inline-flex; align-items: center; gap: 8px; color: #334155; }
+
+/* Small helper text */
+.noExtraField { display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+
+/* Errors */
+.error-message {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+/* Submit button */
+.nextButton {
+  background: linear-gradient(180deg,var(--primary), var(--primary-600));
+  color: white;
+  padding: 14px 20px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin: 18px 0 6px 0;
+  font-weight: 700;
+  transition: transform .12s ease, box-shadow .12s ease;
+  box-shadow: 0 8px 20px rgba(39,65,154,0.14);
+}
+.nextButton:hover { transform: translateY(-3px); }
+.nextButton:disabled {
+  background: linear-gradient(180deg,#9ca3af,#9ca3af);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: var(--card-bg);
+  padding: 18px 22px;
+  border-radius: 10px;
+  box-shadow: 0 14px 40px rgba(16,24,40,0.2);
+  z-index: 1200;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Thank you */
+.thankyou-box { text-align:center; padding:28px; border-radius:12px; }
+
+/* Responsive breakpoints */
+@media (max-width: 980px) {
+  .lineContainer {
+    grid-template-columns: 34% 1fr;
+  }
+  .time-input { width: 120px; }
+}
+
+@media (max-width: 768px) {
+  .apply-container { padding: 18px; margin-top: 64px; }
+  .lineContainer { grid-template-columns: 1fr; }
+  .QuestionLine { margin-bottom: 6px; }
+  .inputLine, .dateLine, .time-input { height: 44px; }
+  .answerLine { gap: 10px; }
+}
+
+/* Small phones */
+@media (max-width: 420px) {
+  .apply-header h1 { font-size: 1.25rem; }
+  .inputLine { height: 42px; font-size: 14px; }
+  .answerText { font-size: 14px; }
+  .nextButton { padding: 12px; font-size: 15px; border-radius: 8px; }
+}
+
+/* Availability grid: make days look more compact on large screens */
+.answerLineVerticalCheckBox {
+  gap: 8px;
+}
