@@ -640,3 +640,110 @@
 .modal-submit-btn:hover {
   background-color: #1e2e78;
 }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .hero-section {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-description {
+    font-size: 1rem;
+  }
+  .clients-section{
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .services-section{
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .services-title,
+  .team-title,
+  .about-title,
+  .contact-title {
+    font-size: 1.8rem;
+  }
+  
+  .services-intro,
+  .team-description,
+  .about-description {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+  
+  .service-card {
+    height: 250px;
+  }
+  
+  .service-card-title {
+    font-size: 1.2rem;
+  }
+  .team-section{
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .about-section{
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .contact-section {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .contact-form {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.8rem;
+  }
+  
+  .hero-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .services-title,
+  .team-title,
+  .about-title,
+  .contact-title {
+    font-size: 1.6rem;
+  }
+  
+  .clients-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+  
+  .client-logo {
+    height: 70px;
+  }
+  
+  .service-card {
+    height: 220px;
+  }
+  
+  .service-card-title {
+    font-size: 1.1rem;
+  }
+  
+  .service-card-content {
+    font-size: 0.8rem;
+  }
+  
+  .contact-form {
+    padding: 1rem;
+  }
+  
+  .form-group input, .form-group textarea {
+    padding: 0.6rem;
+  }
+}
