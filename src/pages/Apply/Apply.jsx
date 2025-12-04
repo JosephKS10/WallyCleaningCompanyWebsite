@@ -130,32 +130,54 @@ function Apply() {
     }
 };
 
+const TimeSelect = ({ name, value, onChange }) => {
+  const times = [];
 
-  const RenderTimer = ({startTime, endTime}) => {
-    return( 
-    <div className="time-container">
-        <div className="time-label">Time</div>
-        <div className="time-inputs-container">
-          <input 
-            type="time" 
-            name={startTime} 
-            value={time[startTime]} 
-            onChange={handleTimeChange} 
-            className='time-input'
-          />
-          <span className="time-separator">-</span>
-          <input 
-            type="time" 
-            name={endTime}
-            value={time[endTime]} 
-            onChange={handleTimeChange} 
-            className='time-input'
-          />
-        </div>
-        {formErrors.startTime && <div className="error-message time-error">{formErrors.startTime}</div>}
-      </div>
-    )
+  for (let h = 0; h < 24; h++) {
+    times.push(`${String(h).padStart(2, "0")}:00`);
+    times.push(`${String(h).padStart(2, "0")}:30`);
   }
+
+  return (
+    <select name={name} value={value} onChange={onChange} className="time-input">
+      <option value="">Select</option>
+      {times.map(t => (
+        <option key={t} value={t}>{t}</option>
+      ))}
+    </select>
+  );
+};
+
+
+const RenderTimer = ({ startTime, endTime }) => {
+  return (
+    <div className="time-container">
+      <div className="time-label">Time</div>
+
+      <div className="time-inputs-container">
+        <TimeSelect
+          name={startTime}
+          value={time[startTime]}
+          onChange={handleTimeChange}
+        />
+
+        <span className="time-separator">-</span>
+
+        <TimeSelect
+          name={endTime}
+          value={time[endTime]}
+          onChange={handleTimeChange}
+        />
+      </div>
+
+      {formErrors.startTime && (
+        <div className="error-message time-error">
+          {formErrors.startTime}
+        </div>
+      )}
+    </div>
+  );
+};
 
   // Availability days state
   const [availabilityDay, setAvailabilityDay] = useState({

@@ -62,7 +62,7 @@
 
 .header-nav-link:hover,
 .header-nav-btn:hover {
-  color: #2b4194;
+  color: rgb(193, 22, 28);
 }
 
 .header-quote-btn-container {
@@ -77,7 +77,7 @@
 }
 
 .header-quote-btn {
-  background-image: linear-gradient(rgb(220, 31, 38) 0%, rgb(255, 94, 58) 100%);
+  background-image: linear-gradient(rgb(193, 22, 28) 0%, rgb(222, 76, 46) 100%);
   color: #fff;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -89,7 +89,7 @@
 }
 
 .header-quote-btn:hover {
-  background-image: linear-gradient(rgb(200, 25, 30) 0%, rgb(235, 80, 50) 100%);
+  background-image: linear-gradient(rgb(173, 17, 22) 0%, rgb(202, 66, 40) 100%);
 }
 
 .header-mobile-btn {
@@ -126,11 +126,11 @@
 }
 
 .mobile-nav-link:hover {
-  color: linear-gradient(rgb(220, 31, 38) 0%, rgb(255, 94, 58) 100%);
+  color: linear-gradient(rgb(193, 22, 28) 0%, rgb(222, 76, 46) 100%);
 }
 
 .mobile-quote-btn {
-  background-image: linear-gradient(rgb(200, 25, 30) 0%, rgb(235, 80, 50) 100%);
+  background-image: linear-gradient(rgb(193, 22, 28) 0%, rgb(222, 76, 46) 100%);
   color: #fff;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -143,7 +143,7 @@
 }
 
 .mobile-quote-btn:hover {
-  background-image: linear-gradient(rgb(200, 25, 30) 0%, rgb(235, 80, 50) 100%);
+  background-image: linear-gradient(rgb(173, 17, 22) 0%, rgb(202, 66, 40) 100%);
 }
 
 /* Modal Styles */
@@ -216,12 +216,12 @@
 
 .form-group input:focus, .form-group textarea:focus {
   outline: none;
-  border-color: #2b4194;
-  box-shadow: 0 0 0 3px rgba(43, 65, 148, 0.1);
+  border-color: rgb(193, 22, 28) !important;
+  box-shadow: none !important;
 }
 
 .modal-submit-btn {
-  background-image: linear-gradient(rgb(220, 31, 38) 0%, rgb(255, 94, 58) 100%);
+  background-image: linear-gradient(rgb(193, 22, 28) 0%, rgb(222, 76, 46) 100%);
   color: #fff;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -234,7 +234,7 @@
 }
 
 .modal-submit-btn:hover {
-  background-image: linear-gradient(rgb(200, 25, 30) 0%, rgb(235, 80, 50) 100%);
+  background-image: linear-gradient(rgb(173, 17, 22) 0%, rgb(202, 66, 40) 100%);
 }
 
 /* Responsive Adjustments */
