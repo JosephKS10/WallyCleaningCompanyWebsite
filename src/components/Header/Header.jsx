@@ -66,7 +66,7 @@ const Header = () => {
         <div className="header-container">
           <div className="header-logo">
             <Link to="/">
-              <img src="/wally.png" alt="Wally Cleaning Logo" className="header-logo-img" onClick={scrollToTop}/>
+              <img src="/logo.png" alt="Wally Cleaning Logo" className="header-logo-img" onClick={scrollToTop}/>
             </Link>
           </div>
 

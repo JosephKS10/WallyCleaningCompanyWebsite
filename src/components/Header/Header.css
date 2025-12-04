@@ -77,7 +77,7 @@
 }
 
 .header-quote-btn {
-  background-color: #2b4194;
+  background-image: linear-gradient(rgb(220, 31, 38) 0%, rgb(255, 94, 58) 100%);
   color: #fff;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -89,11 +89,11 @@
 }
 
 .header-quote-btn:hover {
-  background-color: #1e2e78;
+  background-image: linear-gradient(rgb(200, 25, 30) 0%, rgb(235, 80, 50) 100%);
 }
 
 .header-mobile-btn {
-  color: #2b4194;
+  color: #000;
 }
 
 @media (min-width: 768px) {
@@ -108,7 +108,6 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 @media (min-width: 768px) {
@@ -119,7 +118,7 @@
 
 .mobile-nav-link {
   display: block;
-  color: #374151;
+  color: #000;
   padding: 0.5rem 0;
   transition: color 200ms ease;
   text-decoration: none;
@@ -127,11 +126,11 @@
 }
 
 .mobile-nav-link:hover {
-  color: #2b4194;
+  color: linear-gradient(rgb(220, 31, 38) 0%, rgb(255, 94, 58) 100%);
 }
 
 .mobile-quote-btn {
-  background-color: #2b4194;
+  background-image: linear-gradient(rgb(200, 25, 30) 0%, rgb(235, 80, 50) 100%);
   color: #fff;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -144,7 +143,7 @@
 }
 
 .mobile-quote-btn:hover {
-  background-color: #1e2e78;
+  background-image: linear-gradient(rgb(200, 25, 30) 0%, rgb(235, 80, 50) 100%);
 }
 
 /* Modal Styles */
@@ -187,7 +186,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: #2b4194;
+  color: #fff;
   text-align: center;
 }
 
@@ -222,7 +221,7 @@
 }
 
 .modal-submit-btn {
-  background-color: #2b4194;
+  background-image: linear-gradient(rgb(220, 31, 38) 0%, rgb(255, 94, 58) 100%);
   color: #fff;
   padding: 0.75rem 1.5rem;
   border: none;
@@ -235,7 +234,7 @@
 }
 
 .modal-submit-btn:hover {
-  background-color: #1e2e78;
+  background-image: linear-gradient(rgb(200, 25, 30) 0%, rgb(235, 80, 50) 100%);
 }
 
 /* Responsive Adjustments */

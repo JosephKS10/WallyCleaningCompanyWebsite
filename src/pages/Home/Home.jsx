@@ -337,7 +337,7 @@ const Home = () => {
             <p className="contact-subtitle">Call us anytime</p>
             <div className="contact-details">
               <p className="contact-phone">Phone: +1 (555) 123-4567</p>
-              <p className="contact-email">Email: info@wallycleaning.com</p>
+              <p className="contact-email">Email: info@wallycleaningcompany.com</p>
               <p className="contact-address">Address: 123 Cleaning Street, Sydney, Australia</p>
             </div>
           </div>
