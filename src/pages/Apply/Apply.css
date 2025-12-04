@@ -307,6 +307,51 @@ textarea.inputLine {
   }
 }
 
+@keyframes timeSelectFocus {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+  100% { transform: translateY(0); }
+}
+
+.time-input:focus {
+  animation: timeSelectFocus 0.3s ease;
+}
+
+/* Custom scrollbar for time dropdown */
+.time-input option::-webkit-scrollbar {
+  width: 8px;
+}
+
+.time-input option::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.time-input option::-webkit-scrollbar-thumb {
+  background: rgb(200, 25, 30, 0.3);
+  border-radius: 4px;
+}
+
+.time-input option::-webkit-scrollbar-thumb:hover {
+  background: rgb(200, 25, 30, 0.5);
+}
+
+/* Group styling for multiple time inputs */
+.time-group {
+  margin: 16px 0;
+  padding: 16px;
+  background: linear-gradient(135deg, #f9fbff, #ffffff);
+  border-radius: 12px;
+  border: 1px solid rgba(200, 25, 30, 0.1);
+}
+
+/* Disabled state */
+.time-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
+
 /* Checkbox / radio appearance - improved */
 input[type="checkbox"].checkbox, input[type="radio"].checkbox {
   width: 18px;
@@ -376,6 +421,43 @@ input[type="checkbox"].checkbox, input[type="radio"].checkbox {
 /* Thank you */
 .thankyou-box { text-align:center; padding:28px; border-radius:12px; }
 
+.duplicate-info {
+  margin-top: 20px;
+  padding: 15px;
+  background: rgba(200, 25, 30, 0.05);
+  border-radius: 8px;
+  border-left: 4px solid rgb(200, 25, 30);
+  text-align: left;
+}
+
+.duplicate-info p {
+  margin: 0 0 10px 0;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.duplicate-info ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.duplicate-info li {
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.thankyou-box h2 {
+  color: rgb(200, 25, 30);
+  margin-bottom: 15px;
+}
+
+.thankyou-box p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
 /* Responsive breakpoints */
 @media (max-width: 980px) {
   .lineContainer {
@@ -390,6 +472,7 @@ input[type="checkbox"].checkbox, input[type="radio"].checkbox {
   .QuestionLine { margin-bottom: 6px; }
   .inputLine, .dateLine, .time-input { height: 44px; }
   .answerLine { gap: 10px; }
+  .duplicate-info ul { padding-left: 0; }
 }
 
 /* Small phones */

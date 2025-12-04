@@ -24,6 +24,8 @@ function Apply() {
     setPersonalInfo({ ...personalInfo, [name]: value });
   };
 
+  const [formSubmissionResult, setFormSubmissionResult] = useState(null);
+
   const [documentInfo, setDocumentInfo] = useState({
     ownCar: '',
     ownCarReason: '',
@@ -130,7 +132,7 @@ function Apply() {
     }
 };
 
-const TimeSelect = ({ name, value, onChange }) => {
+const TimeSelect = ({ name, value, onChange, className = '' }) => {
   const times = [];
 
   for (let h = 0; h < 24; h++) {
@@ -139,40 +141,53 @@ const TimeSelect = ({ name, value, onChange }) => {
   }
 
   return (
-    <select name={name} value={value} onChange={onChange} className="time-input">
-      <option value="">Select</option>
-      {times.map(t => (
-        <option key={t} value={t}>{t}</option>
-      ))}
-    </select>
+    <div className="time-select-wrapper">
+      <select 
+        name={name} 
+        value={value} 
+        onChange={onChange} 
+        className={`time-input ${className}`}
+      >
+        <option value="">Select Time</option>
+        {times.map(t => (
+          <option key={t} value={t}>{t}</option>
+        ))}
+      </select>
+    </div>
   );
 };
 
+const RenderTimer = ({ startTime, endTime, day }) => {
+  const hasError = formErrors[`${day}Time`] || 
+                  (formErrors.startTime && formErrors.startTime.includes(day));
 
-const RenderTimer = ({ startTime, endTime }) => {
   return (
-    <div className="time-container">
-      <div className="time-label">Time</div>
-
+    <div className={`time-container ${hasError ? 'has-error' : ''}`}>
+      <div className="time-label">
+        <span>Time for {day}</span>
+      </div>
+      
       <div className="time-inputs-container">
         <TimeSelect
           name={startTime}
           value={time[startTime]}
           onChange={handleTimeChange}
+          className={formErrors.startTime ? 'time-input error' : 'time-input'}
         />
-
-        <span className="time-separator">-</span>
-
+        
+        <span className="time-separator">–</span>
+        
         <TimeSelect
           name={endTime}
           value={time[endTime]}
           onChange={handleTimeChange}
+          className={formErrors.endTime ? 'time-input error' : 'time-input'}
         />
       </div>
-
-      {formErrors.startTime && (
+      
+      {hasError && (
         <div className="error-message time-error">
-          {formErrors.startTime}
+          {formErrors[`${day}Time`] || formErrors.startTime}
         </div>
       )}
     </div>
@@ -328,37 +343,40 @@ const RenderTimer = ({ startTime, endTime }) => {
         method: 'POST',
         body: formDataToSubmit
       })
-      .then(response => {
-        setIsSubmitting(false); 
-        if (response.ok) {
-            setSubHeading("")
-          setsubmittedSuccessfully(true);
-          console.log('Form submitted successfully');
-          setsubmittedSuccessfully(true);
-        } else {
-          console.error('Form submission failed');
-
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        // Handle error cases
-      });
-    } else {
+      .then(response => response.json()) // Add this line to parse JSON
+    .then(data => {
+      setIsSubmitting(false); 
+      console.log('Response data:', data); // Log the parsed data
+      setFormSubmissionResult(data); // Set the parsed data, not the raw response
       
-      const firstErrorKey = Object.keys(formErrors)[0];
-      const firstErrorElement = document.querySelector(`[name="${firstErrorKey}"]`);
-      if (firstErrorElement) {
-        firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Check if it's a duplicate or success
+      if (data.result === "duplicate" || data.result === "success") {
+        setsubmittedSuccessfully(true);
+      } else {
+        // Handle other cases if needed
+        console.error('Form submission had unexpected result:', data);
       }
+    })
+    .catch(error => {
+      setIsSubmitting(false);
+      console.error('Error:', error);
+      // Handle error cases
+      // You might want to show an error message to the user
+    });
+  } else {
+    const firstErrorKey = Object.keys(formErrors)[0];
+    const firstErrorElement = document.querySelector(`[name="${firstErrorKey}"]`);
+    if (firstErrorElement) {
+      firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-    
-  };
+  }
+};
 
   useEffect(() => {
     window.scrollTo(0, 0);
 }, []); 
 
+  console.log(formSubmissionResult)
   return (
     <div className="apply-container">
       <div className="apply-header">
@@ -949,9 +967,24 @@ const RenderTimer = ({ startTime, endTime }) => {
           </div>
         ) : (
           <div className="thankyou-box">
-            <h2>Thank You!</h2>
-            <p>Your application has been submitted successfully. We will review your information and get back to you soon.</p>
-          </div>
+    <h2>
+      {formSubmissionResult?.result === "duplicate" 
+              ? "Application Already Submitted" 
+              : "Thank You!"}
+          </h2>
+          <p>{formSubmissionResult?.message}</p>
+          {formSubmissionResult?.result === "duplicate" && formSubmissionResult?.existingData && (
+            <div className="duplicate-info">
+              <p><strong>Previous submission details:</strong></p>
+              <ul>
+                <li>Name: {formSubmissionResult.existingData.name}</li>
+                <li>Email: {formSubmissionResult.existingData.email}</li>
+                <li>Phone: {formSubmissionResult.existingData.phone}</li>
+                <li>Date Submitted: {new Date(formSubmissionResult.existingData.dateSubmitted).toLocaleDateString()}</li>
+              </ul>
+            </div>
+          )}
+        </div>
         )}
       </form>
     </div>
