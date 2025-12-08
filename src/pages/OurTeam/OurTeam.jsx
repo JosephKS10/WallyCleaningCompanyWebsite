@@ -55,7 +55,7 @@ const OurTeam = () => {
       {/* ✅ TEAM SECTION */}
       <section className="team-section">
         <div className="team-container">
-          <h2 className="team-title">One Goal, One Vision, One Team</h2>
+          <h2 className="team-title">One Goal. One Vision. One Team</h2>
           <p className="team-description">
             Teamwork is a vital ingredient to the success of any business and our team all share the one common goal and one vision. 
             And that is to provide the highest levels of service delivery, with the minimum amount of fuss or bother. Equally important 

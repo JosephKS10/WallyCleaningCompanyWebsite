@@ -404,48 +404,6 @@ const services = [
           </div>
         </section>
 
-      {/* Team Section */}
-      <section className="team-section">
-        <div className="team-container">
-          <h2 className="team-title">One Goal, One Vision, One Team</h2>
-          <p className="team-description">
-            Teamwork is a vital ingredient to the success of any business and our team all share the one common goal and one vision. 
-            And that is to provide the highest levels of service delivery, with the minimum amount of fuss or bother. Equally important 
-            is to do so in a safe and sustainable manner whilst continuing to be competitive in the marketplace. Our team members may 
-            be spread far and wide but the glue that bonds us all is our commitment to all of our valued clients. And that commitment 
-            is to ensure that all of the service solutions provided by Wally Cleaning Company are exactly that, solutions.
-          </p>
-        </div>
-      </section>
-
-      {/* About Us Section */}
-      <section className="about-section">
-        <div className="about-container">
-          <div className="about-content">
-            <h2 className="about-title">Family first. A true Family Business.</h2>
-            <p className="about-description">
-              Originally established in 2002, Wally Cleaning Company Solutions is literally one big happy family. Four brothers and 
-              three sisters of the same family (and their respective partners) all share ownership of this Australian owned business. 
-              Each family member is actively involved in their own area of expertise. Be that management/supervision, operations, 
-              training or administration, their commitment is unquestionable as it is unwavering.
-            </p>
-            <p className="about-description">
-              Providing the highest level of service is always a matter of effectively and efficiently managing your people and this 
-              is one area we pride ourselves on. We are, after all, in the people business. We rely on our people and our people rely 
-              on us. We treat our people with the respect, dignity and empathy that they deserve and are entitled to. We always encourage, 
-              engage and support our entire team through clear, open lines of communication, ongoing training, mentoring and guidance. 
-              Most importantly, we treat all of our people like part of our own family.
-            </p>
-          </div>
-          <div className="about-image">
-            <img 
-              src="https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
-              alt="Wally Cleaning Company Team" 
-              className="about-img"
-            />
-          </div>
-        </div>
-      </section>
 
       {/* Contact Form Section */}
       <section id="contact" className="contact-section">
