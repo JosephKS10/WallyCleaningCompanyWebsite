@@ -18,7 +18,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2b4194; 
+  background: rgb(173, 17, 22); 
   border-radius: 10px;
   transition: background 0.3s ease;
 }
@@ -30,5 +30,5 @@
 /* Firefox support */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #2b4194 #f1f1f1;
+  scrollbar-color: rgba(173, 17, 22, 0.734) #f1f1f1;
 }

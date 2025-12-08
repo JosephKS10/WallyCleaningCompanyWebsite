@@ -3,7 +3,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
 import Apply from './pages/Apply/Apply';
-
+import OurTeam from './pages/OurTeam/OurTeam';
 function App() {
   return (
     <div className="min-h-screen flex flex-col">
@@ -12,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/apply" element={<Apply />} />
+          <Route path="/our-team" element={<OurTeam />} />
         </Routes>
       </main>
       <Footer />

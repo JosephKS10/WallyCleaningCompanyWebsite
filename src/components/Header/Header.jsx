@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { HiMenu, HiX } from 'react-icons/hi';
 import './Header.css';
 
@@ -12,7 +12,7 @@ const Header = () => {
     email: '',
     services: ''
   });
-
+  const navigate = useNavigate();
   const scrollToServices = () => {
     const servicesSection = document.getElementById('services');
     servicesSection?.scrollIntoView({ behavior: 'smooth' });
@@ -83,7 +83,14 @@ const Header = () => {
               </button>
             </Link>
             <Link to="/apply" className="header-nav-link">
-              Apply for Job
+              Careers
+            </Link>
+            <Link 
+              to="/our-team" 
+              className="header-nav-link"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Our Team
             </Link>
             <Link to="/#contact" className="header-nav-link">
               <button onClick={scrollToContact} className="header-nav-btn">
@@ -94,6 +101,9 @@ const Header = () => {
 
           {/* Get a Quote Button (Desktop) */}
           <div className="header-quote-btn-container">
+            <button className="header-cleaner-login-btn" onClick={() => navigate('/cleaner-login')}>
+              Cleaner Login
+            </button>
             <button className="header-quote-btn" onClick={openModal}>
               Get a Quote
             </button>
@@ -135,7 +145,14 @@ const Header = () => {
               className="mobile-nav-link"
               onClick={() => setIsMenuOpen(false)}
             >
-              Apply for Job
+              Careers
+            </Link>
+            <Link 
+              to="/our-team" 
+              className="mobile-nav-link"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Our Team
             </Link>
             <Link 
               to="/#contact" 
@@ -147,6 +164,9 @@ const Header = () => {
             >
               Contact Us
             </Link>
+             <button className="header-cleaner-login-btn" onClick={() => navigate('/cleaner-login')}>
+              Cleaner Login
+            </button>
             <button className="mobile-quote-btn" onClick={openModal}>
               Get a Quote
             </button>

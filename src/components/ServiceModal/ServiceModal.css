@@ -1,0 +1,120 @@
+.service-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.3s ease;
+}
+
+.service-modal-box {
+  background: #fff;
+  width: 95%;
+  max-width: 900px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  animation: scaleIn 0.3s ease;
+}
+
+.service-modal-image {
+  background-size: cover;
+  background-position: center;
+  min-height: 350px;
+}
+
+.service-modal-content {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.service-modal-content h2 {
+  font-size: 1.8rem;
+  color: rgb(193, 22, 28);
+  margin-bottom: 1rem;
+}
+
+.service-modal-description {
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 1.2rem;
+}
+
+.service-modal-points {
+  margin: 0 0 1.5rem 0;
+  padding-left: 1.2rem;
+  list-style-type: disc;
+}
+
+.service-modal-points li {
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.service-modal-finishing {
+  font-size: 1rem;
+  color: #555;
+  margin-top: auto;
+}
+
+.service-modal-cta {
+  margin-top: 1.5rem;
+  background: linear-gradient(rgb(193, 22, 28), rgb(222, 76, 46));
+  border: none;
+  color: #fff;
+  padding: 0.75rem 1.8rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.service-modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  padding: 6px;
+  cursor: pointer;
+}
+
+/* ✅ Mobile Responsive */
+@media (max-width: 768px) {
+  .service-modal-box {
+    grid-template-columns: 1fr;
+    height: 70vh;
+    overflow-y: auto;
+  }
+
+  .service-modal-image {
+    height: 250px;
+  }
+
+  .service-modal-content {
+    padding: 1.8rem;
+  }
+
+  .service-modal-content h2 {
+    font-size: 1.4rem;
+  }
+}
+
+/* ✅ Animations */
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9) }
+  to { transform: scale(1) }
+}

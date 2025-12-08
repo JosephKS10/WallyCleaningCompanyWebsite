@@ -2,16 +2,17 @@
 .header {
   position: fixed;
   top: 0;
-  width: 100%;
+  width: 100vw;
   background-color: #fff;
   z-index: 100;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgb(193, 22, 28, 0.2);
+
 }
 
 .header-nav {
-  max-width: 1250px;
+  max-width: 85vw;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 0px;
 }
 
 .header-container {
@@ -41,6 +42,7 @@
     display: flex;
   }
 }
+
 
 .header-nav-link {
   color: #374151;
@@ -90,6 +92,23 @@
 
 .header-quote-btn:hover {
   background-image: linear-gradient(rgb(173, 17, 22) 0%, rgb(202, 66, 40) 100%);
+}
+
+.header-cleaner-login-btn {
+  background-color: #fff;
+  color: rgb(173, 17, 22);
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgb(193, 22, 28);
+  border-radius: 50px;
+  font-weight: 500;
+  transition: background-color 200ms ease;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-right: 0.5rem;
+}
+.header-cleaner-login-btn:hover {
+  background-color: #f3f4f6;
+  border-color: rgb(173, 17, 22);
 }
 
 .header-mobile-btn {
@@ -186,7 +205,7 @@
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
-  color: #fff;
+  color: rgb(193, 17, 22) !important;
   text-align: center;
 }
 
@@ -238,13 +257,91 @@
 }
 
 /* Responsive Adjustments */
+@media (min-width: 2560px) {
+  .header-container {
+    height: 120px;
+  }
+  
+  .header-logo-img {
+    height: 80px;
+  }
+  .modal-content {
+    padding: 3rem;
+  }
+  .modal-close {
+    font-size: 3rem !important;
+    top: 0.5rem !important;
+    right: 1.5rem !important;
+  }
+  .modal-title {
+    font-size: 2rem !important;
+  }
+  .modal-subtitle {
+    font-size: 1.5rem;
+  }
+  .form-group input, .form-group textarea {
+    padding: 1rem !important;
+    font-size: 1.25rem !important;
+  }
+  .modal-submit-btn {
+    padding: 1rem 2rem !important;
+  }
+  .header-nav-btn {
+    font-size: 1.5rem;
+    padding: 0.25rem 0;
+  }
+  .header-nav-link {
+    font-size: 1.5rem;
+  }
+  .header-cleaner-login-btn {
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+  }
+  .header-quote-btn
+  {
+    padding: 1rem 2rem;
+    font-size: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1148px) {
+  .header-logo-img{
+    height: 45px;
+  }
+  .header-quote-btn-container {
+    display: flex;
+
+  }
+  .header-desktop-nav {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .header-nav-link{
+    font-size: 0.7rem;
+    width: 7vw;
+    text-align: center;
+    
+  }
+  .header-nav-btn{
+    font-size: 0.7rem;
+    width: 7vw;
+  }
+  .header-cleaner-login-btn{
+    padding: 0.6rem 1.2rem;
+    font-size: 0.7rem;
+  }
+  .header-quote-btn{
+    padding: 0.6rem 1.2rem;
+    font-size: 0.7rem;
+  }
+}
+
+
+
 @media (max-width: 768px) {
   .header{
     box-shadow: none;
 
-  }
-  .header-nav {
-    padding: 0 15px;
   }
   
   .header-container {
@@ -293,3 +390,4 @@
     padding: 0.6rem 1.2rem;
   }
 }
+

@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import TextType from '../../components/TextType/TextType';
+import ServiceModal from "../../components/ServiceModal/ServiceModal";
 import './Home.css';
 
 const Home = () => {
@@ -12,7 +14,9 @@ const Home = () => {
     services: ''
   });
   const location = useLocation();
-  
+  const [selectedService, setSelectedService] = useState(null);
+
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -49,80 +53,189 @@ const Home = () => {
   // ];
 
   // Services data
-  const services = [
-    {
-      id: 1,
-      title: "Commercial Cleaning",
-      content: "Single to multi-level offices buildings, Common Areas cleaning, Strata cleaning.",
-      image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 2,
-      title: "Industrial Cleaning",
-      content: "Warehouses, Factories, Manufacturing/ Production Plants, Distribution centres.",
-      image: "https://images.unsplash.com/photo-1517673132405-a56a62b97caf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 3,
-      title: "Specialized Cleaning",
-      content: "Steam cleaning (carpet & furniture), Window cleaning (internal & external), Polishing, High Pressure cleaning, Spring (detail) cleaning.",
-      image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 4,
-      title: "Education Cleaning",
-      content: "Pre-Schools, Child Care, Primary Schools, Secondary Schools, Colleges & Universities.",
-      image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 5,
-      title: "Retail Cleaning",
-      content: "Standalone Department Stores, Shopping Centres, Supermarkets, Car Dealerships.",
-      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 6,
-      title: "Hospitality Cleaning",
-      content: "Restaurants, Fast Food outlets, Hotels, Bars & Clubs.",
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 7,
-      title: "Consumable Products",
-      content: "Supply of consumable products (Toilet paper, hand towel, soap etc.) at competitive prices.",
-      image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 8,
-      title: "Hygiene Services",
-      content: "Engagement and Management of all Hygiene Services.",
-      image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 9,
-      title: "Waste Management",
-      content: "Engagement and Management of all Waste Services.",
-      image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 10,
-      title: "Pest Control",
-      content: "Engagement and Management of all Pest Control Services.",
-      image: "https://images.unsplash.com/photo-1569336415964-5f6bee9a2973?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 11,
-      title: "Grounds Maintenance",
-      content: "Engagement and Management of all Grounds Maintenance Services.",
-      image: "https://images.unsplash.com/photo-1545173168-9f1947eebb7f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    },
-    {
-      id: 12,
-      title: "Building Maintenance",
-      content: "Engagement and Management of all Building Maintenance.",
-      image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
-    }
-  ];
+const services = [
+  {
+    id: 1,
+    title: "Commercial Cleaning",
+    content:
+      "FBI Facility Solutions specialise in the provision of cleaning services for all various forms of commercial (non-domestic) facilities. We have been providing commercial cleaning solutions since 2002 and we currently provide our services to the following types of businesses:",
+    contentPoint: [
+      "Office buildings – single to multi-level",
+      "Showrooms – retail and wholesale",
+      "Aged Care Centres",
+      "Child Care Centres",
+      "Kindergartens",
+      "Medical Centres",
+      "Gymnasiums",
+      "Production facilities",
+      "Food processing plants",
+      "Factories",
+      "Warehouses",
+      "Restaurants",
+      "Art Galleries"
+    ],
+    contentFinishing:
+      "Whatever your business, we have the skills, expertise and experience to deliver your desired results. Call us now for a competitive, obligation free quotation.",
+    image:
+      "/images/services/commercial-cleaning.jpg"
+  },
+
+  {
+    id: 2,
+    title: "Industrial Cleaning",
+    content:
+      "FBI Facility Solutions provide solutions to the many challenges associated with operating industrial facilities such as yours. We have been providing commercial cleaning solutions since 2002 and we currently provide our services to various types of businesses, including:",
+    contentPoint: [
+      "Production facilities",
+      "Food processing plants",
+      "Factories",
+      "Warehouses"
+    ],
+    contentFinishing:
+      "Whatever your business, we have the skills, expertise, equipment and experience to deliver your desired results. Call us now for a competitive, obligation free quotation.",
+    image:
+      "/images/services/industrial-cleaning.jpg"
+  },
+
+  {
+    id: 3,
+    title: "Specialised Cleaning",
+    content:
+      "FBI Facility Solutions have extensive experience in a broad range of specialised cleaning services.",
+    contentPoint: [
+      "Infection Control / COVID-19 Cleaning – disinfection & sanitisation as per DHHS standards",
+      "Steam Cleaning – carpet, rugs, soft furnishings",
+      "Stripping & Re-Sealing (polishing) – hard floors such as vinyl",
+      "Spring (deep) Cleaning – thorough periodical cleaning",
+      "Window Cleaning – internal & external, single or multi-level",
+      "High Pressure Cleaning – external pathways, paving, courtyards"
+    ],
+    contentFinishing:
+      "Whatever the task, we have the skills, expertise, equipment and experience to self-deliver your desired results. Call us now for a competitive, obligation free quotation.",
+    image:
+      "/images/services/specialised-cleaning.jpg"
+  },
+
+  {
+    id: 4,
+    title: "Aged Care Cleaning",
+    content:
+      "FBI Facility Solutions clearly understand the high level of cleaning standards required and the importance of infection control cleaning associated with Aged Care Cleaning. We have years of experience in this sector and proudly deliver our service with added empathy, care and respect.",
+    contentPoint: [],
+    contentFinishing:
+      "No matter the size of your centre, we have the capacity, resources and experience to deliver the desired results. Call us now for a competitive, obligation free consultation.",
+    image:
+      "/images/services/aged-care.jpg"
+  },
+
+  {
+    id: 5,
+    title: "Child Care Cleaning",
+    content:
+      "FBI Facility Solutions service a significant number of Child Care Centres and Kindergartens throughout Metropolitan Melbourne. The health and wellbeing of all children and staff is paramount, which is why we commit to thorough disinfecting and sanitising on every visit.",
+    contentPoint: [],
+    contentFinishing:
+      "No matter the size of your centre, we have the capacity, resources and experience to deliver the desired results. Call us now for a competitive, obligation free quotation.",
+    image:
+      "/images/services/child-care.jpg"
+  },
+
+  {
+    id: 6,
+    title: "Retail Cleaning",
+    content:
+      "FBI Facility Solutions understand and appreciate the importance of first impressions. With extensive retail cleaning experience since day one, we ensure a highly detailed level of cleaning so your customers focus on your products.",
+    contentPoint: [
+      "Prestige New Car Dealerships",
+      "Contemporary Furniture Showrooms",
+      "Premium Kitchen Appliance Showrooms",
+      "Wholesale Lighting Showrooms"
+    ],
+    contentFinishing:
+      "Our primary goal is to enhance your customer experience through premium cleaning standards.",
+    image:
+      "/images/services/retail-cleaning.jpg"
+  },
+
+  {
+    id: 7,
+    title: "Consumable Products",
+    content:
+      "FBI Facility Solutions manage the ordering, restocking and delivery of consumable products daily. Buying in bulk allows us to pass major savings directly to our clients.",
+    contentPoint: [
+      "Toilet Paper",
+      "Hand Towel",
+      "Hand Soaps",
+      "Hand Sanitiser",
+      "Bin Liners"
+    ],
+    contentFinishing:
+      "Reliable supply, competitive pricing, and zero hassle.",
+    image:
+      "/images/services/consumable.jpg"
+  },
+
+  {
+    id: 8,
+    title: "Hygiene Services Solutions",
+    content:
+      "Through our extensive industry contacts and long-standing relationships, FBI Facility Solutions will source, engage, and manage your Hygiene Services provider.",
+    contentPoint: [],
+    contentFinishing:
+      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
+    image:
+      "/images/services/hygiene.jpg"
+  },
+
+  {
+    id: 9,
+    title: "Waste Management",
+    content:
+      "Through our extensive industry contacts and relationships, FBI Facility Solutions are the logical choice to source, engage, and manage your Waste Management provider.",
+    contentPoint: [],
+    contentFinishing:
+      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
+    image:
+      "/images/services/waste-management.jpg"
+  },
+
+  {
+    id: 10,
+    title: "Ground Maintenance",
+    content:
+      "Through our trusted industry contacts, FBI Facility Solutions source, engage and manage professional Grounds Maintenance providers for your facility.",
+    contentPoint: [],
+    contentFinishing:
+      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
+    image:
+      "/images/services/ground-maintenance.jpg"
+  },
+
+  {
+    id: 11,
+    title: "Building Maintenance",
+    content:
+      "FBI Facility Solutions can source, engage and manage all your Building Maintenance requirements through our trusted industry partners.",
+    contentPoint: [],
+    contentFinishing:
+      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
+    image:
+      "/images/services/building-maintenance3.jpg"
+  },
+
+  {
+    id: 12,
+    title: "Pest Control",
+    content:
+      "FBI Facility Solutions will source, engage and manage your Pest Control provider through our trusted industry relationships.",
+    contentPoint: [],
+    contentFinishing:
+      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
+    image:
+      "/images/services/pest-control.jpg"
+  }
+];
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -162,15 +275,18 @@ const Home = () => {
           {/* Left side - Text content */}
           <div className="hero-text">
             <h1 className="hero-title">
-              Securing Your Future
-              <br />
-              Together.
+             <TextType 
+                text={["Delivering Excellence Without Compromise", "Your Facility. Our Responsibility.", "Where Quality Meets Reliability", "Built on Trust. Driven by Performance."]}
+                typingSpeed={75}
+                pauseDuration={1500}
+                showCursor={true}
+                cursorCharacter="|"
+              />
             </h1>
             <p className="hero-description">
-              Achieve your financial goals with personalized strategies and expert guidance. 
-              We are your partner in building lasting wealth and financial freedom.
+              We are committed to delivering quality solutions to all of our valued clients with care, consistency and above all, respect to all.
             </p>
-            <button className="hero-btn" onClick={openModal}>
+            <button className="header-quote-btn" onClick={openModal}>
               Get a Quote
             </button>
           </div>
@@ -182,21 +298,21 @@ const Home = () => {
               <div className="hero-images-mobile">
                 <div className="hero-image-container">
                   <img 
-                    src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                    src="/images/home/home-1.jpg" 
                     alt="Cleaning service" 
                     className="hero-image"
                   />
                 </div>
                 <div className="hero-image-container">
                   <img 
-                    src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                    src="/images/home/home-2.jpg" 
                     alt="Professional cleaner" 
                     className="hero-image"
                   />
                 </div>
                 <div className="hero-image-container">
                   <img 
-                    src="https://images.unsplash.com/photo-1545173168-9f1947eebb7f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                    src="/images/home/home-3.jpg" 
                     alt="Clean office" 
                     className="hero-image"
                   />
@@ -207,21 +323,21 @@ const Home = () => {
               <div className="hero-images-desktop">
                 <div className="hero-image-1">
                   <img 
-                    src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                    src="/images/home/home-1.jpg" 
                     alt="Cleaning service" 
                     className="hero-image"
                   />
                 </div>
                 <div className="hero-image-2">
                   <img 
-                    src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                    src="/images/home/home-2.jpg" 
                     alt="Professional cleaner" 
                     className="hero-image"
                   />
                 </div>
                 <div className="hero-image-3">
                   <img 
-                    src="https://images.unsplash.com/photo-1545173168-9f1947eebb7f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                    src="/images/home/home-3.jpg" 
                     alt="Clean office" 
                     className="hero-image"
                   />
@@ -258,32 +374,35 @@ const Home = () => {
 
       {/* Services Section */}
       <section id="services" className="services-section">
-        <div className="services-container">
-          <h2 className="services-title">At your service.</h2>
-          <p className="services-intro">
-            Our service is providing solutions to the many challenges associated with managing all types of facilities. 
-            We proudly provide commercial and industrial cleaning service solutions as detailed below. We also specialise in
-            engaging and managing numerous other facility services such as hygiene and pest control, supply of consumable 
-            products and waste/recycling management.
-          </p>
-          <div className="services-grid">
-            {services.map(service => (
-              <div key={service.id} className="service-card">
-                <div className="service-card-inner">
-                  <div className="service-card-front" style={{ backgroundImage: `url(${service.image})` }}>
+          <div className="services-container">
+            <h2 className="services-title">At your service<span style={{color: "rgb(200, 25, 30)"}}>.</span></h2>
+            <p className="services-intro">
+              Our service is providing solutions to the many challenges associated with managing all types of facilities. 
+              We proudly provide commercial and industrial cleaning service solutions as detailed below. We also specialise in
+              engaging and managing numerous other facility services such as hygiene and pest control, supply of consumable 
+              products and waste/recycling management.
+            </p>
+            <div className="services-grid">
+              {services.map(service => (
+                <div key={service.id} className="service-card">
+                  <div className="service-card-image" style={{ backgroundImage: `url(${service.image})` }}>
                     <div className="service-card-overlay"></div>
-                    <h3 className="service-card-title">{service.title}</h3>
                   </div>
-                  <div className="service-card-back">
+                  <div className="service-card-body">
                     <h3 className="service-card-title">{service.title}</h3>
-                    <p className="service-card-content">{service.content}</p>
+                    <p className="service-card-description">{service.content}</p>
+                    <button 
+                      className="service-read-more-btn"
+                      onClick={() => setSelectedService(service)}
+                    >
+                      Read More
+                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* Team Section */}
       <section className="team-section">
@@ -335,9 +454,9 @@ const Home = () => {
             <h2 className="contact-title">Quick Contact Form</h2>
             <p className="contact-subtitle">Call us anytime</p>
             <div className="contact-details">
-              <p className="contact-phone">Phone: +1 (555) 123-4567</p>
-              <p className="contact-email">Email: info@wallycleaningcompany.com</p>
-              <p className="contact-address">Address: 123 Cleaning Street, Sydney, Australia</p>
+              <p className="contact-phone">Phone: 1300 424 066</p>
+              <p className="contact-email">Email: info@fbifacilitysolution.com.au</p>
+              <p className="contact-address">Address: 45 Atkinson Chadstone,VIC 3148</p>
             </div>
           </div>
           <div className="contact-form-container">
@@ -440,6 +559,13 @@ const Home = () => {
           </div>
         </div>
       )}
+      {selectedService && (
+        <ServiceModal 
+          service={selectedService} 
+          onClose={() => setSelectedService(null)} 
+        />
+      )}
+
     </div>
   );
 };
