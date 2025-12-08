@@ -376,7 +376,6 @@ const RenderTimer = ({ startTime, endTime, day }) => {
     window.scrollTo(0, 0);
 }, []); 
 
-  console.log(formSubmissionResult)
   return (
     <div className="apply-container">
       <div className="apply-header">
