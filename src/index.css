@@ -13,22 +13,22 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #ffff; 
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(173, 17, 22); 
+  background: #d4d4d4aa; 
   border-radius: 10px;
   transition: background 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1e2e78; 
+  background: #d4d4d4aa; 
 }
 
 /* Firefox support */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(173, 17, 22, 0.734) #f1f1f1;
+  scrollbar-color: #d4d4d4aa #fff;
 }

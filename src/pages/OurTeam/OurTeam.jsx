@@ -1,17 +1,25 @@
 import "./OurTeam.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TextType from "../../components/TextType/TextType";
 
 const OurTeam = () => {
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    services: ''
+  });
+  const [loadedImages, setLoadedImages] = useState({});
 
-     const [contactForm, setContactForm] = useState({
-        name: '',
-        phone: '',
-        email: '',
-        services: ''
-      });
+  useEffect(() => {
+    scrollTo(0, 0);
+  }, []);
 
-       const handleInputChange = (e) => {
+  const handleImageLoad = (imageName) => {
+    setLoadedImages(prev => ({ ...prev, [imageName]: true }));
+  };
+
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setContactForm({
       ...contactForm,
@@ -21,7 +29,6 @@ const OurTeam = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
     console.log('Form submitted:', contactForm);
     alert('Thank you for your message. We will get back to you soon!');
     setContactForm({
@@ -31,16 +38,22 @@ const OurTeam = () => {
       services: ''
     });
   };
+
   return (
     <div className="our-team-page">
-
       {/* ✅ HERO SECTION */}
-      <section 
-        className="team-hero"
-        style={{ backgroundImage: "url(/images/team/our-team.jpg)" }}
-      >
+      <section className="team-hero">
+        <div className="team-hero-background">
+          <img 
+            src="/images/team/our-team.jpg" 
+            alt="Our Team"
+            className={`team-hero-img ${loadedImages['hero'] ? 'loaded' : ''}`}
+            loading="eager"
+            fetchpriority="high"
+            onLoad={() => handleImageLoad('hero')}
+          />
+        </div>
         <div className="team-hero-overlay"></div>
-
         <div className="team-hero-content">
           <TextType 
             text={["One Team", "One Goal.", "One Vision"]}
@@ -69,17 +82,14 @@ const OurTeam = () => {
       {/* ✅ ABOUT US SECTION */}
       <section className="about-section">
         <div className="about-container">
-
           <div className="about-content">
             <h2 className="about-title">Family first. A true Family Business.</h2>
-
             <p className="about-description">
               Originally established in 2002, Wally Cleaning Company Solutions is literally one big happy family. Four brothers and 
               three sisters of the same family (and their respective partners) all share ownership of this Australian owned business. 
               Each family member is actively involved in their own area of expertise. Be that management/supervision, operations, 
               training or administration, their commitment is unquestionable as it is unwavering.
             </p>
-
             <p className="about-description">
               Providing the highest level of service is always a matter of effectively and efficiently managing your people and this 
               is one area we pride ourselves on. We are, after all, in the people business. We rely on our people and our people rely 
@@ -88,19 +98,19 @@ const OurTeam = () => {
               Most importantly, we treat all of our people like part of our own family.
             </p>
           </div>
-
           <div className="about-image">
             <img 
               src="https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
               alt="Wally Cleaning Company Team"
-              className="about-img"
+              className={`about-img ${loadedImages['about'] ? 'loaded' : ''}`}
+              loading="lazy"
+              onLoad={() => handleImageLoad('about')}
             />
           </div>
-
         </div>
       </section>
 
-    <section id="contact" className="contact-section">
+      <section id="contact" className="contact-section">
         <div className="contact-container">
           <div className="contact-info">
             <h2 className="contact-title">Quick Contact Form</h2>

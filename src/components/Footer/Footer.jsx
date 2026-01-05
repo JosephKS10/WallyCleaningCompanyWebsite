@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-bold mb-4">Wally Cleaning</h3>
+            <h3 className="text-lg font-bold mb-4">FBI Facility Solutions</h3>
             <p>Professional cleaning services for homes and businesses</p>
           </div>
           <div>
@@ -20,7 +20,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="text-center mt-8 pt-4 border-t border-gray-700">
-          <p>&copy; 2023 Wally Cleaning Company. All rights reserved.</p>
+          <p>&copy;{new Date().getFullYear()} FBI Facility Solutions. All rights reserved.</p>
         </div>
       </div>
     </footer>

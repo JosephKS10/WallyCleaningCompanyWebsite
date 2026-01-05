@@ -7,6 +7,7 @@ import './Home.css';
 const Home = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loadedImages, setLoadedImages] = useState({});
   const [contactForm, setContactForm] = useState({
     name: '',
     phone: '',
@@ -40,6 +41,10 @@ const Home = () => {
       }
     }
   }, [location]);
+
+   const handleImageLoad = (imageName) => {
+    setLoadedImages(prev => ({ ...prev, [imageName]: true }));
+  };
 
   // // Client logos (random placeholder logos)
   // const clientLogos = [
@@ -276,7 +281,7 @@ const services = [
           <div className="hero-text">
             <h1 className="hero-title">
              <TextType 
-                text={["Delivering Excellence Without Compromise", "Your Facility. Our Responsibility.", "Where Quality Meets Reliability", "Built on Trust. Driven by Performance."]}
+                text={["Delivering Excellence Without Compromise", "Your Facility. Our Responsibility.", "Where Quality Meets Reliability", "Built on Trust. Driven by Performance"]}
                 typingSpeed={75}
                 pauseDuration={1500}
                 showCursor={true}
@@ -300,21 +305,28 @@ const services = [
                   <img 
                     src="/images/home/home-1.jpg" 
                     alt="Cleaning service" 
-                    className="hero-image"
+                    className={`hero-image ${loadedImages['home-1'] ? 'loaded' : ''}`}
+                    loading="eager"
+                    fetchpriority="high"
+                    onLoad={() => handleImageLoad('home-1')}
                   />
                 </div>
                 <div className="hero-image-container">
                   <img 
                     src="/images/home/home-2.jpg" 
                     alt="Professional cleaner" 
-                    className="hero-image"
+                    className={`hero-image ${loadedImages['home-2'] ? 'loaded' : ''}`}
+                    loading="lazy"
+                    onLoad={() => handleImageLoad('home-2')}
                   />
                 </div>
                 <div className="hero-image-container">
                   <img 
                     src="/images/home/home-3.jpg" 
                     alt="Clean office" 
-                    className="hero-image"
+                    className={`hero-image ${loadedImages['home-3'] ? 'loaded' : ''}`}
+                    loading="lazy"
+                    onLoad={() => handleImageLoad('home-3')}
                   />
                 </div>
               </div>
@@ -325,21 +337,28 @@ const services = [
                   <img 
                     src="/images/home/home-1.jpg" 
                     alt="Cleaning service" 
-                    className="hero-image"
+                    className={`hero-image ${loadedImages['home-1'] ? 'loaded' : ''}`}
+                    loading="eager"
+                    fetchpriority="high"
+                    onLoad={() => handleImageLoad('home-1')}
                   />
                 </div>
                 <div className="hero-image-2">
                   <img 
                     src="/images/home/home-2.jpg" 
                     alt="Professional cleaner" 
-                    className="hero-image"
+                    className={`hero-image ${loadedImages['home-2'] ? 'loaded' : ''}`}
+                    loading="lazy"
+                    onLoad={() => handleImageLoad('home-2')}
                   />
                 </div>
                 <div className="hero-image-3">
                   <img 
                     src="/images/home/home-3.jpg" 
                     alt="Clean office" 
-                    className="hero-image"
+                    className={`hero-image ${loadedImages['home-3'] ? 'loaded' : ''}`}
+                    loading="lazy"
+                    onLoad={() => handleImageLoad('home-3')}
                   />
                 </div>
               </div>
