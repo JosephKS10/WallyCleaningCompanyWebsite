@@ -6,4 +6,5 @@ deployment:
     - source /opt/cpanel/ea-nodejs20/enable
     - npm install
     - npm run build
+    - /bin/rm -rf $DEPLOYPATH/*
     - /bin/cp -R dist/* $DEPLOYPATH
