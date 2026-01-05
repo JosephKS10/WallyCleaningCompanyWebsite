@@ -2,9 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/fbifacil/public_html/
-    - export NODEJS_VERSION=18
-    - source /opt/cpanel/ea-nodejs20/enable
-    - npm install
-    - npm run build
-    - /bin/rm -rf $DEPLOYPATH/*
     - /bin/cp -R dist/* $DEPLOYPATH
