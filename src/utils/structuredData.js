@@ -7,11 +7,16 @@ export const getOrganizationSchema = () => ({
   "alternateName": "FBI Facility Solutions Pty Ltd",
   "url": "https://fbifacilitysolutions.com.au",
   "logo": "https://fbifacilitysolutions.com.au/logo.png",
-  "image": "https://fbifacilitysolutions.com.au/images/og-image.jpg",
+  "image": [
+    "https://fbifacilitysolutions.com.au/images/home-3.jpg",
+    "https://fbifacilitysolutions.com.au/images/home/home-1.jpg",
+    "https://fbifacilitysolutions.com.au/images/home/home-2.jpg",
+    "https://fbifacilitysolutions.com.au/images/team/our-team.jpg",
+  ],
   "description": "Professional commercial and industrial cleaning services in Melbourne. Family-owned business providing comprehensive facility management solutions since 2002.",
   "telephone": "1300424066",
   "email": "info@fbifacilitysolution.com.au",
-  "priceRange": "$$",
+  "priceRange": "$",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "45 Atkinson",
