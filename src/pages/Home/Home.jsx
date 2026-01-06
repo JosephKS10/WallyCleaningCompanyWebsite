@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import TextType from '../../components/TextType/TextType';
 import ServiceModal from "../../components/ServiceModal/ServiceModal";
+import SEO from '../../components/SEO/SEO';
+import { getOrganizationSchema, getWebsiteSchema } from '../../utils/structuredData';
 import './Home.css';
 
 const Home = () => {
@@ -272,7 +274,24 @@ const services = [
     setIsModalOpen(false);
   };
 
+   const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      getOrganizationSchema(),
+      getWebsiteSchema()
+    ]
+  };
+
   return (
+    <>
+    <SEO
+        title="FBI Facility Solutions - Professional Commercial Cleaning Services Melbourne"
+        description="FBI Facility Solutions provides premium commercial cleaning, industrial cleaning, aged care, childcare, and facility management services throughout Melbourne. Family-owned business since 2002. Call 1300 424 066 for a free quote."
+        keywords="commercial cleaning Melbourne, industrial cleaning services, office cleaning Chadstone, facility management Melbourne, aged care cleaning, childcare cleaning, retail cleaning services, cleaning company Melbourne, professional cleaners Melbourne"
+        canonicalUrl="https://fbifacilitysolutions.com.au/"
+        ogImage="/images/home/home-1.jpg"
+        structuredData={structuredData}
+      />
     <div className="home">
       {/* Hero Section */}
       <section className="hero-section">
@@ -544,6 +563,7 @@ const services = [
       )}
 
     </div>
+    </>
   );
 };
 

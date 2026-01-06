@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
+import SEO from '../../components/SEO/SEO';
+import { getBreadcrumbSchema } from '../../utils/structuredData';
 import './Apply.css';
 
 function Apply() {
@@ -372,11 +374,27 @@ const RenderTimer = ({ startTime, endTime, day }) => {
   }
 };
 
+
+  const breadcrumbData = getBreadcrumbSchema([
+    { name: "Home", url: "https://fbifacilitysolutions.com.au/" },
+    { name: "Careers", url: "https://fbifacilitysolutions.com.au/apply" }
+  ]);
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
 }, []); 
 
   return (
+     <>
+      <SEO
+        title="Careers - Join FBI Facility Solutions | Cleaning Jobs Melbourne"
+        description="Join the FBI Facility Solutions team! We're hiring cleaners across Melbourne. Family-owned business offering great opportunities in commercial and industrial cleaning. Apply now."
+        keywords="cleaning jobs Melbourne, cleaner positions, commercial cleaning careers, cleaning job opportunities Melbourne, join cleaning team"
+        canonicalUrl="https://fbifacilitysolutions.com.au/apply"
+        ogImage="/images/careers-og.jpg"
+        structuredData={breadcrumbData}
+      />
     <div className="apply-container">
       <div className="apply-header">
         <h1>FBI Facility Solutions Job Application</h1>
@@ -987,6 +1005,7 @@ const RenderTimer = ({ startTime, endTime, day }) => {
         )}
       </form>
     </div>
+    </>
   );
 }
 

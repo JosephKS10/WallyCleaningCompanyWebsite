@@ -1,6 +1,8 @@
 import "./OurTeam.css";
 import { useEffect, useState } from "react";
 import TextType from "../../components/TextType/TextType";
+import SEO from '../../components/SEO/SEO';
+import { getOrganizationSchema, getBreadcrumbSchema } from '../../utils/structuredData';
 
 const OurTeam = () => {
   const [contactForm, setContactForm] = useState({
@@ -39,7 +41,29 @@ const OurTeam = () => {
     });
   };
 
+  const breadcrumbData = getBreadcrumbSchema([
+    { name: "Home", url: "https://fbifacilitysolutions.com.au/" },
+    { name: "Our Team", url: "https://fbifacilitysolutions.com.au/our-team" }
+  ]);
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      getOrganizationSchema(),
+      breadcrumbData
+    ]
+  };
+
   return (
+    <>
+      <SEO
+        title="Our Team - FBI Facility Solutions | Family-Owned Cleaning Company Melbourne"
+        description="Meet the FBI Facility Solutions team. A family-owned cleaning business established in 2002, providing professional commercial and industrial cleaning services across Melbourne with care and commitment."
+        keywords="cleaning team Melbourne, family owned cleaning business, commercial cleaning team, professional cleaners Melbourne, FBI Facility Solutions team"
+        canonicalUrl="https://fbifacilitysolutions.com.au/our-team"
+        ogImage="/images/team/our-team.jpg"
+        structuredData={structuredData}
+      />
     <div className="our-team-page">
       {/* ✅ HERO SECTION */}
       <section className="team-hero">
@@ -169,6 +193,7 @@ const OurTeam = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 
