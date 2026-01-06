@@ -776,6 +776,20 @@
   background-color: #1e2e78;
 }
 
+/* Contact links styling */
+.contact-phone a,
+.contact-email a {
+  color: #4b5563;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-phone a:hover,
+.contact-email a:hover {
+  color: rgb(200, 25, 30);
+  text-decoration: underline;
+}
+
 /* Responsive Adjustments */
 
 @media (max-width: 1280px) {
@@ -897,5 +911,18 @@
   .form-group input, .form-group textarea {
     padding: 0.6rem;
   }
+}
+
+/* Screen reader only - for accessibility and SEO */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 

@@ -92,13 +92,14 @@ const OurTeam = () => {
       {/* ✅ TEAM SECTION */}
       <section className="team-section">
         <div className="team-container">
-          <h2 className="team-title">One Goal. One Vision. One Team</h2>
+          <h2 className="team-title">Melbourne's Trusted Commercial Cleaning Team</h2>
           <p className="team-description">
-            Teamwork is a vital ingredient to the success of any business and our team all share the one common goal and one vision. 
-            And that is to provide the highest levels of service delivery, with the minimum amount of fuss or bother. Equally important 
-            is to do so in a safe and sustainable manner whilst continuing to be competitive in the marketplace. Our team members may 
-            be spread far and wide but the glue that bonds us all is our commitment to all of our valued clients. And that commitment 
-            is to ensure that all of the service solutions provided by Wally Cleaning Company are exactly that, solutions.
+            FBI Facility Solutions is a family-owned cleaning company serving Melbourne since 2002. 
+            Our professional cleaning team shares a unified vision: delivering exceptional commercial 
+            and industrial cleaning services with minimal disruption to your business operations. We 
+            prioritize safety, sustainability, and competitive pricing while maintaining the highest 
+            standards of service quality. Our commitment to Melbourne businesses is unwavering – we 
+            ensure every cleaning solution we provide truly solves your facility management challenges.
           </p>
         </div>
       </section>
@@ -124,7 +125,7 @@ const OurTeam = () => {
           </div>
           <div className="about-image">
             <img 
-              src="https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+              src="https://images.unsplash.com/photo-1603712725038-e9334ae8f39f?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
               alt="Wally Cleaning Company Team"
               className={`about-img ${loadedImages['about'] ? 'loaded' : ''}`}
               loading="lazy"

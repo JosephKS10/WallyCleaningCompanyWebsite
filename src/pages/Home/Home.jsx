@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import TextType from '../../components/TextType/TextType';
 import ServiceModal from "../../components/ServiceModal/ServiceModal";
+import FAQ from '../../components/FAQ/FAQ';
 import SEO from '../../components/SEO/SEO';
 import { getOrganizationSchema, getWebsiteSchema } from '../../utils/structuredData';
 import './Home.css';
@@ -61,187 +62,175 @@ const Home = () => {
 
   // Services data
 const services = [
-  {
-    id: 1,
-    title: "Commercial Cleaning",
-    content:
-      "FBI Facility Solutions specialise in the provision of cleaning services for all various forms of commercial (non-domestic) facilities. We have been providing commercial cleaning solutions since 2002 and we currently provide our services to the following types of businesses:",
-    contentPoint: [
-      "Office buildings – single to multi-level",
-      "Showrooms – retail and wholesale",
-      "Aged Care Centres",
-      "Child Care Centres",
-      "Kindergartens",
-      "Medical Centres",
-      "Gymnasiums",
-      "Production facilities",
-      "Food processing plants",
-      "Factories",
-      "Warehouses",
-      "Restaurants",
-      "Art Galleries"
-    ],
-    contentFinishing:
-      "Whatever your business, we have the skills, expertise and experience to deliver your desired results. Call us now for a competitive, obligation free quotation.",
-    image:
-      "/images/services/commercial-cleaning.jpg"
-  },
+    {
+      id: 1,
+      title: "Commercial Cleaning Melbourne",
+      content:
+        "FBI Facility Solutions specialises in commercial cleaning services across Melbourne. Since 2002, we've provided professional cleaning solutions for offices, showrooms, medical centres, and commercial facilities throughout Victoria.",
+      contentPoint: [
+        "Office buildings – single to multi-level",
+        "Showrooms – retail and wholesale",
+        "Aged Care Centres",
+        "Child Care Centres",
+        "Kindergartens",
+        "Medical Centres",
+        "Gymnasiums",
+        "Production facilities",
+        "Food processing plants",
+        "Factories",
+        "Warehouses",
+        "Restaurants",
+        "Art Galleries"
+      ],
+      contentFinishing:
+        "Whatever your business, we have the skills, expertise and experience to deliver your desired results. Call us now for a competitive, obligation free quotation.",
+      image: "/images/services/commercial-cleaning.jpg"
+    },
 
-  {
-    id: 2,
-    title: "Industrial Cleaning",
-    content:
-      "FBI Facility Solutions provide solutions to the many challenges associated with operating industrial facilities such as yours. We have been providing commercial cleaning solutions since 2002 and we currently provide our services to various types of businesses, including:",
-    contentPoint: [
-      "Production facilities",
-      "Food processing plants",
-      "Factories",
-      "Warehouses"
-    ],
-    contentFinishing:
-      "Whatever your business, we have the skills, expertise, equipment and experience to deliver your desired results. Call us now for a competitive, obligation free quotation.",
-    image:
-      "/images/services/industrial-cleaning.jpg"
-  },
+    {
+      id: 2,
+      title: "Industrial Cleaning Services",
+      content:
+        "Professional industrial cleaning services for factories, warehouses, and production facilities across Melbourne. FBI Facility Solutions delivers comprehensive industrial cleaning solutions tailored to your operational needs.",
+      contentPoint: [
+        "Production facilities",
+        "Food processing plants",
+        "Factories",
+        "Warehouses"
+      ],
+      contentFinishing:
+        "Whatever your business, we have the skills, expertise, equipment and experience to deliver your desired results. Call us now for a competitive, obligation free quotation.",
+      image: "/images/services/industrial-cleaning.jpg"
+    },
 
-  {
-    id: 3,
-    title: "Specialised Cleaning",
-    content:
-      "FBI Facility Solutions have extensive experience in a broad range of specialised cleaning services.",
-    contentPoint: [
-      "Infection Control / COVID-19 Cleaning – disinfection & sanitisation as per DHHS standards",
-      "Steam Cleaning – carpet, rugs, soft furnishings",
-      "Stripping & Re-Sealing (polishing) – hard floors such as vinyl",
-      "Spring (deep) Cleaning – thorough periodical cleaning",
-      "Window Cleaning – internal & external, single or multi-level",
-      "High Pressure Cleaning – external pathways, paving, courtyards"
-    ],
-    contentFinishing:
-      "Whatever the task, we have the skills, expertise, equipment and experience to self-deliver your desired results. Call us now for a competitive, obligation free quotation.",
-    image:
-      "/images/services/specialised-cleaning.jpg"
-  },
+    {
+      id: 3,
+      title: "Specialised Cleaning Services",
+      content:
+        "FBI Facility Solutions offers specialised cleaning services including COVID-19 disinfection, carpet steam cleaning, floor stripping and sealing, and high-pressure cleaning across Melbourne.",
+      contentPoint: [
+        "Infection Control / COVID-19 Cleaning – disinfection & sanitisation as per DHHS standards",
+        "Steam Cleaning – carpet, rugs, soft furnishings",
+        "Stripping & Re-Sealing (polishing) – hard floors such as vinyl",
+        "Spring (deep) Cleaning – thorough periodical cleaning",
+        "Window Cleaning – internal & external, single or multi-level",
+        "High Pressure Cleaning – external pathways, paving, courtyards"
+      ],
+      contentFinishing:
+        "Whatever the task, we have the skills, expertise, equipment and experience to self-deliver your desired results. Call us now for a competitive, obligation free quotation.",
+      image: "/images/services/specialised-cleaning.jpg"
+    },
 
-  {
-    id: 4,
-    title: "Aged Care Cleaning",
-    content:
-      "FBI Facility Solutions clearly understand the high level of cleaning standards required and the importance of infection control cleaning associated with Aged Care Cleaning. We have years of experience in this sector and proudly deliver our service with added empathy, care and respect.",
-    contentPoint: [],
-    contentFinishing:
-      "No matter the size of your centre, we have the capacity, resources and experience to deliver the desired results. Call us now for a competitive, obligation free consultation.",
-    image:
-      "/images/services/aged-care.jpg"
-  },
+    {
+      id: 4,
+      title: "Aged Care Cleaning Melbourne",
+      content:
+        "Specialized aged care cleaning services in Melbourne with focus on infection control and DHHS compliance. FBI Facility Solutions understands the critical importance of hygiene in aged care facilities.",
+      contentPoint: [],
+      contentFinishing:
+        "No matter the size of your centre, we have the capacity, resources and experience to deliver the desired results. Call us now for a competitive, obligation free consultation.",
+      image: "/images/services/aged-care.jpg"
+    },
 
-  {
-    id: 5,
-    title: "Child Care Cleaning",
-    content:
-      "FBI Facility Solutions service a significant number of Child Care Centres and Kindergartens throughout Metropolitan Melbourne. The health and wellbeing of all children and staff is paramount, which is why we commit to thorough disinfecting and sanitising on every visit.",
-    contentPoint: [],
-    contentFinishing:
-      "No matter the size of your centre, we have the capacity, resources and experience to deliver the desired results. Call us now for a competitive, obligation free quotation.",
-    image:
-      "/images/services/child-care.jpg"
-  },
+    {
+      id: 5,
+      title: "Child Care Cleaning Services",
+      content:
+        "Professional childcare and kindergarten cleaning services throughout Melbourne. FBI Facility Solutions prioritizes child safety with thorough disinfection and sanitization protocols for child care centres.",
+      contentPoint: [],
+      contentFinishing:
+        "No matter the size of your centre, we have the capacity, resources and experience to deliver the desired results. Call us now for a competitive, obligation free quotation.",
+      image: "/images/services/child-care.jpg"
+    },
 
-  {
-    id: 6,
-    title: "Retail Cleaning",
-    content:
-      "FBI Facility Solutions understand and appreciate the importance of first impressions. With extensive retail cleaning experience since day one, we ensure a highly detailed level of cleaning so your customers focus on your products.",
-    contentPoint: [
-      "Prestige New Car Dealerships",
-      "Contemporary Furniture Showrooms",
-      "Premium Kitchen Appliance Showrooms",
-      "Wholesale Lighting Showrooms"
-    ],
-    contentFinishing:
-      "Our primary goal is to enhance your customer experience through premium cleaning standards.",
-    image:
-      "/images/services/retail-cleaning.jpg"
-  },
+    {
+      id: 6,
+      title: "Retail Cleaning Services",
+      content:
+        "Premium retail cleaning services for showrooms, dealerships, and retail spaces in Melbourne. FBI Facility Solutions ensures your retail environment makes the perfect first impression.",
+      contentPoint: [
+        "Prestige New Car Dealerships",
+        "Contemporary Furniture Showrooms",
+        "Premium Kitchen Appliance Showrooms",
+        "Wholesale Lighting Showrooms"
+      ],
+      contentFinishing:
+        "Our primary goal is to enhance your customer experience through premium cleaning standards.",
+      image: "/images/services/retail-cleaning.jpg"
+    },
 
-  {
-    id: 7,
-    title: "Consumable Products",
-    content:
-      "FBI Facility Solutions manage the ordering, restocking and delivery of consumable products daily. Buying in bulk allows us to pass major savings directly to our clients.",
-    contentPoint: [
-      "Toilet Paper",
-      "Hand Towel",
-      "Hand Soaps",
-      "Hand Sanitiser",
-      "Bin Liners"
-    ],
-    contentFinishing:
-      "Reliable supply, competitive pricing, and zero hassle.",
-    image:
-      "/images/services/consumable.jpg"
-  },
+    {
+      id: 7,
+      title: "Consumable Products Supply",
+      content:
+        "Bulk cleaning consumables and supplies for businesses across Melbourne. FBI Facility Solutions manages ordering, restocking, and delivery of essential cleaning products at competitive prices.",
+      contentPoint: [
+        "Toilet Paper",
+        "Hand Towel",
+        "Hand Soaps",
+        "Hand Sanitiser",
+        "Bin Liners"
+      ],
+      contentFinishing:
+        "Reliable supply, competitive pricing, and zero hassle.",
+      image: "/images/services/consumable.jpg"
+    },
 
-  {
-    id: 8,
-    title: "Hygiene Services Solutions",
-    content:
-      "Through our extensive industry contacts and long-standing relationships, FBI Facility Solutions will source, engage, and manage your Hygiene Services provider.",
-    contentPoint: [],
-    contentFinishing:
-      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
-    image:
-      "/images/services/hygiene.jpg"
-  },
+    {
+      id: 8,
+      title: "Hygiene Services Melbourne",
+      content:
+        "Complete hygiene services management for Melbourne businesses. FBI Facility Solutions sources, engages, and manages professional hygiene service providers for your facility.",
+      contentPoint: [],
+      contentFinishing:
+        "That's one less thing for you to worry about, leaving you more time to focus on your business.",
+      image: "/images/services/hygiene.jpg"
+    },
 
-  {
-    id: 9,
-    title: "Waste Management",
-    content:
-      "Through our extensive industry contacts and relationships, FBI Facility Solutions are the logical choice to source, engage, and manage your Waste Management provider.",
-    contentPoint: [],
-    contentFinishing:
-      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
-    image:
-      "/images/services/waste-management.jpg"
-  },
+    {
+      id: 9,
+      title: "Waste Management Services",
+      content:
+        "Professional waste management solutions for businesses in Melbourne. FBI Facility Solutions coordinates waste management and recycling services tailored to your facility's needs.",
+      contentPoint: [],
+      contentFinishing:
+        "That's one less thing for you to worry about, leaving you more time to focus on your business.",
+      image: "/images/services/waste-management.jpg"
+    },
 
-  {
-    id: 10,
-    title: "Ground Maintenance",
-    content:
-      "Through our trusted industry contacts, FBI Facility Solutions source, engage and manage professional Grounds Maintenance providers for your facility.",
-    contentPoint: [],
-    contentFinishing:
-      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
-    image:
-      "/images/services/ground-maintenance.jpg"
-  },
+    {
+      id: 10,
+      title: "Ground Maintenance Melbourne",
+      content:
+        "Professional grounds maintenance services for commercial properties across Melbourne. FBI Facility Solutions manages trusted grounds maintenance providers for your facility.",
+      contentPoint: [],
+      contentFinishing:
+        "That's one less thing for you to worry about, leaving you more time to focus on your business.",
+      image: "/images/services/ground-maintenance.jpg"
+    },
 
-  {
-    id: 11,
-    title: "Building Maintenance",
-    content:
-      "FBI Facility Solutions can source, engage and manage all your Building Maintenance requirements through our trusted industry partners.",
-    contentPoint: [],
-    contentFinishing:
-      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
-    image:
-      "/images/services/building-maintenance3.jpg"
-  },
+    {
+      id: 11,
+      title: "Building Maintenance Services",
+      content:
+        "Comprehensive building maintenance solutions for Melbourne commercial properties. FBI Facility Solutions coordinates all building maintenance requirements through trusted industry partners.",
+      contentPoint: [],
+      contentFinishing:
+        "That's one less thing for you to worry about, leaving you more time to focus on your business.",
+      image: "/images/services/building-maintenance3.jpg"
+    },
 
-  {
-    id: 12,
-    title: "Pest Control",
-    content:
-      "FBI Facility Solutions will source, engage and manage your Pest Control provider through our trusted industry relationships.",
-    contentPoint: [],
-    contentFinishing:
-      "That’s one less thing for you to worry about, leaving you more time to focus on your business.",
-    image:
-      "/images/services/pest-control.jpg"
-  }
-];
+    {
+      id: 12,
+      title: "Pest Control Services Melbourne",
+      content:
+        "Professional pest control management for commercial facilities in Melbourne. FBI Facility Solutions sources and manages reliable pest control providers for your business.",
+      contentPoint: [],
+      contentFinishing:
+        "That's one less thing for you to worry about, leaving you more time to focus on your business.",
+      image: "/images/services/pest-control.jpg"
+    }
+  ];
 
 
   const handleInputChange = (e) => {
@@ -294,97 +283,100 @@ const services = [
       />
     <div className="home">
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-container">
-          {/* Left side - Text content */}
-          <div className="hero-text">
-            <h1 className="hero-title">
-             <TextType 
-                text={["Delivering Excellence Without Compromise", "Your Facility. Our Responsibility.", "Where Quality Meets Reliability", "Built on Trust. Driven by Performance"]}
-                typingSpeed={75}
-                pauseDuration={1500}
-                showCursor={true}
-                cursorCharacter="|"
-              />
-            </h1>
-            <p className="hero-description">
-              We are committed to delivering quality solutions to all of our valued clients with care, consistency and above all, respect to all.
-            </p>
-            <button className="header-quote-btn" onClick={openModal}>
-              Get a Quote
-            </button>
-          </div>
+     <section className="hero-section">
+          <div className="hero-container">
+            {/* Left side - Text content */}
+            <div className="hero-text">
+              <h1 className="hero-title">
+                <TextType 
+                  text={[
+                    "Professional Commercial Cleaning Melbourne",
+                    "Your Facility. Our Responsibility.", 
+                    "Excellence in Facility Management",
+                    "Trusted Cleaning Services Since 2002"
+                  ]}
+                  typingSpeed={75}
+                  pauseDuration={1500}
+                  showCursor={true}
+                  cursorCharacter="|"
+                />
+              </h1>
+              <p className="hero-description">
+                FBI Facility Solutions delivers professional commercial cleaning, industrial cleaning, and comprehensive facility management services across Melbourne. Family-owned and operated since 2002, we provide quality cleaning solutions with care, consistency, and respect.
+              </p>
+              <button className="header-quote-btn" onClick={openModal}>
+                Get a Free Quote
+              </button>
+            </div>
 
-          {/* Right side - Images */}
-          <div className="hero-images">
-            {isMobile ? (
-              // Mobile view - stacked images
-              <div className="hero-images-mobile">
-                <div className="hero-image-container">
-                  <img 
-                    src="/images/home/home-1.jpg" 
-                    alt="Cleaning service" 
-                    className={`hero-image ${loadedImages['home-1'] ? 'loaded' : ''}`}
-                    loading="eager"
-                    fetchpriority="high"
-                    onLoad={() => handleImageLoad('home-1')}
-                  />
+            {/* Right side - Images */}
+            <div className="hero-images">
+              {isMobile ? (
+                <div className="hero-images-mobile">
+                  <div className="hero-image-container">
+                    <img 
+                      src="/images/home/home-1.jpg" 
+                      alt="Professional commercial cleaning services in Melbourne office building" 
+                      className={`hero-image ${loadedImages['home-1'] ? 'loaded' : ''}`}
+                      loading="eager"
+                      fetchpriority="high"
+                      onLoad={() => handleImageLoad('home-1')}
+                    />
+                  </div>
+                  <div className="hero-image-container">
+                    <img 
+                      src="/images/home/home-2.jpg" 
+                      alt="Professional cleaner providing industrial cleaning services" 
+                      className={`hero-image ${loadedImages['home-2'] ? 'loaded' : ''}`}
+                      loading="lazy"
+                      onLoad={() => handleImageLoad('home-2')}
+                    />
+                  </div>
+                  <div className="hero-image-container">
+                    <img 
+                      src="/images/home/home-3.jpg" 
+                      alt="Clean commercial office space in Melbourne" 
+                      className={`hero-image ${loadedImages['home-3'] ? 'loaded' : ''}`}
+                      loading="lazy"
+                      onLoad={() => handleImageLoad('home-3')}
+                    />
+                  </div>
                 </div>
-                <div className="hero-image-container">
-                  <img 
-                    src="/images/home/home-2.jpg" 
-                    alt="Professional cleaner" 
-                    className={`hero-image ${loadedImages['home-2'] ? 'loaded' : ''}`}
-                    loading="lazy"
-                    onLoad={() => handleImageLoad('home-2')}
-                  />
+              ) : (
+                <div className="hero-images-desktop">
+                  <div className="hero-image-1">
+                    <img 
+                      src="/images/home/home-1.jpg" 
+                      alt="Professional commercial cleaning services in Melbourne office building" 
+                      className={`hero-image ${loadedImages['home-1'] ? 'loaded' : ''}`}
+                      loading="eager"
+                      fetchpriority="high"
+                      onLoad={() => handleImageLoad('home-1')}
+                    />
+                  </div>
+                  <div className="hero-image-2">
+                    <img 
+                      src="/images/home/home-2.jpg" 
+                      alt="Professional cleaner providing industrial cleaning services" 
+                      className={`hero-image ${loadedImages['home-2'] ? 'loaded' : ''}`}
+                      loading="lazy"
+                      onLoad={() => handleImageLoad('home-2')}
+                    />
+                  </div>
+                  <div className="hero-image-3">
+                    <img 
+                      src="/images/home/home-3.jpg" 
+                      alt="Clean commercial office space in Melbourne" 
+                      className={`hero-image ${loadedImages['home-3'] ? 'loaded' : ''}`}
+                      loading="lazy"
+                      onLoad={() => handleImageLoad('home-3')}
+                    />
+                  </div>
                 </div>
-                <div className="hero-image-container">
-                  <img 
-                    src="/images/home/home-3.jpg" 
-                    alt="Clean office" 
-                    className={`hero-image ${loadedImages['home-3'] ? 'loaded' : ''}`}
-                    loading="lazy"
-                    onLoad={() => handleImageLoad('home-3')}
-                  />
-                </div>
-              </div>
-            ) : (
-              // Desktop view - positioned images
-              <div className="hero-images-desktop">
-                <div className="hero-image-1">
-                  <img 
-                    src="/images/home/home-1.jpg" 
-                    alt="Cleaning service" 
-                    className={`hero-image ${loadedImages['home-1'] ? 'loaded' : ''}`}
-                    loading="eager"
-                    fetchpriority="high"
-                    onLoad={() => handleImageLoad('home-1')}
-                  />
-                </div>
-                <div className="hero-image-2">
-                  <img 
-                    src="/images/home/home-2.jpg" 
-                    alt="Professional cleaner" 
-                    className={`hero-image ${loadedImages['home-2'] ? 'loaded' : ''}`}
-                    loading="lazy"
-                    onLoad={() => handleImageLoad('home-2')}
-                  />
-                </div>
-                <div className="hero-image-3">
-                  <img 
-                    src="/images/home/home-3.jpg" 
-                    alt="Clean office" 
-                    className={`hero-image ${loadedImages['home-3'] ? 'loaded' : ''}`}
-                    loading="lazy"
-                    onLoad={() => handleImageLoad('home-3')}
-                  />
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* Client Logos Section */}
       {/* <section className="clients-section">
@@ -413,17 +405,24 @@ const services = [
       {/* Services Section */}
       <section id="services" className="services-section">
           <div className="services-container">
-            <h2 className="services-title">At your service<span style={{color: "rgb(200, 25, 30)"}}>.</span></h2>
+            <h2 className="services-title">
+              Professional Cleaning Services Melbourne<span style={{color: "rgb(200, 25, 30)"}}>.</span>
+            </h2>
             <p className="services-intro">
-              Our service is providing solutions to the many challenges associated with managing all types of facilities. 
-              We proudly provide commercial and industrial cleaning service solutions as detailed below. We also specialise in
-              engaging and managing numerous other facility services such as hygiene and pest control, supply of consumable 
-              products and waste/recycling management.
+              FBI Facility Solutions provides comprehensive facility management and cleaning services across Melbourne. 
+              Our commercial and industrial cleaning solutions include aged care cleaning, childcare centre cleaning, 
+              office cleaning, and specialized facility services. We also manage hygiene services, pest control, 
+              consumable products supply, and waste management for businesses throughout Victoria.
             </p>
             <div className="services-grid">
               {services.map(service => (
                 <div key={service.id} className="service-card">
-                  <div className="service-card-image" style={{ backgroundImage: `url(${service.image})` }}>
+                  <div 
+                    className="service-card-image" 
+                    style={{ backgroundImage: `url(${service.image})` }}
+                    role="img"
+                    aria-label={`${service.title} services`}
+                  >
                     <div className="service-card-overlay"></div>
                   </div>
                   <div className="service-card-body">
@@ -432,6 +431,7 @@ const services = [
                     <button 
                       className="service-read-more-btn"
                       onClick={() => setSelectedService(service)}
+                      aria-label={`Learn more about ${service.title}`}
                     >
                       Read More
                     </button>
@@ -442,119 +442,137 @@ const services = [
           </div>
         </section>
 
+        <FAQ/>
 
       {/* Contact Form Section */}
       <section id="contact" className="contact-section">
-        <div className="contact-container">
-          <div className="contact-info">
-            <h2 className="contact-title">Quick Contact Form</h2>
-            <p className="contact-subtitle">Call us anytime</p>
-            <div className="contact-details">
-              <p className="contact-phone">Phone: 1300 424 066</p>
-              <p className="contact-email">Email: info@fbifacilitysolution.com.au</p>
-              <p className="contact-address">Address: 45 Atkinson Chadstone,VIC 3148</p>
+          <div className="contact-container">
+            <div className="contact-info">
+              <h2 className="contact-title">Contact FBI Facility Solutions</h2>
+              <p className="contact-subtitle">Get a free quote for cleaning services in Melbourne</p>
+              <div className="contact-details">
+                <p className="contact-phone">Phone: <a href="tel:1300424066">1300 424 066</a></p>
+                <p className="contact-email">Email: <a href="mailto:info@fbifacilitysolution.com.au">info@fbifacilitysolution.com.au</a></p>
+                <p className="contact-address">Address: 45 Atkinson, Chadstone VIC 3148</p>
+              </div>
+            </div>
+            <div className="contact-form-container">
+              <form className="contact-form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="contact-name" className="sr-only">Your Name</label>
+                  <input
+                    id="contact-name"
+                    type="text"
+                    name="name"
+                    value={contactForm.name}
+                    onChange={handleInputChange}
+                    placeholder="Your Name"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="contact-phone" className="sr-only">Your Phone</label>
+                  <input
+                    id="contact-phone"
+                    type="tel"
+                    name="phone"
+                    value={contactForm.phone}
+                    onChange={handleInputChange}
+                    placeholder="Your Phone"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="contact-email" className="sr-only">Your Email</label>
+                  <input
+                    id="contact-email"
+                    type="email"
+                    name="email"
+                    value={contactForm.email}
+                    onChange={handleInputChange}
+                    placeholder="Your Email"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="contact-services" className="sr-only">Description of Services Needed</label>
+                  <textarea
+                    id="contact-services"
+                    name="services"
+                    value={contactForm.services}
+                    onChange={handleInputChange}
+                    placeholder="Tell us about your cleaning requirements"
+                    rows="4"
+                    required
+                  ></textarea>
+                </div>
+                <button type="submit" className="contact-submit-btn">Send Message</button>
+              </form>
             </div>
           </div>
-          <div className="contact-form-container">
-            <form className="contact-form" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="name"
-                  value={contactForm.name}
-                  onChange={handleInputChange}
-                  placeholder="Your Name"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="tel"
-                  name="phone"
-                  value={contactForm.phone}
-                  onChange={handleInputChange}
-                  placeholder="Your Phone"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="email"
-                  name="email"
-                  value={contactForm.email}
-                  onChange={handleInputChange}
-                  placeholder="Your Email"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <textarea
-                  name="services"
-                  value={contactForm.services}
-                  onChange={handleInputChange}
-                  placeholder="Description of services needed"
-                  rows="4"
-                  required
-                ></textarea>
-              </div>
-              <button type="submit" className="contact-submit-btn">Send Message</button>
-            </form>
-          </div>
-        </div>
-      </section>
+        </section>
 
       {/* Modal for Get a Quote */}
-      {isModalOpen && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeModal}>×</button>
-            <h2 className="modal-title">Get a Quote</h2>
-            <form className="modal-form" onSubmit={handleSubmit}>
-              <div className="form-group">
-                <input
-                  type="text"
-                  name="name"
-                  value={contactForm.name}
-                  onChange={handleInputChange}
-                  placeholder="Your Name"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="tel"
-                  name="phone"
-                  value={contactForm.phone}
-                  onChange={handleInputChange}
-                  placeholder="Your Phone"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="email"
-                  name="email"
-                  value={contactForm.email}
-                  onChange={handleInputChange}
-                  placeholder="Your Email"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <textarea
-                  name="services"
-                  value={contactForm.services}
-                  onChange={handleInputChange}
-                  placeholder="Description of services needed"
-                  rows="4"
-                  required
-                ></textarea>
-              </div>
-              <button type="submit" className="modal-submit-btn">Get Quote</button>
-            </form>
+       {isModalOpen && (
+          <div className="modal-overlay" onClick={closeModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <button className="modal-close" onClick={closeModal} aria-label="Close quote form">×</button>
+              <h2 className="modal-title">Get a Free Cleaning Quote</h2>
+              <form className="modal-form" onSubmit={handleSubmit}>
+                <div className="form-group">
+                  <label htmlFor="modal-name" className="sr-only">Your Name</label>
+                  <input
+                    id="modal-name"
+                    type="text"
+                    name="name"
+                    value={contactForm.name}
+                    onChange={handleInputChange}
+                    placeholder="Your Name"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="modal-phone" className="sr-only">Your Phone</label>
+                  <input
+                    id="modal-phone"
+                    type="tel"
+                    name="phone"
+                    value={contactForm.phone}
+                    onChange={handleInputChange}
+                    placeholder="Your Phone"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="modal-email" className="sr-only">Your Email</label>
+                  <input
+                    id="modal-email"
+                    type="email"
+                    name="email"
+                    value={contactForm.email}
+                    onChange={handleInputChange}
+                    placeholder="Your Email"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="modal-services" className="sr-only">Services Needed</label>
+                  <textarea
+                    id="modal-services"
+                    name="services"
+                    value={contactForm.services}
+                    onChange={handleInputChange}
+                    placeholder="Describe your cleaning requirements"
+                    rows="4"
+                    required
+                  ></textarea>
+                </div>
+                <button type="submit" className="modal-submit-btn">Get Quote</button>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
       {selectedService && (
         <ServiceModal 
           service={selectedService} 
