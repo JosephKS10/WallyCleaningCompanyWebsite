@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiMenu, HiX } from 'react-icons/hi';
+import { sendQuoteEmail } from "../../utils/emailApi";
+
 import './Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
   const [quoteForm, setQuoteForm] = useState({
     name: '',
     phone: '',
@@ -38,19 +42,32 @@ const Header = () => {
     });
   };
 
-  const handleQuoteSubmit = (e) => {
+  const handleQuoteSubmit = async(e) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
-    console.log('Quote form submitted:', quoteForm);
-    alert('Thank you for your inquiry. We will get back to you soon with a quote!');
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    try { 
+    await sendQuoteEmail(quoteForm);
+
+    setShowThankYou(true);
+
     setQuoteForm({
       name: '',
       phone: '',
       email: '',
       services: ''
     });
+
     setIsModalOpen(false);
-  };
+  } catch (error) {
+    alert(error.message || "Failed to send quote request.");
+  }
+  finally {
+    setIsSubmitting(false);
+  }
+};
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -222,8 +239,27 @@ const Header = () => {
                   required
                 ></textarea>
               </div>
-              <button type="submit" className="modal-submit-btn">Request Quote</button>
+              <button type="submit" className="modal-submit-btn" disabled={isSubmitting}>{isSubmitting ? (
+                <span className="btn-loader" aria-label="Sending"></span>
+              ) : (
+                "Request Quote"
+              )}</button>
             </form>
+          </div>
+        </div>
+      )}
+
+            {showThankYou && (
+        <div className="thank-you-overlay">
+          <div className="thank-you-modal" role="dialog" aria-modal="true">
+            <h2>Thank You! 🎉</h2>
+            <p>
+              Your quote request has been received.  
+              Our team will contact you shortly.
+            </p>
+            <button onClick={() => setShowThankYou(false)}>
+              Close
+            </button>
           </div>
         </div>
       )}

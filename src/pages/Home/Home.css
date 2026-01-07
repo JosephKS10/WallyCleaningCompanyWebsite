@@ -790,6 +790,75 @@
   text-decoration: underline;
 }
 
+.modal-submit-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.btn-loader {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.thank-you-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.thank-you-modal {
+  background: #fff;
+  padding: 32px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  border-radius: 12px;
+  animation: popIn 0.25s ease-out;
+}
+
+.thank-you-modal h2 {
+  margin-bottom: 12px;
+  color: rgb(193, 22, 28);
+}
+
+.thank-you-modal button {
+  margin-top: 20px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: none;
+  background: linear-gradient(rgb(193, 22, 28) 0%, rgb(222, 76, 46) 100%);;
+  color: white;
+  cursor: pointer;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+
+
 /* Responsive Adjustments */
 
 @media (max-width: 1280px) {

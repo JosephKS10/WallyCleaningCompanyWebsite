@@ -5,6 +5,8 @@ import ServiceModal from "../../components/ServiceModal/ServiceModal";
 import FAQ from '../../components/FAQ/FAQ';
 import SEO from '../../components/SEO/SEO';
 import { getOrganizationSchema, getWebsiteSchema } from '../../utils/structuredData';
+import { sendQuoteEmail } from "../../utils/emailApi";
+
 import './Home.css';
 
 const Home = () => {
@@ -17,6 +19,8 @@ const Home = () => {
     email: '',
     services: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showThankYou, setShowThankYou] = useState(false);
   const location = useLocation();
   const [selectedService, setSelectedService] = useState(null);
 
@@ -241,19 +245,32 @@ const services = [
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
-    console.log('Form submitted:', contactForm);
-    alert('Thank you for your message. We will get back to you soon!');
+
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    try {
+    await sendQuoteEmail(contactForm);
+
     setContactForm({
       name: '',
       phone: '',
       email: '',
       services: ''
     });
+
+    setShowThankYou(true);
+
     setIsModalOpen(false);
-  };
+  } catch (error) {
+    alert(error.message || "Something went wrong. Please try again.");
+  }
+  finally {
+    setIsSubmitting(false);
+  }
+};
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -506,7 +523,11 @@ const services = [
                     required
                   ></textarea>
                 </div>
-                <button type="submit" className="contact-submit-btn">Send Message</button>
+                <button type="submit" className="contact-submit-btn" disabled={isSubmitting}> {isSubmitting ? (
+                  <span className="btn-loader" aria-label="Sending"></span>
+                ) : (
+                  "Send Message"
+                )}</button>
               </form>
             </div>
           </div>
@@ -567,8 +588,27 @@ const services = [
                     required
                   ></textarea>
                 </div>
-                <button type="submit" className="modal-submit-btn">Get Quote</button>
+                <button type="submit" className="modal-submit-btn" disabled={isSubmitting}> {isSubmitting ? (
+                  <span className="btn-loader" aria-label="Sending"></span>
+                ) : (
+                  "Get a Free Quote"
+                )}</button>
               </form>
+            </div>
+          </div>
+        )}
+
+        {showThankYou && (
+          <div className="thank-you-overlay">
+            <div className="thank-you-modal" role="dialog" aria-modal="true">
+              <h2>Thank You! 🎉</h2>
+              <p>
+                Your quote request has been received.  
+                Our team will contact you shortly.
+              </p>
+              <button onClick={() => setShowThankYou(false)}>
+                Close
+              </button>
             </div>
           </div>
         )}
