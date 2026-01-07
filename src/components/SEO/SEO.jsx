@@ -5,7 +5,7 @@ const SEO = ({
   description = "FBI Facility Solutions provides premium commercial cleaning, industrial cleaning, and facility management services throughout Melbourne. Family-owned since 2002. Call 1300 424 066.",
   keywords = "commercial cleaning Melbourne, industrial cleaning services, office cleaning Chadstone, facility management Melbourne, aged care cleaning, childcare cleaning, retail cleaning services",
   canonicalUrl,
-  ogImage = "/images/og-image.jpg",
+  ogImage = "/images/team/our-team.jpg",
   ogType = "website",
   structuredData,
   noindex = false,
