@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiMenu, HiX } from 'react-icons/hi';
 import { sendQuoteEmail } from "../../utils/emailApi";
-
 import './Header.css';
 
 const Header = () => {
@@ -10,6 +9,7 @@ const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
+  const [isCleanerAuthenticated, setIsCleanerAuthenticated] = useState(false);
   const [quoteForm, setQuoteForm] = useState({
     name: '',
     phone: '',
@@ -17,6 +17,54 @@ const Header = () => {
     services: ''
   });
   const navigate = useNavigate();
+
+  // Check if cleaner is authenticated on component mount and when storage changes
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem('cleaner_token');
+      const tokenExpiry = localStorage.getItem('cleaner_token_expiry');
+      
+      if (token && tokenExpiry) {
+        // Check if token is expired
+        if (new Date().getTime() > parseInt(tokenExpiry)) {
+          // Token expired, clear storage
+          localStorage.removeItem('cleaner_token');
+          localStorage.removeItem('cleaner_data');
+          localStorage.removeItem('cleaner_token_expiry');
+          setIsCleanerAuthenticated(false);
+        } else {
+          setIsCleanerAuthenticated(true);
+        }
+      } else {
+        setIsCleanerAuthenticated(false);
+      }
+    };
+
+    // Initial check
+    checkAuthStatus();
+
+    // Listen for storage changes (for logout from other tabs)
+    const handleStorageChange = (e) => {
+      if (e.key === 'cleaner_token' || e.key === 'cleaner_token_expiry') {
+        checkAuthStatus();
+      }
+    };
+
+    // Listen for auth events from CleanerAuthContext
+    const handleAuthChange = () => {
+      checkAuthStatus();
+    };
+
+    // Add event listeners
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('cleaner-auth-change', handleAuthChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('cleaner-auth-change', handleAuthChange);
+    };
+  }, []);
+
   const scrollToServices = () => {
     const servicesSection = document.getElementById('services');
     servicesSection?.scrollIntoView({ behavior: 'smooth' });
@@ -49,25 +97,24 @@ const Header = () => {
 
     setIsSubmitting(true);
     try { 
-    await sendQuoteEmail(quoteForm);
+      await sendQuoteEmail(quoteForm);
 
-    setShowThankYou(true);
+      setShowThankYou(true);
 
-    setQuoteForm({
-      name: '',
-      phone: '',
-      email: '',
-      services: ''
-    });
+      setQuoteForm({
+        name: '',
+        phone: '',
+        email: '',
+        services: ''
+      });
 
-    setIsModalOpen(false);
-  } catch (error) {
-    alert(error.message || "Failed to send quote request.");
-  }
-  finally {
-    setIsSubmitting(false);
-  }
-};
+      setIsModalOpen(false);
+    } catch (error) {
+      alert(error.message || "Failed to send quote request.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -75,6 +122,15 @@ const Header = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const handleCleanerButtonClick = () => {
+    if (isCleanerAuthenticated) {
+      navigate('/cleaner/dashboard');
+    } else {
+      navigate('/cleaner/login');
+    }
+    setIsMenuOpen(false);
   };
 
   return (
@@ -118,12 +174,15 @@ const Header = () => {
 
           {/* Get a Quote Button (Desktop) */}
           <div className="header-quote-btn-container">
-            <button className="header-cleaner-login-btn" onClick={() => navigate('/cleaner-login')}>
-              Cleaner Login
+            <button 
+              className="header-cleaner-login-btn" 
+              onClick={handleCleanerButtonClick}
+            >
+              {isCleanerAuthenticated ? 'Dashboard' : 'Cleaner Login'}
             </button>
-            <button className="header-quote-btn" onClick={openModal}>
+            {isCleanerAuthenticated || <button className="header-quote-btn" onClick={openModal}>
               Get a Quote
-            </button>
+            </button>}
           </div>
 
           {/* Mobile Menu Button */}
@@ -181,12 +240,15 @@ const Header = () => {
             >
               Contact Us
             </Link>
-             <button className="header-cleaner-login-btn" onClick={() => navigate('/cleaner-login')}>
-              Cleaner Login
+            <button 
+              className="header-cleaner-login-btn" 
+              onClick={handleCleanerButtonClick}
+            >
+              {isCleanerAuthenticated ? 'Dashboard' : 'Cleaner Login'}
             </button>
-            <button className="mobile-quote-btn" onClick={openModal}>
+            {isCleanerAuthenticated || <button className="mobile-quote-btn" onClick={openModal}>
               Get a Quote
-            </button>
+            </button>}
           </div>
         )}
       </nav>
@@ -249,7 +311,7 @@ const Header = () => {
         </div>
       )}
 
-            {showThankYou && (
+      {showThankYou && (
         <div className="thank-you-overlay">
           <div className="thank-you-modal" role="dialog" aria-modal="true">
             <h2>Thank You! 🎉</h2>
