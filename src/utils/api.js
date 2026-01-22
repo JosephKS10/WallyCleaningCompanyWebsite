@@ -89,4 +89,72 @@ export const cleanerAPI = {
   }
 };
 
+export const leaveAPI = {
+  // Submit leave request
+  submitLeaveRequest: async (leaveData) => {
+    try {
+      const response = await api.post('/leaves', leaveData);
+      return response.data;
+    } catch (error) {
+      console.error('Error submitting leave request:', error);
+      throw error;
+    }
+  },
+
+  // Get cleaner's leave requests
+  getCleanerLeaves: async (params = {}) => {
+    try {
+      const response = await api.get('/leaves/my-leaves', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching leave requests:', error);
+      throw error;
+    }
+  },
+
+  // Get upcoming leaves
+  getUpcomingLeaves: async () => {
+    try {
+      const response = await api.get('/leaves/upcoming');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching upcoming leaves:', error);
+      throw error;
+    }
+  },
+
+  // Check leave availability
+  checkLeaveAvailability: async (startDate, endDate) => {
+    try {
+      const response = await api.post('/leaves/check-availability', { startDate, endDate });
+      return response.data;
+    } catch (error) {
+      console.error('Error checking leave availability:', error);
+      throw error;
+    }
+  },
+
+  // Cancel leave request
+  cancelLeaveRequest: async (leaveId) => {
+    try {
+      const response = await api.put(`/leaves/${leaveId}/cancel`);
+      return response.data;
+    } catch (error) {
+      console.error('Error cancelling leave request:', error);
+      throw error;
+    }
+  },
+
+  // Get single leave request
+  getLeaveRequest: async (leaveId) => {
+    try {
+      const response = await api.get(`/leaves/${leaveId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching leave request:', error);
+      throw error;
+    }
+  }
+};
+
 export default api;

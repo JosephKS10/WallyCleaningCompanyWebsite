@@ -307,6 +307,8 @@
   width: 48px;
   height: 48px;
   margin-bottom: 1rem;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .empty-state p {
@@ -2593,40 +2595,40 @@
   gap: 2rem;
 }
 
-.form-section {
+.leave-form-section {
   padding: 1.5rem;
   background: #f9fafb;
   border-radius: 8px;
 }
 
-.form-title {
+.leave-form-title {
   margin: 0 0 1rem 0;
   font-size: 1rem;
   font-weight: 600;
 }
 
-.form-grid {
+.leave-form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.form-group {
+.leave-form-group {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.form-group label {
+.leave-form-group label {
   font-size: 0.85rem;
   font-weight: 500;
   color: #666;
 }
 
-.form-group input,
-.form-group select,
-.form-group textarea {
+.leave-form-group input,
+.leave-form-group select,
+.leave-form-group textarea {
   padding: 0.75rem;
   border: 2px solid #e5e7eb;
   border-radius: 6px;
@@ -2634,9 +2636,9 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
+.leave-form-group input:focus,
+.leave-form-group select:focus,
+.leave-form-group textarea:focus {
   outline: none;
   border-color: rgb(200, 25, 30);
 }
@@ -2647,7 +2649,7 @@
   margin-top: 0.25rem;
 }
 
-.form-actions {
+.leave-form-actions {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2836,6 +2838,74 @@
 .emergency-submit-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(200, 25, 30, 0.2);
+}
+
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.site-card.selected {
+  border-color: rgb(200, 25, 30);
+  background-color: #fff5f5;
+  box-shadow: 0 2px 8px rgba(200, 25, 30, 0.1);
+}
+
+.site-card.selected .site-name {
+  color: rgb(200, 25, 30);
+}
+
+/* Enhanced form sections */
+.form-section {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.form-section:hover {
+  border-color: #d1d5db;
+}
+
+/* Status badges */
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-approved {
+  background-color: #d1fae5;
+  color: #065f46;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Button disabled state */
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 /* ===== RECTIFICATION TAB ===== */
