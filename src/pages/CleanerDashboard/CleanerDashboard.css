@@ -1384,11 +1384,24 @@
   font-size: 1rem;
   color: #000;
 }
-
+.week-grid-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 10px; /* Leave space for the scrollbar */
+}
 .week-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 1rem;
+  min-width: 1000px; /* Forces horizontal scroll on tablets instead of squishing */
+}
+/* Helper to prevent long locations from breaking the card layout */
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
 }
 
 .day-column {
@@ -3540,14 +3553,18 @@
   
   .stats-grid,
   .sites-grid,
-  .week-grid,
   .quick-stats {
     grid-template-columns: 1fr;
   }
   
+  .week-grid {
+    grid-template-columns: 1fr; 
+    min-width: 100%; 
+  }
+  
   .day-column {
     border-bottom: 1px solid #e5e7eb;
-    min-height: auto;
+    min-height: auto; 
   }
 
   .activity-item {

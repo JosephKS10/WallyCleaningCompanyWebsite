@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 const ScheduleTab = ({ cleaner }) => {
   const [viewMode, setViewMode] = useState('weekly'); // 'weekly' or 'monthly'
   
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
   // Get all days with cleaning assignments
   const getWeeklySchedule = () => {
     const schedule = {
@@ -16,15 +18,16 @@ const ScheduleTab = ({ cleaner }) => {
     };
 
     cleaner?.siteInfo?.forEach(site => {
-      if (site.everydayValuation) {
+      // Only process sites that haven't been removed and are active/pending
+      if (site.everydayValuation && !site.removedDate) {
         Object.entries(site.everydayValuation).forEach(([day, data]) => {
-          if (data.selected && schedule[day]) {
+          if (data && data.selected && schedule[day]) {
             schedule[day].push({
-              siteName: site.site_name,
-              location: site.location,
-              time: site.cleaning_times,
-              price: data.price,
-              siteId: site._id
+              siteName: site.site_name || 'Unnamed Site',
+              location: site.location || 'No location',
+              time: site.cleaning_times || 'Time not set',
+              price: data.price || 0,
+              siteId: site._id || site.siteId
             });
           }
         });
@@ -70,9 +73,8 @@ const ScheduleTab = ({ cleaner }) => {
               
               <div className="current-week">
                 <h3>Week of {new Date().toLocaleDateString('en-US', { 
-                  weekday: 'long', 
                   year: 'numeric', 
-                  month: 'long', 
+                  month: 'short', 
                   day: 'numeric' 
                 })}</h3>
               </div>
@@ -86,8 +88,49 @@ const ScheduleTab = ({ cleaner }) => {
             </div>
           </div>
 
-          <div className="week-grid">
-            
+          <div className="week-grid-wrapper">
+            <div className="week-grid">
+              {daysOfWeek.map(day => (
+                <div key={day} className="day-column">
+                  <div className="day-header">
+                    <h4 className="day-name">{day}</h4>
+                    <span className="assignment-count">{weeklySchedule[day].length}</span>
+                  </div>
+                  
+                  <div className="assignments-list">
+                    {weeklySchedule[day].length > 0 ? (
+                      weeklySchedule[day].map((task, index) => (
+                        <div key={index} className="assignment-card">
+                          <div className="assignment-header">
+                            <h5 className="site-name">{task.siteName}</h5>
+                          </div>
+                          
+                          <div className="assignment-details">
+                            <div className="detail">
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ width: '12px', marginRight: '4px' }}>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              {task.time}
+                            </div>
+                            <div className="detail">
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ width: '12px', marginRight: '4px' }}>
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                              </svg>
+                              <span className="truncate-text">{task.location}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="no-assignments">
+                        No tasks
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       ) : (
@@ -101,7 +144,6 @@ const ScheduleTab = ({ cleaner }) => {
           </div>
         </div>
       )}
-
     </div>
   );
 };
