@@ -1499,17 +1499,25 @@
   color: white;
 }
 
-/* ===== PROFILE TAB ===== */
+
 .profile-tab {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  min-width: 0; 
+  width: 100%;
+  max-width: 100%;
 }
 
-.profile-header {
+.profile-header-wrapper {
   display: flex;
-  justify-content: center;
   align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  flex-wrap: wrap; 
+  width: 100%; 
 }
 
 .profile-avatar {
@@ -1520,10 +1528,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .profile-basic {
   flex: 1;
+  min-width: 200px;
 }
 
 .profile-name {
@@ -1535,12 +1545,14 @@
 .profile-email {
   margin: 0.25rem 0;
   color: #666;
+  word-break: break-all;
 }
 
 .profile-meta {
   display: flex;
   gap: 1rem;
   margin-top: 0.5rem;
+  flex-wrap: wrap; /* Prevent tight squishing */
 }
 
 .meta-item {
@@ -1553,6 +1565,7 @@
 
 .profile-status {
   text-align: right;
+  min-width: 150px;
 }
 
 .profile-status .status-badge {
@@ -1563,6 +1576,11 @@
   font-weight: 600;
 }
 
+.reference-id {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #666;
+}
 .status-active {
   background: #d1fae5;
   color: #065f46;
@@ -1579,13 +1597,25 @@
   color: #666;
 }
 
+.profile-nav-container {
+  width: 100%;
+  max-width: 100%; 
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+  -webkit-overflow-scrolling: touch; 
+  scrollbar-width: none; 
+}
+
+.profile-nav-container::-webkit-scrollbar {
+  display: none; 
+}
+
 .profile-nav {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid #e5e7eb;
-  overflow-x: auto;
+  width: max-content; /* Ensure items don't wrap to next line, force scroll */
 }
 
 .profile-nav-btn {
@@ -1597,11 +1627,18 @@
   cursor: pointer;
   white-space: nowrap;
   font-family: 'Montserrat', sans-serif;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.profile-nav-btn:hover {
+  color: #000;
 }
 
 .profile-nav-btn.active {
   color: rgb(200, 25, 30);
   border-bottom: 2px solid rgb(200, 25, 30);
+  font-weight: 600;
 }
 
 .profile-content {
@@ -1621,6 +1658,14 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
+}
+
+.info-item p,
+.info-item span,
+.info-item label {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .info-section {
@@ -3548,7 +3593,8 @@
 
   .dashboard-main {
     padding: 1rem;
-    min-height: auto; /* Prevent massive empty spaces */
+    min-height: auto; 
+    width: 92.5vw;
   }
   
   .stats-grid,
@@ -3607,6 +3653,43 @@
 
   .detail-grid {
     grid-template-columns: 1fr; /* Stack detail items on small screens */
+  }
+  .profile-header-wrapper {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  .profile-basic {
+    min-width: 100%; 
+    width: 100%;
+  }
+
+  .profile-status {
+    min-width: 100%;
+    width: 100%;
+    text-align: center;
+  }
+  
+  
+  .profile-meta {
+    justify-content: center;
+  }
+  
+  .info-grid, 
+  .documents-grid {
+    grid-template-columns: 1fr; /* Force single column on mobile */
+  }
+
+  .document-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .view-doc-btn {
+    margin-left: 0;
+    margin-top: 1rem;
+    width: 100%;
   }
 }
 
