@@ -1827,6 +1827,9 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  min-width: 0; 
+  width: 100%;
+  max-width: 100%;
 }
 
 .reports-header {
@@ -1836,13 +1839,16 @@
 .reports-container {
   display: grid;
   grid-template-columns: 250px 1fr;
-  gap: 2rem;
+  width: 100%;
+  min-width: 0;
 }
 
 .reports-sidebar {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+
+  width: 12.5vw;
 }
 
 .sidebar-title {
@@ -1870,7 +1876,7 @@
   text-align: left;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.rem;
   color: #666;
   font-family: 'Montserrat', sans-serif;
 }
@@ -1916,6 +1922,7 @@
 .report-content {
   min-height: 500px;
 }
+
 
 .performance-stats {
   display: grid;
@@ -2031,12 +2038,15 @@
 .history-table {
   background: #f9fafb;
   border-radius: 8px;
-  overflow: hidden;
+  overflow-x: auto; 
+  -webkit-overflow-scrolling: touch; 
+  width: 100%;
 }
 
 .history-table table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px;
 }
 
 .history-table th {
@@ -2046,6 +2056,7 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: #666;
+  white-space: nowrap; /* Prevents headers from squishing */
 }
 
 .history-table td {
@@ -3570,6 +3581,7 @@
     border-bottom: 1px solid #e5e7eb;
     padding-bottom: 1.5rem;
   }
+  
 }
 
 /* Mobile Phones */
@@ -3677,7 +3689,7 @@
   
   .info-grid, 
   .documents-grid {
-    grid-template-columns: 1fr; /* Force single column on mobile */
+    grid-template-columns: 1fr; 
   }
 
   .document-card {
@@ -3691,6 +3703,38 @@
     margin-top: 1rem;
     width: 100%;
   }
+  .reports-list {
+    flex-direction: row;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .reports-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .report-item {
+    white-space: nowrap; 
+    flex-shrink: 0; 
+  }
+
+  .reports-sidebar {
+    gap: 0.5rem; 
+  }
+  
+  .reports-container {
+    gap: 1rem;
+  }
+
+  .performance-report{
+    width: 85vw;
+  }
+  .performance-report::-webkit-scrollbar{
+    display: none;
+  }
+
 }
 
 @media (max-width: 480px) {
