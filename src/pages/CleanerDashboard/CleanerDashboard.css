@@ -65,17 +65,21 @@
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(200, 25, 30, 0.2);
 }
-
+.cleaner-dashboard, .cleaner-dashboard *, .cleaner-dashboard *::before, .cleaner-dashboard *::after {
+  box-sizing: border-box;
+}
 /* ===== DASHBOARD LAYOUT ===== */
 .dashboard-header {
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 1rem 2rem;
   margin-top: 4rem;
+  width: 100%; /* Ensures it doesn't overflow */
 }
 
 .dashboard-header-content {
-  max-width: 80vw;
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -118,11 +122,13 @@
 
 .dashboard-container {
   max-width: 1200px;
+  width: 100%;
   margin: 2rem auto;
   display: grid;
   grid-template-columns: 250px 1fr;
   gap: 2rem;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
+  overflow-x: hidden; /* Hard stop on horizontal scroll */
 }
 
 /* ===== SIDEBAR ===== */
@@ -472,11 +478,12 @@
 .profile-display-card {
   background: white;
   border-radius: 12px;
-  padding: 2rem;
+  padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   display: flex;
   gap: 2rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .profile-image-container {
@@ -487,38 +494,38 @@
   gap: 1rem;
 }
 
-.profile-picture-large {
-  width: 12vw;
-  height: auto;
+.profile-picture-large, 
+.profile-picture-placeholder {
+  width: 120px; /* Fixed size instead of vw to prevent shrinking */
+  height: 120px;
   border-radius: 50%;
-  aspect-ratio: 4/4;
-
+  object-fit: cover;
+  border: 3px solid #f3f4f6;
 }
 
 .profile-picture-placeholder {
-  width: 8vw;
-  border-radius: 50%;
   background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
   display: flex;
   align-items: center;
   justify-content: center;
- border-radius: 50%;
-  aspect-ratio: 4/4;
-
 }
 
 .edit-photo-btn {
   background: rgb(200, 25, 30);
   color: white;
   border: none;
-  padding: 0.5rem 0.5rem;
+  padding: 0.6rem;
   font-size: 1rem;
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s;
-  position: relative;
-  bottom: 3.5rem;
-  left: 3.5rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .edit-photo-btn:hover {
@@ -533,14 +540,22 @@
 
 .profile-details-grid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: 1fr;
   gap: 1rem;
+  flex: 1;
+  min-width: 200px; /* Forces wrap if space gets too tight */
 }
 
 .detail-item {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+.detail-item p,
+.detail-item a,
+.detail-item span {
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .detail-label {
@@ -561,8 +576,11 @@
 .calendar-section {
   background: white;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 1.25rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  flex: 2; 
+  min-width: 280px; /* Forces wrap instead of squishing */
+  border: 1px solid #e5e7eb;
 }
 
 .calendar-header {
@@ -1115,6 +1133,8 @@
   padding: 1rem;
   position: sticky;
   top: 1rem;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 .panel-header {
@@ -1475,10 +1495,8 @@
 
 .profile-header {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-
+  justify-content: center;
+  align-items: center;
 }
 
 .profile-avatar {
@@ -3452,52 +3470,95 @@
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (max-width: 1024px) {
-  .sites-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .reports-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
   .dashboard-container {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* Stack sidebar on top of main content */
+    gap: 1.5rem;
     padding: 0 1rem;
   }
   
+  .dashboard-sidebar {
+    margin-bottom: 0;
+  }
+
+  /* Make the sidebar a compact grid on tablets/mobile instead of a long list */
+  .sidebar-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 0.5rem;
+  }
+
+  /* Ensure the divider spans the whole row in the grid */
+  .sidebar-divider {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin: 0.5rem 0;
+  }
+
+  .sites-container,
+  .reports-container,
+  .tasks-notifications-section,
+  .profile-calendar-section {
+    grid-template-columns: 1fr; /* Stack complex 2-column layouts */
+  }
+
+  .profile-display-card {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .profile-details-grid {
+    text-align: center;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1.5rem;
+  }
+}
+
+/* Mobile Phones */
+@media (max-width: 768px) {
   .dashboard-header {
-    margin-top: 1rem;
+    margin-top: 4rem; /* Adjust if your global nav needs it */
     padding: 1rem;
   }
   
   .dashboard-header-content {
-    max-width: 100%;
     flex-direction: column;
-    gap: 1rem;
     align-items: flex-start;
+    gap: 1rem;
   }
   
   .logout-btn {
     align-self: stretch;
+    width: 100%;
+    text-align: center;
+  }
+
+  .dashboard-main {
+    padding: 1rem;
+    min-height: auto; /* Prevent massive empty spaces */
   }
   
   .stats-grid,
-  .sites-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .week-grid {
+  .sites-grid,
+  .week-grid,
+  .quick-stats {
     grid-template-columns: 1fr;
   }
   
   .day-column {
     border-bottom: 1px solid #e5e7eb;
+    min-height: auto;
+  }
+
+  .activity-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
   
   .profile-nav {
     overflow-x: auto;
+    padding-bottom: 10px;
   }
   
   .invoice-preview-modal {
@@ -3526,13 +3587,13 @@
   .modal-actions {
     flex-wrap: wrap;
   }
+
+  .detail-grid {
+    grid-template-columns: 1fr; /* Stack detail items on small screens */
+  }
 }
 
-@media (max-width: 640px) {
-  .dashboard-main {
-    padding: 1rem;
-  }
-  
+@media (max-width: 480px) {
   .section-title {
     font-size: 1.25rem;
   }
@@ -3547,5 +3608,24 @@
   
   .totals-table {
     width: 100%;
+  }
+
+  /* Make sidebar links even more compact on tiny screens */
+  .sidebar-nav {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sidebar-link {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  .sidebar-link svg {
+    margin-right: 0;
+  }
+  .schedule-grid {
+    grid-template-columns: repeat(2, 1fr); /* Drop to 2 days per row instead of 3 on tiny screens */
   }
 }

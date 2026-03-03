@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { siteAPI } from '../../utils/api';
 
 const MySitesTab = ({ cleaner }) => {
@@ -7,6 +7,9 @@ const MySitesTab = ({ cleaner }) => {
   const [sites, setSites] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Create a ref to auto-scroll to the details panel on mobile
+  const detailsPanelRef = useRef(null);
 
   // Fetch sites data when component mounts
   useEffect(() => {
@@ -15,17 +18,14 @@ const MySitesTab = ({ cleaner }) => {
         setLoading(true);
         setError(null);
         
-        // Check if cleaner has site Info
         if (!cleaner?.siteInfo || !Array.isArray(cleaner.siteInfo) || cleaner.siteInfo.length === 0) {
           setSites([]);
           setLoading(false);
           return;
         }
 
-        // Extract site IDs from cleaner's siteInfo
         const siteIds = cleaner.siteInfo
           .map(site => {
-            // Handle both string and object siteId formats
             if (typeof site.siteId === 'string') return site.siteId;
             if (site.siteId && site.siteId.$oid) return site.siteId.$oid;
             return null;
@@ -38,13 +38,10 @@ const MySitesTab = ({ cleaner }) => {
           return;
         }
 
-        // Fetch site data using the API
         const response = await siteAPI.getSitesByIds(siteIds);
         
         if (response.sites && Array.isArray(response.sites)) {
-          // Merge site data with cleaner's siteInfo
           const mergedSites = response.sites.map(apiSite => {
-            // Find corresponding siteInfo in cleaner's data
             const cleanerSiteInfo = cleaner.siteInfo.find(site => {
               const cleanerSiteId = typeof site.siteId === 'string' 
                 ? site.siteId 
@@ -54,11 +51,8 @@ const MySitesTab = ({ cleaner }) => {
             });
 
             if (cleanerSiteInfo) {
-              // Merge data: cleaner's siteInfo takes precedence, fall back to API data
               return {
-                ...apiSite, // Start with API data
-                
-                // Override with cleaner's siteInfo where available
+                ...apiSite,
                 siteStatus: cleanerSiteInfo.siteStatus || apiSite.siteStatus || 'inactive',
                 site_name: cleanerSiteInfo.site_name || apiSite.site_name || 'Unnamed Site',
                 location: cleanerSiteInfo.location || apiSite.location || 'Location not specified',
@@ -71,14 +65,10 @@ const MySitesTab = ({ cleaner }) => {
                 invoice_recipient_email: cleanerSiteInfo.invoice_recipient_email || '',
                 scope_of_work: cleanerSiteInfo.scope_of_work || apiSite.scope_of_work || null,
                 additional_notes: cleanerSiteInfo.additional_notes || apiSite.additional_notes || null,
-                
-                // Use cleaner's assignedDate if available, otherwise use current date
                 assignedDate: cleanerSiteInfo.assignedDate?.$date || 
                              cleanerSiteInfo.assignedDate || 
                              apiSite.assignedDate || 
                              new Date().toISOString(),
-                
-                // Keep other important fields from API
                 organization_name: apiSite.organization_name || '',
                 wcc_site_name: apiSite.wcc_site_name || 'N/A',
                 alarm_code: apiSite.alarm_code || 'N/A',
@@ -88,14 +78,11 @@ const MySitesTab = ({ cleaner }) => {
                 everydayValuation: apiSite.everydayValuation || null,
                 start_date: apiSite.start_date || null,
                 wcc_price: apiSite.wcc_price || 0,
-                
-                // Cleaner-specific assignment details
                 induction_date: cleanerSiteInfo.induction_date || null,
                 removedDate: cleanerSiteInfo.removedDate?.$date || cleanerSiteInfo.removedDate || null,
-                _id: apiSite._id // Keep the API site ID
+                _id: apiSite._id 
               };
             } else {
-              // No matching cleaner siteInfo, use API data only
               return {
                 ...apiSite,
                 site_name: apiSite.site_name || 'Unnamed Site',
@@ -129,61 +116,42 @@ const MySitesTab = ({ cleaner }) => {
     fetchSites();
   }, [cleaner]);
 
-  // Helper function to calculate cleaning frequency from everydayValuation
   const getCleaningFrequency = (everydayValuation) => {
     if (!everydayValuation) return 'Not set';
-    
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const selectedDays = days.filter(day => everydayValuation[day]?.selected);
     
     if (selectedDays.length === 7) return 'Daily';
-    if (selectedDays.length === 5 && 
-        selectedDays.includes('Monday') && 
-        selectedDays.includes('Friday')) return 'Weekdays';
-    if (selectedDays.length === 2 && 
-        selectedDays.includes('Saturday') && 
-        selectedDays.includes('Sunday')) return 'Weekends';
+    if (selectedDays.length === 5 && selectedDays.includes('Monday') && selectedDays.includes('Friday')) return 'Weekdays';
+    if (selectedDays.length === 2 && selectedDays.includes('Saturday') && selectedDays.includes('Sunday')) return 'Weekends';
     if (selectedDays.length === 1) return `Once a week (${selectedDays[0]})`;
-    
     return `${selectedDays.length} days/week`;
   };
 
-  // Helper function to calculate monthly cost
   const calculateMonthlyCost = (everydayValuation) => {
     if (!everydayValuation) return 0;
-    
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const weeklyCost = days.reduce((total, day) => {
       return total + (everydayValuation[day]?.selected ? (everydayValuation[day]?.price || 0) : 0);
     }, 0);
-    
-    // Approximate monthly cost (4.33 weeks in a month)
     return Math.round(weeklyCost * 4.33 * 100) / 100;
   };
 
-  // Get status badge class based on site status
   const getStatusClass = (status) => {
     switch(status?.toLowerCase()) {
-      case 'active':
-        return 'status-active';
-      case 'inactive':
-        return 'status-inactive';
-      case 'pending':
-        return 'status-pending';
-      case 'completed':
-        return 'status-completed';
-      default:
-        return 'status-inactive';
+      case 'active': return 'status-active';
+      case 'inactive': return 'status-inactive';
+      case 'pending': return 'status-pending';
+      case 'completed': return 'status-completed';
+      default: return 'status-inactive';
     }
   };
 
-  // Get display text for status
   const getStatusDisplay = (status) => {
     if (!status) return 'Inactive';
     return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
-  // Filter sites based on search term
   const filteredSites = sites.filter(site => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
@@ -198,6 +166,13 @@ const MySitesTab = ({ cleaner }) => {
 
   const handleSiteClick = (site) => {
     setSelectedSite(site);
+    
+    // Auto-scroll to the details panel on tablet/mobile views
+    setTimeout(() => {
+      if (detailsPanelRef.current && window.innerWidth <= 1024) {
+        detailsPanelRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
   };
 
   if (loading) {
@@ -234,8 +209,6 @@ const MySitesTab = ({ cleaner }) => {
   return (
     <div className="my-sites-tab">
       <h2 className="section-title">My Sites</h2>
-      
-
       
       {/* Search Bar */}
       <div className="search-bar">
@@ -287,7 +260,6 @@ const MySitesTab = ({ cleaner }) => {
                       <span>{site.cleaning_frequency || getCleaningFrequency(site.everydayValuation)}</span>
                     </div>
                     
-                    
                     {site.organization_name && (
                       <div className="site-detail">
                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -324,7 +296,7 @@ const MySitesTab = ({ cleaner }) => {
 
         {/* Site Details Panel */}
         {selectedSite && (
-          <div className="site-details-panel">
+          <div className="site-details-panel" ref={detailsPanelRef}>
             <div className="panel-header">
               <h3 className="panel-title">Site Details</h3>
               <button 
@@ -391,7 +363,6 @@ const MySitesTab = ({ cleaner }) => {
                           className={`schedule-day ${data.selected ? 'selected' : ''}`}
                         >
                           <span className="day-name">{day}</span>
-
                         </div>
                       ))}
                   </div>
@@ -399,7 +370,7 @@ const MySitesTab = ({ cleaner }) => {
               )}
 
               {/* Stock Inventory Credentials */}
-              {!selectedSite?.removedDate && (<div className="detail-section" style={{border:"1px solid grey", padding:"1rem", borderRadius:"1rem"}}>
+              {!selectedSite?.removedDate && (<div className="detail-section" style={{border:"1px solid #e5e7eb", padding:"1rem", borderRadius:"8px"}}>
                 <h4 className="detail-title">Stock Inventory Credentials</h4>
                 <div className="detail-grid">
                    <div className="detail-item">

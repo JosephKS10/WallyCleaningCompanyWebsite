@@ -89,6 +89,21 @@ export const cleanerAPI = {
   }
 };
 
+export const auditAPI = {
+  // Get cleaner profile
+  getAuditsBySite: async (siteId) => {
+    try {
+      const response = await api.get(`/audits/site/${siteId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching cleaner profile:', error);
+      throw error;
+    }
+  },
+
+  
+};
+
 export const leaveAPI = {
   // Submit leave request
   submitLeaveRequest: async (leaveData) => {
