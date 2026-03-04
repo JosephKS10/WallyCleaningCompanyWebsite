@@ -10,7 +10,7 @@ import ProfileTab from '../Tabs/ProfileTab';
 import ReportsTab from '../Tabs/ReportsTab';
 import LeaveRequestTab from '../Tabs/LeaveRequestTab';
 import EmergencyRequestTab from '../Tabs/EmergencyRequestTab';
-import RectificationTab from '../Tabs/RectificationTab';
+
 import InvoiceTab from '../Tabs/InvoiceTab';
 import InductionVideosTab from '../Tabs/InductionVideosTab';
 import OrderStocksTab from '../Tabs/OrderStocksTab';
@@ -227,8 +227,7 @@ const CleanerDashboard = () => {
           {activeTab === 'videos' && <InductionVideosTab cleaner={cleaner} />}
           {activeTab === 'stocks' && <OrderStocksTab cleaner={cleaner} />}
           {activeTab === 'leave' && <LeaveRequestTab cleaner={cleaner} />}
-          {activeTab === 'rectification' && <RectificationTab cleaner={cleaner} />}
-          {activeTab === 'invoice' && <InvoiceTab cleaner={cleaner} />}
+          {/* {activeTab === 'invoice' && <InvoiceTab cleaner={cleaner} />} */}
         </main>
       </div>
     </div>
