@@ -100,7 +100,19 @@ export const auditAPI = {
       throw error;
     }
   },
-
+  uploadRectification: async (auditId, formData) => {
+    try {
+      const response = await api.post(`/audits/${auditId}/rectification`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error uploading rectification:', error);
+      throw error;
+    }
+  }
   
 };
 

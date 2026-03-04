@@ -1918,7 +1918,9 @@
 .action-btn:hover {
   background: #f3f4f6;
 }
-
+.rectification-btn{
+  width: 40vw;
+}
 .report-content {
   min-height: 500px;
 }
@@ -3563,6 +3565,11 @@
     margin: 0.5rem 0;
   }
 
+.reports-list {
+  width: fit-content;
+  margin-bottom: 2rem;
+}
+
   .sites-container,
   .reports-container,
   .tasks-notifications-section,
@@ -3709,6 +3716,7 @@
     padding-bottom: 0.5rem;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    width: 80vw;
   }
   
   .reports-list::-webkit-scrollbar {

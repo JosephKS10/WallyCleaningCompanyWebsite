@@ -4,11 +4,10 @@ import { FaFilePdf, FaFileExcel, FaFileWord, FaImage } from 'react-icons/fa';
 import { siteAPI, auditAPI } from '../../utils/api';
 
 import PDFViewerModal from '../../components/PDFViewerModal/PDFViewerModal'; 
+import RectificationModal from '../../components/RectificationModal/RectificationModal';
 
 const ReportsTab = ({ cleaner }) => {
   const [sites, setSites] = useState([]);
-
-  console.log(sites)
   const [selectedSiteId, setSelectedSiteId] = useState(null);
   
   const [audits, setAudits] = useState([]);
@@ -16,9 +15,12 @@ const ReportsTab = ({ cleaner }) => {
   const [loadingAudits, setLoadingAudits] = useState(false);
   const [error, setError] = useState(null);
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   // PDF Viewer Modal State
   const [viewPdf, setViewPdf] = useState(null);
   const [viewPdfName, setViewPdfName] = useState('');
+  const [rectificationAudit, setRectificationAudit] = useState(null);
 
   // 1. Fetch Cleaner's Sites on Mount
   useEffect(() => {
@@ -73,14 +75,12 @@ const ReportsTab = ({ cleaner }) => {
     fetchSites();
   }, [cleaner]);
 
-  // 2. Fetch Audits whenever the selected site changes
+
   useEffect(() => {
     const fetchAudits = async () => {
       if (!selectedSiteId) return;
-      
       try {
         setLoadingAudits(true);
-        // Note: If getAuditsBySite requires a token, you'll need to pass it here
         const response = await auditAPI.getAuditsBySite(selectedSiteId); 
         setAudits(response.audits || []);
       } catch (err) {
@@ -92,7 +92,7 @@ const ReportsTab = ({ cleaner }) => {
     };
 
     fetchAudits();
-  }, [selectedSiteId]);
+  }, [selectedSiteId, refreshTrigger]);
 
   // UI Helpers
   const getFileIcon = (fileName) => {
@@ -207,7 +207,6 @@ const ReportsTab = ({ cleaner }) => {
                         <th>Month/Year</th>
                         <th>Status</th>
                         <th>Score</th>
-                        <th>File</th>
                         <th>Notes</th>
                         <th>Actions</th>
                       </tr>
@@ -227,7 +226,8 @@ const ReportsTab = ({ cleaner }) => {
                                 borderRadius: '12px',
                                 fontSize: '0.75rem',
                                 fontWeight: '600',
-                                textTransform: 'capitalize'
+                                textTransform: 'capitalize',
+                                textAlign: 'left'
                               }}
                             >
                               {audit.status ? audit.status.replace('_', ' ') : 'Completed'}
@@ -240,42 +240,45 @@ const ReportsTab = ({ cleaner }) => {
                               {audit.score != null ? `${audit.score}%` : 'N/A'}
                             </strong>
                           </td>
-                          <td style={{ textAlign: 'center' }}>
-                            <button 
-                              onClick={() => handleViewFile(audit.auditFile, audit.auditFileName)}
-                              title="View Audit File"
-                              style={{ 
-                                background: 'none', 
-                                border: 'none', 
-                                cursor: 'pointer', 
-                                color: 'rgb(200, 25, 30)', 
-                                fontSize: '1.2rem' 
-                              }}
-                            >
-                              {getFileIcon(audit.auditFileName)}
-                            </button>
-                          </td>
                           <td>
                             <div title={audit.notes} style={{ maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '0.85rem', color: '#666' }}>
                               {audit.notes || 'No notes'}
                             </div>
                           </td>
-                          <td>
-                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                         <td>
+                            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                              
+                              {/* View Original Audit Button */}
                               <button 
                                 className="action-btn"
-                                onClick={() => handleViewFile(audit.auditFile, audit.auditFileName)}
+                                onClick={() => handleViewFile(audit.auditFile, audit.auditFileName || 'Audit_Report.pdf')}
                                 style={{ borderColor: 'rgb(200, 25, 30)', color: 'rgb(200, 25, 30)' }}
                               >
-                                <FiEye /> View
+                                <FiEye /> View Audit
                               </button>
                               
-                              {/* TODO: We will handle the Upload Rectification Form functionality here next */}
-                              {audit.status === 'rectification_needed' && (
-                                <button className="action-btn" style={{ borderColor: '#f59e0b', color: '#f59e0b' }}>
-                                  Upload Form
+                              {/* View Rectification File Button (Renders if file exists) */}
+                              {audit.rectificationFile && (
+                                <button 
+                                  className="action-btn"
+                                  onClick={() => handleViewFile(audit.rectificationFile, audit.rectificationFileName || 'Rectification_Report.pdf')}
+                                  style={{ borderColor: '#3b82f6', color: '#3b82f6' }}
+                                >
+                                  <FiEye /> View Rectification
                                 </button>
                               )}
+
+                              {/* Fill Rectification Form Button (Renders if pending/needed and NO file exists yet) */}
+                              {(audit.status === 'pending' || audit.status === 'rectification_needed') && !audit.rectificationFile && (
+                                <button 
+                                  className="action-btn" 
+                                  onClick={() => setRectificationAudit(audit)}
+                                  style={{ borderColor: '#f59e0b', color: '#f59e0b' }}
+                                >
+                                  Fill Rectification Form
+                                </button>
+                              )}
+
                             </div>
                           </td>
                         </tr>
@@ -300,6 +303,17 @@ const ReportsTab = ({ cleaner }) => {
           }}
         />
       )}
+
+      <RectificationModal 
+        isOpen={!!rectificationAudit}
+        audit={rectificationAudit}
+        site={sites.find(s => (s._id?.$oid || s._id) === selectedSiteId)}
+        cleaner={cleaner}
+        onClose={() => setRectificationAudit(null)}
+        onSuccess={() => {
+          setRefreshTrigger(prev => prev + 1);
+        }}
+      />
     </div>
   );
 };
