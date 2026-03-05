@@ -17,10 +17,11 @@ const ReportsTab = ({ cleaner }) => {
 
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // PDF Viewer Modal State
-  const [viewPdf, setViewPdf] = useState(null);
+  const [viewPdfAuditId, setViewPdfAuditId] = useState(null); 
   const [viewPdfName, setViewPdfName] = useState('');
   const [rectificationAudit, setRectificationAudit] = useState(null);
+  const [viewPdfType, setViewPdfType] = useState('audit');
+
 
   // 1. Fetch Cleaner's Sites on Mount
   useEffect(() => {
@@ -115,12 +116,13 @@ const ReportsTab = ({ cleaner }) => {
     }
   };
 
-  const handleViewFile = (fileUrl, fileName) => {
-    if (fileUrl) {
-      setViewPdf(fileUrl);
-      setViewPdfName(fileName);
-    }
-  };
+  const handleViewFile = (auditId, fileName, type = 'audit') => {
+ if (auditId) {
+    setViewPdfAuditId(auditId);
+    setViewPdfName(fileName);
+    setViewPdfType(type);
+  }
+};
 
   if (loadingSites) {
     return (
@@ -249,9 +251,9 @@ const ReportsTab = ({ cleaner }) => {
                             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                               
                               {/* View Original Audit Button */}
-                              <button 
+                              <button
                                 className="action-btn"
-                                onClick={() => handleViewFile(audit.auditFile, audit.auditFileName || 'Audit_Report.pdf')}
+                                onClick={() => handleViewFile(audit._id, audit.auditFileName || 'Audit_Report.pdf')}
                                 style={{ borderColor: 'rgb(200, 25, 30)', color: 'rgb(200, 25, 30)' }}
                               >
                                 <FiEye /> View Audit
@@ -259,9 +261,9 @@ const ReportsTab = ({ cleaner }) => {
                               
                               {/* View Rectification File Button (Renders if file exists) */}
                               {audit.rectificationFile && (
-                                <button 
+                                <button
                                   className="action-btn"
-                                  onClick={() => handleViewFile(audit.rectificationFile, audit.rectificationFileName || 'Rectification_Report.pdf')}
+                                  onClick={() => handleViewFile(audit._id, audit.rectificationFileName || 'Rectification_Report.pdf', 'rectification')}
                                   style={{ borderColor: '#3b82f6', color: '#3b82f6' }}
                                 >
                                   <FiEye /> View Rectification
@@ -292,17 +294,12 @@ const ReportsTab = ({ cleaner }) => {
         </div>
       </div>
 
-      {/* Audit PDF Viewer Modal */}
-      {viewPdf && (
-        <PDFViewerModal 
-          fileUrl={viewPdf}
-          fileName={viewPdfName}
-          onClose={() => {
-            setViewPdf(null);
-            setViewPdfName('');
-          }}
-        />
-      )}
+     <PDFViewerModal
+        auditId={viewPdfAuditId}
+        fileName={viewPdfName}
+        fileType={viewPdfType}
+        onClose={() => { setViewPdfAuditId(null); setViewPdfName(''); setViewPdfType('audit'); }}
+      />
 
       <RectificationModal 
         isOpen={!!rectificationAudit}

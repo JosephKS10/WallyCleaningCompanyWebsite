@@ -1,45 +1,86 @@
-import React, { useState } from 'react';
-import { FiX, FiDownload, FiExternalLink, FiGlobe } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { FiX, FiDownload, FiExternalLink, FiAlertCircle } from 'react-icons/fi';
+import { auditAPI } from '../../utils/api';
 import './PDFViewerModal.css';
 
-const PDFViewerModal = ({ fileUrl, fileName, onClose }) => {
-  // Toggle between Native viewer and Google Docs Viewer
-  const [useGoogleViewer, setUseGoogleViewer] = useState(true);
+const PDFViewerModal = ({ auditId, fileName, fileType = 'audit', onClose }) => {
 
-  if (!fileUrl) return null;
 
-  // If using Google Viewer, wrap the URL
-    const viewerUrl = useGoogleViewer 
-        ? `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`
-        : fileUrl;
+
+    
+  const [blobUrl, setBlobUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (!auditId) return;
+
+    let objectUrl = null;
+    
+
+    const fetchPdf = async () => {
+      try {
+        setLoading(true);
+        setError(false);
+        objectUrl = fileType === 'rectification'
+        ?  await auditAPI.getRectificationFile(auditId)
+        :  await auditAPI.getAuditFile(auditId);
+        setBlobUrl(objectUrl);
+      } catch (err) {
+        console.error('Error loading PDF:', err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPdf();
+
+    // Cleanup blob URL on unmount to free memory
+    return () => {
+      if (objectUrl) URL.revokeObjectURL(objectUrl);
+    };
+  }, [auditId]);
+
+  if (!auditId) return null;
+
+  const handleDownload = () => {
+    if (!blobUrl) return;
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = fileName || 'document.pdf';
+    link.click();
+  };
+
+  const handleOpenNewTab = () => {
+    if (blobUrl) window.open(blobUrl, '_blank');
+  };
 
   return (
     <div className="pdf-modal-overlay" onClick={onClose}>
       <div className="pdf-modal-content" onClick={e => e.stopPropagation()}>
-        
+
         <div className="pdf-modal-header">
           <div className="pdf-modal-title-group">
-            <h3>{fileName || 'View Audit'}</h3>
-            
-            {/* Toggle Button Logic */}
-            <button 
-              className={`pdf-mode-btn ${!useGoogleViewer ? 'active' : ''}`}
-              onClick={() => setUseGoogleViewer(!useGoogleViewer)}
-            >
-              <FiGlobe /> {useGoogleViewer ? 'Switch to Native View' : 'Switch to Google View'}
-            </button>
+            <h3>{fileName || 'View Document'}</h3>
           </div>
-
           <div className="pdf-modal-actions">
-            {/* The actual download button stays here */}
-            {/* This is the ONLY thing that should download the file now */}
-            <a href={fileUrl} download className="pdf-action-btn" title="Download">
+            <button
+              className="pdf-action-btn"
+              onClick={handleDownload}
+              disabled={!blobUrl}
+              title="Download"
+            >
               <FiDownload />
-            </a>
-            
-            <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="pdf-action-btn" title="Open in new tab">
+            </button>
+            <button
+              className="pdf-action-btn"
+              onClick={handleOpenNewTab}
+              disabled={!blobUrl}
+              title="Open in new tab"
+            >
               <FiExternalLink />
-            </a>
+            </button>
             <button className="pdf-close-btn" onClick={onClose}>
               <FiX />
             </button>
@@ -47,15 +88,47 @@ const PDFViewerModal = ({ fileUrl, fileName, onClose }) => {
         </div>
 
         <div className="pdf-modal-body">
-          <iframe 
-            src={viewerUrl} 
-            title="PDF Preview"
-            width="100%" 
-            height="100%" 
-            style={{ border: 'none' }}
-          />
-        </div>
+          {loading && (
+            <div style={{
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center',
+              height: '100%', gap: '16px', color: '#fff'
+            }}>
+              <div className="spinner" />
+              <p>Loading document...</p>
+            </div>
+          )}
 
+          {error && !loading && (
+            <div style={{
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center',
+              height: '100%', gap: '16px', color: '#fff'
+            }}>
+              <FiAlertCircle size={40} />
+              <p>Failed to load document.</p>
+              <button
+                onClick={handleDownload}
+                style={{
+                  padding: '10px 20px', background: '#C8191E',
+                  color: 'white', borderRadius: '8px', border: 'none', cursor: 'pointer'
+                }}
+              >
+                Try Downloading Instead
+              </button>
+            </div>
+          )}
+
+          {blobUrl && !loading && (
+            <iframe
+              src={blobUrl}
+              title={fileName || 'Document Preview'}
+              width="100%"
+              height="100%"
+              style={{ border: 'none' }}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

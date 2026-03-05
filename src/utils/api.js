@@ -100,6 +100,31 @@ export const auditAPI = {
       throw error;
     }
   },
+
+  getAuditFile: async (auditId) => {
+    try {
+      const response = await api.get(`/audits/${auditId}/file`, {
+        responseType: 'blob',
+      });
+      return URL.createObjectURL(response.data);
+    } catch (error) {
+      console.error('Error fetching audit file:', error);
+      throw error;
+    }
+  },
+
+  getRectificationFile: async (auditId) => {
+  try {
+    const response = await api.get(`/audits/${auditId}/rectification-file`, {
+      responseType: 'blob',
+    });
+    return URL.createObjectURL(response.data);
+  } catch (error) {
+    console.error('Error fetching rectification file:', error);
+    throw error;
+  }
+},
+
   uploadRectification: async (auditId, formData) => {
     try {
       const response = await api.post(`/audits/${auditId}/rectification`, formData, {
