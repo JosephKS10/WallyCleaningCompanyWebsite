@@ -478,8 +478,6 @@
 .profile-display-card {
   background: white;
   border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   display: flex;
   gap: 2rem;
   align-items: center;
@@ -492,6 +490,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  margin-left: 1rem;
 }
 
 .profile-picture-large, 
@@ -631,7 +630,6 @@
 }
 
 .calendar-day {
-  aspect-ratio: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -639,7 +637,7 @@
   cursor: pointer;
   transition: all 0.2s;
   position: relative;
-  padding-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
 }
 
 .calendar-day.other-month {
@@ -670,7 +668,7 @@
   height: 6px;
   border-radius: 50%;
   position: relative;
-  bottom: 2px;
+  bottom: 1.5px;
 }
 
 .task-legend {
@@ -802,6 +800,9 @@
   text-align: center;
   padding: 2rem 1rem;
   color: #666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .empty-tasks svg {
@@ -874,6 +875,24 @@
 .notification-time {
   font-size: 0.7rem;
   color: #888;
+}
+
+.empty-notifications{
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.empty-notifications svg {
+  margin-bottom: 0.5rem;
+}
+
+.empty-notifications p {
+  margin: 0;
+  font-size: 0.9rem;
 }
 
 /* Profile Photo Modal */
@@ -3615,7 +3634,11 @@
     min-height: auto; 
     width: 92.5vw;
   }
-  
+  .profile-display-card{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
   .stats-grid,
   .sites-grid,
   .quick-stats {
@@ -3776,6 +3799,19 @@
   }
   .sidebar-link svg {
     margin-right: 0;
+  }
+
+  .calendar-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .calendar-section{
+    padding: 1rem;
+    width: 100%;
+  }
+  .calendar-day {
+    min-width: 100%;
+    width: 100%;
   }
   .schedule-grid {
     grid-template-columns: repeat(2, 1fr); /* Drop to 2 days per row instead of 3 on tiny screens */
