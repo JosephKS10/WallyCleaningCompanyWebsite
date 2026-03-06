@@ -9,7 +9,7 @@ import RectificationModal from '../../components/RectificationModal/Rectificatio
 const ReportsTab = ({ cleaner }) => {
   const [sites, setSites] = useState([]);
   const [selectedSiteId, setSelectedSiteId] = useState(null);
-  
+  console.log(sites)
   const [audits, setAudits] = useState([]);
   const [loadingSites, setLoadingSites] = useState(true);
   const [loadingAudits, setLoadingAudits] = useState(false);
