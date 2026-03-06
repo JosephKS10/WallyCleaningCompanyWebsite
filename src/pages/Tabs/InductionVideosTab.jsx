@@ -17,14 +17,6 @@ const InductionVideosTab = ({ cleaner }) => {
       category: 'General Induction'
     },
     {
-      id: 'dQw4w9WgXcQ', 
-      title: 'Cleaning Equipment Usage and Maintenance',
-      description: 'Proper use and maintenance of cleaning equipment and supplies',
-      duration: '18:20',
-      uploadDate: '2024-01-25',
-      category: 'Equipment'
-    },
-    {
       id: 'CN1DGd-c3IA', 
       title: 'AEC Induction Video',
       description: 'Tips for managing your time effectively and working efficiently',

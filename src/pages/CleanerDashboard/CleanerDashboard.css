@@ -364,7 +364,7 @@
   background: white;
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 2rem;
 }
 
@@ -379,8 +379,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background: #f9fafb;
   border-radius: 6px;
+  border: 1px solid #e5e7eb;
   border-left: 4px solid rgb(200, 25, 30);
 }
 
@@ -413,9 +413,9 @@
   display: flex;
   align-items: center;
   padding: 1rem;
-  background: #f9fafb;
   border-radius: 8px;
   border-left: 4px solid rgb(200, 25, 30);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .stat-icon {
@@ -1338,13 +1338,12 @@
 .schedule-tab {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 }
 
 .schedule-header {
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 1.5rem;
 }
 
@@ -1370,12 +1369,13 @@
 }
 
 .weekly-schedule {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  width: 100%;
+
+  
 }
 
 .week-header {
+  width: 100%;
   margin-bottom: 1rem;
 }
 
@@ -1405,14 +1405,11 @@
 }
 .week-grid-wrapper {
   width: 100%;
-  overflow-x: auto;
-  padding-bottom: 10px; /* Leave space for the scrollbar */
 }
 .week-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
-  min-width: 1000px; /* Forces horizontal scroll on tablets instead of squishing */
 }
 /* Helper to prevent long locations from breaking the card layout */
 .truncate-text {
@@ -1504,7 +1501,22 @@
   padding: 2rem 1rem;
   color: #999;
   font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
+.no-assignments svg {
+  width: 40px;
+  height: 40px;
+  color: #e5e7eb;
+}
+.no-assignments p {
+  margin: 0;
+  font-size: 0.9rem;
+
+}
+
 
 .schedule-stats {
   display: grid;
@@ -2016,12 +2028,15 @@
   text-align: center;
   padding: 4rem 2rem;
   color: #666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.coming-soon h4 {
-  margin: 1rem 0 0.5rem 0;
-  font-size: 1.1rem;
+.coming-soon svg {
+  margin-bottom: 1rem;
 }
+
 
 .payment-summary {
   display: grid;
@@ -3816,4 +3831,32 @@
   .schedule-grid {
     grid-template-columns: repeat(2, 1fr); /* Drop to 2 days per row instead of 3 on tiny screens */
   }
+  .schedule-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .week-header{
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .current-week h3{
+    font-size: 0.8rem;
+    text-align: center;
+  }
+  .recent-requests {
+    width: 100%;
+    overflow-x: auto;
+  }
+  .requests-table {
+    width: 100%;  
+    overflow-x: auto;
+  }
+  .requests-table table {
+    width: 100%;
+  }
+  .requests-table th{
+    font-size: 0.75rem;
+  }
+  
 }

@@ -373,7 +373,7 @@ const OverviewTab = ({ cleaner }) => {
       
       {/* Recent Assignments (Keep existing) */}
       <div className="recent-activity">
-        <h3 className="section-subtitle">Recent Site Assignments</h3>
+        <h3 className="section-subtitle">Recent Site Assignments</h3><br />
         {cleaner?.siteInfo && cleaner.siteInfo.length > 0 ? (
           <div className="activity-list">
             {cleaner.siteInfo.slice(0, 5).map((site, index) => (

@@ -6,7 +6,7 @@ const ProfileTab = ({ cleaner }) => {
   const sections = [
     { id: 'personal', label: 'Personal Info' },
     { id: 'contractor', label: 'Contractor Details' },
-    { id: 'documents', label: 'Documents' },
+    // { id: 'documents', label: 'Documents' },
     { id: 'induction', label: 'Induction Status' },
     { id: 'contract', label: 'Contract Details' }
   ];
@@ -180,7 +180,7 @@ const ProfileTab = ({ cleaner }) => {
           </div>
         )}
 
-        {activeSection === 'documents' && cleaner?.documents && (
+        {/* {activeSection === 'documents' && cleaner?.documents && (
           <div className="profile-section">
             <h3 className="section-subtitle">Documents</h3>
             <div className="documents-grid">
@@ -219,11 +219,11 @@ const ProfileTab = ({ cleaner }) => {
               )}
             </div>
           </div>
-        )}
+        )} */}
 
         {activeSection === 'induction' && (
           <div className="profile-section">
-            <h3 className="section-subtitle">Induction Status</h3>
+            <h3 className="section-subtitle">Induction Status</h3><br />
             <div className="induction-steps">
               <div className={`induction-step ${cleaner?.siteInfoCheck === 'Accepted' ? 'completed' : ''}`}>
                 <div className="step-icon">1</div>
@@ -273,7 +273,7 @@ const ProfileTab = ({ cleaner }) => {
 
         {activeSection === 'contract' && cleaner?.contractDetails && (
           <div className="profile-section">
-            <h3 className="section-subtitle">Contract Details</h3>
+            <h3 className="section-subtitle">Contract Details</h3><br />
             <div className="contract-details">
               <div className="info-grid">
                 <div className="info-item">
