@@ -222,14 +222,11 @@ const ReportsTab = ({ cleaner }) => {
                           <td>
                             <span 
                               style={{ 
-                                backgroundColor: getStatusColor(audit.status), 
-                                color: 'white',
-                                padding: '4px 10px',
-                                borderRadius: '12px',
+                                color: getStatusColor(audit.status),
                                 fontSize: '0.75rem',
                                 fontWeight: '600',
                                 textTransform: 'capitalize',
-                                textAlign: 'left'
+                                textAlign: "justify",
                               }}
                             >
                               {audit.status ? audit.status.replace('_', ' ') : 'Completed'}
