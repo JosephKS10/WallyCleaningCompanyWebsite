@@ -141,6 +141,19 @@ export const auditAPI = {
   
 };
 
+export const orderAPI = {
+  // Fetch orders for a specific site
+  getOrdersBySite: async (siteId) => {
+    try {
+      const response = await api.get(`/orders/site/${siteId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      throw error;
+    }
+  }
+};
+
 export const leaveAPI = {
   // Submit leave request
   submitLeaveRequest: async (leaveData) => {
@@ -152,6 +165,7 @@ export const leaveAPI = {
       throw error;
     }
   },
+
 
   // Get cleaner's leave requests
   getCleanerLeaves: async (params = {}) => {
