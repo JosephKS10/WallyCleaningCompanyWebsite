@@ -1,3 +1,0 @@
-RewriteEngine On
-RewriteCond %{HTTP_HOST} ^(?:www\.)?fbifacilitysolutions\.com\.au$ [NC]
-RewriteRule ^(.*)$ https://cleaningproductsmelbourne.com.au/$1 [R=301,L]

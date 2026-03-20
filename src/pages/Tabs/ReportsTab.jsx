@@ -234,7 +234,7 @@ const ReportsTab = ({ cleaner }) => {
                           </td>
                           <td>
                             <strong style={{ 
-                              color: audit.score >= 80 ? '#10b981' : audit.score >= 60 ? '#f59e0b' : '#ef4444' 
+                              color: audit.score >= 80 ? '#22A82A' : audit.score >= 60 ? '#f59e0b' : '#ef4444' 
                             }}>
                               {audit.score != null ? `${audit.score}%` : 'N/A'}
                             </strong>

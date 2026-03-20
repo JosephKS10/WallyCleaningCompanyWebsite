@@ -7,7 +7,7 @@ const FAQ = () => {
   const faqs = [
     {
       question: "What areas in Melbourne do you service?",
-      answer: "FBI Facility Solutions provides commercial and industrial cleaning services across all Melbourne suburbs, including Chadstone, CBD, and surrounding areas within a 50km radius. We service offices, factories, aged care facilities, childcare centres, and more."
+      answer: "SuperPro Services provides commercial and industrial cleaning services across all Melbourne suburbs, including Chadstone, CBD, and surrounding areas within a 50km radius. We service offices, factories, aged care facilities, childcare centres, and more."
     },
     {
       question: "What types of commercial cleaning services do you offer?",
@@ -19,14 +19,14 @@ const FAQ = () => {
     },
     {
       question: "Are your cleaners police checked and insured?",
-      answer: "Yes, all FBI Facility Solutions cleaners undergo police checks and Working with Children checks where required. We maintain comprehensive insurance coverage for all our cleaning operations."
+      answer: "Yes, all SuperPro Services cleaners undergo police checks and Working with Children checks where required. We maintain comprehensive insurance coverage for all our cleaning operations."
     },
     {
       question: "Do you provide cleaning supplies and equipment?",
       answer: "Yes, we supply all necessary cleaning products, equipment, and consumables. We also offer bulk supply of cleaning consumables at competitive prices for businesses that prefer to manage their own supplies."
     },
     {
-      question: "What makes FBI Facility Solutions different from other cleaning companies?",
+      question: "What makes SuperPro Services different from other cleaning companies?",
       answer: "We're a family-owned Melbourne business established in 2002. Our commitment to quality, reliability, and personalized service sets us apart. We treat every client facility with the same care as if it were our own."
     }
   ];

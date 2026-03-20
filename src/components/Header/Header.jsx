@@ -158,13 +158,13 @@ const Header = () => {
             <Link to="/apply" className="header-nav-link">
               Careers
             </Link>
-            <Link 
+            {/* <Link 
               to="/our-team" 
               className="header-nav-link"
               onClick={() => setIsMenuOpen(false)}
             >
               Our Team
-            </Link>
+            </Link> */}
             <Link to="/#contact" className="header-nav-link">
               <button onClick={scrollToContact} className="header-nav-btn">
                 Contact Us

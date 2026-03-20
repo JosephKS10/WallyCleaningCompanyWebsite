@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 
 const SEO = ({
-  title = "FBI Facility Solutions - Professional Commercial Cleaning Services Melbourne",
-  description = "FBI Facility Solutions provides premium commercial cleaning, industrial cleaning, and facility management services throughout Melbourne. Family-owned since 2002. Call 1300 424 066.",
+  title = "SuperPro Services - Professional Commercial Cleaning Services Melbourne",
+  description = "SuperPro Services provides premium commercial cleaning, industrial cleaning, and facility management services throughout Melbourne.",
   keywords = "commercial cleaning Melbourne, industrial cleaning services, office cleaning Chadstone, facility management Melbourne, aged care cleaning, childcare cleaning, retail cleaning services",
   canonicalUrl,
   ogImage = "/images/team/our-team.jpg",
@@ -10,7 +10,7 @@ const SEO = ({
   structuredData,
   noindex = false,
 }) => {
-  const siteUrl = "https://fbifacilitysolutions.com.au"; // Replace with your actual domain
+  const siteUrl = "https://superproservices.com.au"; // Replace with your actual domain
   const fullCanonicalUrl = canonicalUrl || siteUrl;
 
   return (
@@ -37,7 +37,7 @@ const SEO = ({
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={`${siteUrl}${ogImage}`} />
-      <meta property="og:site_name" content="FBI Facility Solutions" />
+      <meta property="og:site_name" content="SuperPro Services" />
       <meta property="og:locale" content="en_AU" />
 
       {/* Twitter */}
@@ -50,8 +50,8 @@ const SEO = ({
       {/* Geographic Tags */}
       <meta name="geo.region" content="AU-VIC" />
       <meta name="geo.placename" content="Melbourne" />
-      <meta name="geo.position" content="-37.8136;145.0877" />
-      <meta name="ICBM" content="-37.8136, 145.0877" />
+      <meta name="geo.position" content="" />
+      <meta name="ICBM" content="" />
 
       {/* Structured Data */}
       {structuredData && (

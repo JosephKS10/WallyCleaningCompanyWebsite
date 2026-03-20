@@ -51,7 +51,7 @@
 .cleaner-auth-error {
   background-color: #fee;
   border: 1px solid #fcc;
-  color: #c00;
+  color: #dc2626;
   padding: 0.75rem 1rem;
   border-radius: 6px;
   margin-bottom: 1.5rem;
@@ -86,8 +86,8 @@
 
 .form-input:focus {
   outline: none;
-  border-color: rgb(200, 25, 30);
-  box-shadow: 0 0 0 3px rgba(200, 25, 30, 0.1);
+  border-color: #22A82A;
+  box-shadow: 0 0 0 3px rgba(34, 168, 42, 0.1);
 }
 
 .form-input.error {
@@ -161,14 +161,14 @@
 }
 
 .forgot-password-link {
-  color: rgb(200, 25, 30);
+  color: #22A82A;
   font-size: 0.9rem;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .forgot-password-link:hover {
-  color: rgb(150, 20, 25);
+  color: #22A82A;
   text-decoration: underline;
 }
 
@@ -176,8 +176,8 @@
   width: 100%;
   background: linear-gradient(
     135deg,
-    rgb(200, 25, 30) 0%,
-    rgb(210, 72, 45) 100%
+    rgb(34, 168, 42) 0%,
+    rgb(34, 168, 42) 100%
   );
   color: white;
   border: none;
@@ -196,7 +196,7 @@
 
 .cleaner-auth-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(200, 25, 30, 0.3);
+  box-shadow: 0 4px 12px rgba(34, 168, 42, 0.3);
 }
 
 .cleaner-auth-btn:active:not(:disabled) {
@@ -236,14 +236,14 @@
 }
 
 .cleaner-auth-footer-link {
-  color: rgb(200, 25, 30);
+  color: rgb(34, 168, 42);
   font-weight: 500;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .cleaner-auth-footer-link:hover {
-  color: rgb(150, 20, 25);
+  color: rgb(34, 168, 42);
   text-decoration: underline;
 }
 

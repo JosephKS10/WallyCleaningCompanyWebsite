@@ -58,17 +58,17 @@
 }
 
 .faq-question:hover {
-  color: rgb(200, 25, 30);
+ color: #22A82A;
 }
 
 .faq-question.active {
-  color: rgb(200, 25, 30);
+  color: #22A82A;
 }
 
 .faq-icon {
   font-size: 1.5rem;
   font-weight: 300;
-  color: rgb(200, 25, 30);
+  color: #22A82A;
   flex-shrink: 0;
   margin-left: 1rem;
 }

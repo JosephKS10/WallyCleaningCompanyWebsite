@@ -18,7 +18,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid #e5e7eb;
-  border-top-color: rgb(200, 25, 30);
+  border-top-color: #22A82A;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -47,8 +47,8 @@
 .refresh-btn {
   background: linear-gradient(
     135deg,
-    rgb(200, 25, 30) 0%,
-    rgb(210, 72, 45) 100%
+    rgb(34, 168, 42) 0%,
+    rgb(34, 168, 42) 100%
   );
   color: white;
   border: none;
@@ -102,8 +102,8 @@
 .logout-btn {
   background: linear-gradient(
     135deg,
-    rgb(200, 25, 30) 0%,
-    rgb(210, 72, 45) 100%
+    rgb(34, 168, 42) 0%,
+    rgb(34, 168, 42) 100%
   );
   color: white;
   border: none;
@@ -225,7 +225,7 @@
 }
 
 .sidebar-link.active {
-  background-color: rgb(200, 25, 30);
+  background-color: #22A82A;
   color: white;
 }
 
@@ -340,7 +340,7 @@
   border-radius: 8px;
   padding: 1.5rem;
   color: #000;
-  border: 1px solid rgb(200, 25, 30);
+  border: 1px solid #22A82A;
 }
 .stat-card:hover {
   box-shadow: 0 4px 12px rgba(200, 25, 30, 0.2);
@@ -381,7 +381,7 @@
   padding: 1rem;
   border-radius: 6px;
   border: 1px solid #e5e7eb;
-  border-left: 4px solid rgb(200, 25, 30);
+  border-left: 4px solid #22A82A;
 }
 
 .activity-info h4 {
@@ -414,7 +414,7 @@
   align-items: center;
   padding: 1rem;
   border-radius: 8px;
-  border-left: 4px solid rgb(200, 25, 30);
+  border-left: 4px solid #22A82A;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -510,7 +510,7 @@
 }
 
 .edit-photo-btn {
-  background: rgb(200, 25, 30);
+  background: #22A82A;
   color: white;
   border: none;
   padding: 0.6rem;
@@ -528,7 +528,7 @@
 }
 
 .edit-photo-btn:hover {
-  background: rgb(180, 20, 25);
+  background: #197f20;
   transform: translateY(-1px);
 }
 
@@ -645,8 +645,8 @@
 }
 
 .calendar-day.today {
-  border: 1px solid rgb(200, 25, 30);
-  color: rgb(200, 25, 30);
+  border: 1px solid #22A82A;
+  color: #22A82A;
 }
 
 .calendar-day:hover:not(.other-month) {
@@ -654,7 +654,7 @@
 }
 
 .calendar-day.today:hover {
-  background-color: rgb(180, 20, 25);
+  background-color: #22A82A;
   color: white;
 }
 
@@ -730,7 +730,7 @@
   background: #f9fafb;
   border-radius: 8px;
   padding: 1rem;
-  border-left: 3px solid rgb(200, 25, 30);
+  border-left: 3px solid #22A82A;
 }
 
 .task-header {
@@ -782,8 +782,8 @@
 
 .task-action-btn {
   background: none;
-  border: 1px solid rgb(200, 25, 30);
-  color: rgb(200, 25, 30);
+  border: 1px solid #22A82A;
+  color: #22A82A;
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -792,7 +792,7 @@
 }
 
 .task-action-btn:hover {
-  background-color: rgb(200, 25, 30);
+  background-color: #22A82A;
   color: white;
 }
 
@@ -836,7 +836,7 @@
 
 .notification-item.unread {
   background: white;
-  border-left-color: rgb(200, 25, 30);
+  border-left-color: #22A82A;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -853,7 +853,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: rgb(200, 25, 30);
+  background-color: #22A82A;
 }
 
 .notification-content {
@@ -988,7 +988,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgb(200, 25, 30);
+  background: #22A82A;
   color: white;
   border: none;
   padding: 0.75rem 1.5rem !important;
@@ -1002,7 +1002,7 @@
 }
 
 .upload-btn:hover {
-  background: rgb(180, 20, 25);
+  background: #197f20;
 }
 
 .modal-actions {
@@ -1030,7 +1030,7 @@
 }
 
 .save-btn {
-  background: linear-gradient(135deg, rgb(200, 25, 30) 0%, rgb(210, 72, 45) 100%);
+  background: linear-gradient(135deg, #22A82A 0%, #197f20 100%);
   color: white;
   border: none;
   padding: 0.5rem 1.5rem;
@@ -1043,7 +1043,7 @@
 
 .save-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(200, 25, 30, 0.2);
+  box-shadow: 0 4px 12px rgba(34, 168, 42, 0.2);
 }
 
 .sites-container {
@@ -1079,7 +1079,7 @@
 }
 
 .site-card.selected {
-  border-color: rgb(200, 25, 30);
+  border-color: #22A82A;
   background-color: #fff5f5;
 }
 
@@ -1131,8 +1131,8 @@
 
 .view-details-btn {
   background: none;
-  border: 1px solid rgb(200, 25, 30);
-  color: rgb(200, 25, 30);
+  border: 1px solid #22A82A;
+  color: #22A82A;
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -1141,14 +1141,14 @@
 }
 
 .view-details-btn:hover {
-  background-color: rgb(200, 25, 30);
+  background-color: #22A82A;
   color: white;
 }
 
 .site-details-panel {
   background: #f9fafb;
   border-radius: 8px;
-  border-left: 4px solid rgb(200, 25, 30);
+  border-left: 4px solid #22A82A;
   padding: 1rem;
   position: sticky;
   top: 1rem;
@@ -1242,7 +1242,7 @@
 
 .link {
   font-size: 0.9rem;
-  color: rgb(200, 25, 30);
+  color: #22A82A;
   text-decoration: none;
 }
 
@@ -1273,7 +1273,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid #e5e7eb;
-  border-top-color: rgb(200, 25, 30);
+  border-top-color: #22A82A;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -1293,7 +1293,7 @@
 .status-active {
   background-color: #d1fae5;
   color: #065f46;
-  border: 1px solid #10b981;
+  border: 1px solid #22A82A;
 }
 
 .status-inactive {
@@ -1363,8 +1363,8 @@
 }
 
 .view-btn.active {
-  border-color: rgb(200, 25, 30);
-  background-color: rgb(200, 25, 30);
+  border-color: #22A82A;
+  background-color: #22A82A;
   color: white;
 }
 
@@ -1460,7 +1460,7 @@
   background: white;
   border-radius: 6px;
   padding: 0.75rem;
-  border-left: 3px solid rgb(200, 25, 30);
+  border-left: 3px solid #22A82A;
 }
 
 .assignment-header {
@@ -1667,8 +1667,8 @@
 }
 
 .profile-nav-btn.active {
-  color: rgb(200, 25, 30);
-  border-bottom: 2px solid rgb(200, 25, 30);
+  color: #22A82A;
+  border-bottom: 2px solid #22A82A;
   font-weight: 600;
 }
 
@@ -1771,8 +1771,8 @@
 .view-doc-btn {
   margin-left: auto;
   background: none;
-  border: 1px solid rgb(200, 25, 30);
-  color: rgb(200, 25, 30);
+  border: 1px solid #22A82A;
+  color: #22A82A;
   padding: 0.25rem 0.75rem;
   border-radius: 4px;
   font-size: 0.8rem;
@@ -1797,7 +1797,7 @@
 }
 
 .induction-step.completed {
-  border-left-color: #10b981;
+  border-left-color: #22A82A;
 }
 
 .step-icon {
@@ -1813,7 +1813,7 @@
 }
 
 .induction-step.completed .step-icon {
-  background: #10b981;
+  background: #22A82A;
   color: white;
 }
 
@@ -1916,7 +1916,7 @@
 }
 
 .report-item.active {
-  background: rgb(200, 25, 30);
+  background: #22A82A;
   color: #ffffff;
 }
 
@@ -2240,8 +2240,8 @@
 }
 
 .playlist-item.active {
-  background: #fff5f5;
-  border-color: rgb(200, 25, 30);
+  background: #d1fae5;
+  border-color: #22A82A;
 }
 
 .video-thumbnail {
@@ -2305,8 +2305,8 @@
 
 .video-category-small {
   font-size: 0.75rem;
-  color: rgb(200, 25, 30);
-  background: #fff5f5;
+  color: #22A82A;
+  background: #d1fae5;
   padding: 0.125rem 0.5rem;
   border-radius: 9999px;
   font-weight: 500;
@@ -2383,7 +2383,7 @@
   padding: 0.75rem;
   background: #f9fafb;
   border-radius: 8px;
-  border-left: 4px solid #10b981;
+  border-left: 4px solid #22A82A;
 }
 
 .stocks-features li svg {
@@ -2424,7 +2424,7 @@
   width: 40px;
   height: 40px;
   line-height: 40px;
-  background: rgb(200, 25, 30);
+  background: #22A82A;
   color: white;
   border-radius: 50%;
   font-weight: 700;
@@ -2461,7 +2461,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, rgb(200, 25, 30) 0%, rgb(210, 72, 45) 100%);
+  background: linear-gradient(135deg, #22A82A 0%, #22A82A 100%);
   color: white;
   border: none;
   padding: 0.75rem 1.5rem;
@@ -2475,7 +2475,7 @@
 
 .primary-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(200, 25, 30, 0.3);
+  box-shadow: 0 8px 16px rgba(34, 168, 42, 0.3);
 }
 
 .primary-btn:disabled {
@@ -2553,7 +2553,7 @@
   padding: 1rem;
   background: #f9fafb;
   border-radius: 8px;
-  border-left: 4px solid rgb(200, 25, 30);
+  border-left: 4px solid #22A82A;
 }
 
 .order-header {
@@ -2604,8 +2604,8 @@
   align-items: center;
   justify-content: center;
   background: none;
-  border: 1px solid rgb(200, 25, 30);
-  color: rgb(200, 25, 30);
+  border: 1px solid #22A82A;
+  color: #22A82A;
   padding: 0.5rem 1rem;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -2616,7 +2616,7 @@
 }
 
 .view-all-btn:hover {
-  background: rgb(200, 25, 30);
+  background: #22A82A;
   color: white;
 }
 
@@ -2699,7 +2699,7 @@
 .leave-balance {
   font-size: 2rem;
   font-weight: 700;
-  color: rgb(200, 25, 30);
+  color: #22A82A;
   margin: 0;
 }
 
@@ -2765,7 +2765,7 @@
 .leave-form-group select:focus,
 .leave-form-group textarea:focus {
   outline: none;
-  border-color: rgb(200, 25, 30);
+  border-color: #22A82A;
 }
 
 .file-hint {
@@ -2784,11 +2784,11 @@
 }
 
 
-.submit-btn {
+.leave-submit-btn {
   background: linear-gradient(
     135deg,
-    rgb(200, 25, 30) 0%,
-    rgb(210, 72, 45) 100%
+    #22A82A 0%,
+    #22A82A 100%
   );
   color: white;
   border: none;
@@ -2801,9 +2801,9 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.submit-btn:hover {
+.leave-submit-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(200, 25, 30, 0.2);
+  box-shadow: 0 4px 12px rgba(34, 168, 42, 0.2);
 }
 
 .cancel-btn {
@@ -2923,7 +2923,7 @@
 .contact-number {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #dc2626;
+  color: #22A82A;
   margin: 0.5rem 0;
 }
 
@@ -2943,8 +2943,8 @@
 .emergency-submit-btn {
   background: linear-gradient(
     135deg,
-    rgb(200, 25, 30) 0%,
-    rgb(210, 72, 45) 100%
+    #22A82A 0%,
+    #22A82A 100%
   );
   width: 80%;
   color: white;
@@ -2962,7 +2962,7 @@
 
 .emergency-submit-btn:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(200, 25, 30, 0.2);
+  box-shadow: 0 4px 12px rgba(34, 168, 42, 0.2);
 }
 
 
@@ -2974,13 +2974,13 @@
 }
 
 .site-card.selected {
-  border-color: rgb(200, 25, 30);
-  background-color: #fff5f5;
-  box-shadow: 0 2px 8px rgba(200, 25, 30, 0.1);
+  border-color: #22A82A;
+  background-color: #f0f9ff;
+  box-shadow: 0 2px 8px rgba(34, 168, 42, 0.1);
 }
 
 .site-card.selected .site-name {
-  color: rgb(200, 25, 30);
+  color: #22A82A;
 }
 
 /* Enhanced form sections */
@@ -3067,11 +3067,11 @@
 }
 
 .file-upload:hover {
-  border-color: rgb(200, 25, 30);
+  border-color: #22A82A;
 }
 
 .file-upload input[type="file"] {
-  border: 1px dashed rgb(200, 25, 30);
+  border: 1px dashed #22A82A;
   text-align: center;
 }
 
@@ -3245,7 +3245,7 @@
 .summary-value {
   font-size: 2rem;
   font-weight: 700;
-  color: rgb(200, 25, 30);
+  color: #22A82A;
   margin: 0;
 }
 
@@ -3287,7 +3287,7 @@
 .invoice-number {
   font-family: 'Courier New', monospace;
   font-weight: 600;
-  color: rgb(200, 25, 30);
+  color: #22A82A;
 }
 
 .amount {
@@ -3317,13 +3317,13 @@
 }
 
 .action-btn.preview {
-  border-color: rgb(200, 25, 30);
-  color: rgb(200, 25, 30);
+  border-color: #22A82A;
+  color: #22A82A;
 }
 
 .action-btn.download {
-  border-color: #10b981;
-  color: #10b981;
+  border-color: #22A82A;
+  color: #22A82A;
 }
 
 .action-btn.print {
@@ -3419,7 +3419,7 @@
   align-items: flex-start;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
-  border-bottom: 2px solid rgb(200, 25, 30);
+  border-bottom: 2px solid #22A82A;
 }
 
 .company-info h2 {
@@ -3442,7 +3442,7 @@
 .invoice-info h1 {
   font-size: 2.5rem;
   font-weight: 700;
-  color: rgb(200, 25, 30);
+  color: #22A82A;
   margin-bottom: 1rem;
 }
 

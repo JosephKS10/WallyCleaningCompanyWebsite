@@ -1,21 +1,21 @@
 // NAP = Name, Address, Phone - Critical for local SEO consistency
 const NAP = ({ variant = 'full', className = '' }) => {
   const businessInfo = {
-    name: "FBI Facility Solutions",
-    street: "45 Atkinson",
-    city: "Chadstone",
+    name: "SuperPro Services",
+    street: "",
+    city: "Melbourne,",
     state: "VIC",
-    postcode: "3148",
+    postcode: "",
     phone: "1300 424 066",
     phoneLink: "1300424066",
-    email: "info@fbifacilitysolution.com.au"
+    email: "info@superproservices.com.au"
   };
 
   if (variant === 'footer') {
     return (
       <div className={`nap-footer ${className}`}>
         <p><strong>{businessInfo.name}</strong></p>
-        <p>{businessInfo.street}, {businessInfo.city} {businessInfo.state} {businessInfo.postcode}</p>
+        <p>{businessInfo.street} {businessInfo.city} {businessInfo.state} {businessInfo.postcode}</p>
         <p>Phone: <a href={`tel:${businessInfo.phoneLink}`}>{businessInfo.phone}</a></p>
         <p>Email: <a href={`mailto:${businessInfo.email}`}>{businessInfo.email}</a></p>
       </div>
@@ -35,7 +35,7 @@ const NAP = ({ variant = 'full', className = '' }) => {
     <address className={`nap-full ${className}`}>
       <p className="nap-name">{businessInfo.name}</p>
       <p className="nap-street">{businessInfo.street}</p>
-      <p className="nap-city">{businessInfo.city}, {businessInfo.state} {businessInfo.postcode}</p>
+      <p className="nap-city">{businessInfo.city}{businessInfo.state}{businessInfo.postcode}</p>
       <p className="nap-phone">Phone: <a href={`tel:${businessInfo.phoneLink}`}>{businessInfo.phone}</a></p>
       <p className="nap-email">Email: <a href={`mailto:${businessInfo.email}`}>{businessInfo.email}</a></p>
     </address>

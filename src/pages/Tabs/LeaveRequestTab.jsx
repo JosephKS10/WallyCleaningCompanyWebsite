@@ -551,7 +551,7 @@ const LeaveRequestTab = ({ cleaner }) => {
        <div className="leave-form-actions">
           <button 
             type="submit" 
-            className="submit-btn"
+            className="leave-submit-btn"
             disabled={isSubmitting || validationError || !formData.selectedSites.length || !formData.startDate || !formData.endDate || (isEmergency && !formData.emergencyContactNumber)}
           >
             {isSubmitting ? (

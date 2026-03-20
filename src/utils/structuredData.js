@@ -2,33 +2,33 @@
 export const getOrganizationSchema = () => ({
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "@id": "https://fbifacilitysolutions.com.au/#organization",
-  "name": "FBI Facility Solutions",
-  "alternateName": "FBI Facility Solutions Pty Ltd",
-  "url": "https://fbifacilitysolutions.com.au",
-  "logo": "https://fbifacilitysolutions.com.au/logo.png",
+  "@id": "https://superproservices.com.au/#organization",
+  "name": "SuperPro Services",
+  "alternateName": "SuperPro Services Pty Ltd",
+  "url": "https://superproservices.com.au",
+  "logo": "https://superproservices.com.au/logo.png",
   "image": [
-    "https://fbifacilitysolutions.com.au/images/home-3.jpg",
-    "https://fbifacilitysolutions.com.au/images/home/home-1.jpg",
-    "https://fbifacilitysolutions.com.au/images/home/home-2.jpg",
-    "https://fbifacilitysolutions.com.au/images/team/our-team.jpg",
+    "https://superproservices.com.au/images/home-3.jpg",
+    "https://superproservices.com.au/images/home/home-1.jpg",
+    "https://superproservices.com.au/images/home/home-2.jpg",
+    "https://superproservices.com.au/images/team/our-team.jpg",
   ],
-  "description": "Professional commercial and industrial cleaning services in Melbourne. Family-owned business providing comprehensive facility management solutions since 2002.",
+  "description": "Professional commercial and industrial cleaning services in Melbourne. Providing comprehensive facility management solutions.",
   "telephone": "1300424066",
-  "email": "info@fbifacilitysolution.com.au",
+  "email": "info@superproservices.com.au",
   "priceRange": "$",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "45 Atkinson",
-    "addressLocality": "Chadstone",
+    "streetAddress": "",
+    "addressLocality": "",
     "addressRegion": "VIC",
-    "postalCode": "3148",
+    "postalCode": "",
     "addressCountry": "AU"
   },
   "geo": {
     "@type": "GeoCoordinates",
-    "latitude": "-37.8136",
-    "longitude": "145.0877"
+    "latitude": "",
+    "longitude": ""
   },
   "openingHoursSpecification": [
     {
@@ -53,8 +53,8 @@ export const getOrganizationSchema = () => ({
     "@type": "GeoCircle",
     "geoMidpoint": {
       "@type": "GeoCoordinates",
-      "latitude": "-37.8136",
-      "longitude": "145.0877"
+      "latitude": "",
+      "longitude": ""
     },
     "geoRadius": "50000"
   },
@@ -90,18 +90,18 @@ export const getOrganizationSchema = () => ({
 export const getWebsiteSchema = () => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": "https://fbifacilitysolutions.com.au/#website",
-  "url": "https://fbifacilitysolutions.com.au",
-  "name": "FBI Facility Solutions",
+  "@id": "https://superproservices.com.au/#website",
+  "url": "https://superproservices.com.au",
+  "name": "SuperPro Services",
   "description": "Professional Commercial Cleaning Services in Melbourne",
   "publisher": {
-    "@id": "https://fbifacilitysolutions.com.au/#organization"
+    "@id": "https://superproservices.com.au/#organization"
   },
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
       "@type": "EntryPoint",
-      "urlTemplate": "https://fbifacilitysolutions.com.au/?s={search_term_string}"
+      "urlTemplate": "https://superproservices.com.au/?s={search_term_string}"
     },
     "query-input": "required name=search_term_string"
   }

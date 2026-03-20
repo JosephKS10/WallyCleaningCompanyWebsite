@@ -290,14 +290,14 @@ const services = [
 
   return (
     <>
-    <SEO
-        title="FBI Facility Solutions - Professional Commercial Cleaning Services Melbourne"
-        description="FBI Facility Solutions provides premium commercial cleaning, industrial cleaning, aged care, childcare, and facility management services throughout Melbourne. Family-owned business since 2002. Call 1300 424 066 for a free quote."
-        keywords="commercial cleaning Melbourne, industrial cleaning services, office cleaning Chadstone, facility management Melbourne, aged care cleaning, childcare cleaning, retail cleaning services, cleaning company Melbourne, professional cleaners Melbourne"
-        canonicalUrl="https://fbifacilitysolutions.com.au/"
-        ogImage="/images/home/home-1.jpg"
-        structuredData={structuredData}
-      />
+   <SEO
+      title="SuperPro Services - Professional Commercial Cleaning Services Melbourne"
+      description="SuperPro Services provides premium commercial cleaning, industrial cleaning, aged care, childcare, and facility management services throughout Melbourne. Call 1300 424 066 for a free quote."
+      keywords="commercial cleaning Melbourne, industrial cleaning services, office cleaning, facility management Melbourne, aged care cleaning, childcare cleaning, retail cleaning services, cleaning company Melbourne, professional cleaners Melbourne"
+      canonicalUrl="https://superproservices.com.au/"
+      ogImage="/images/home/home-1.jpg"
+      structuredData={structuredData}
+    />
     <div className="home">
       {/* Hero Section */}
      <section className="hero-section">
@@ -318,10 +318,10 @@ const services = [
                   cursorCharacter="|"
                 />
               </h1>
-              <p className="hero-description">
-                FBI Facility Solutions delivers professional commercial cleaning, industrial cleaning, and comprehensive facility management services across Melbourne. Family-owned and operated since 2002, we provide quality cleaning solutions with care, consistency, and respect.
-              </p>
-              <button className="header-quote-btn" onClick={openModal}>
+             <p className="hero-description">
+              SuperPro Services delivers professional commercial cleaning, industrial cleaning, and comprehensive facility management services across Melbourne. We provide quality cleaning solutions with care, consistency, and respect.
+            </p>
+              <button className="hero-btn" onClick={openModal}>
                 Get a Free Quote
               </button>
             </div>
@@ -422,15 +422,15 @@ const services = [
       {/* Services Section */}
       <section id="services" className="services-section">
           <div className="services-container">
-            <h2 className="services-title">
-              Professional Cleaning Services Melbourne<span style={{color: "rgb(200, 25, 30)"}}>.</span>
+           <h2 className="services-title">
+              Professional Cleaning Services Melbourne<span style={{color: "#22A82A"}}>.</span>
             </h2>
             <p className="services-intro">
-              FBI Facility Solutions provides comprehensive facility management and cleaning services across Melbourne. 
-              Our commercial and industrial cleaning solutions include aged care cleaning, childcare centre cleaning, 
-              office cleaning, and specialized facility services. We also manage hygiene services, pest control, 
-              consumable products supply, and waste management for businesses throughout Victoria.
-            </p>
+            SuperPro Services provides comprehensive facility management and cleaning services across Melbourne. 
+            Our commercial and industrial cleaning solutions include aged care cleaning, childcare centre cleaning, 
+            office cleaning, and specialized facility services. We also manage hygiene services, pest control, 
+            consumable products supply, and waste management for businesses throughout Victoria.
+          </p>
             <div className="services-grid">
               {services.map(service => (
                 <div key={service.id} className="service-card">
@@ -465,14 +465,14 @@ const services = [
       <section id="contact" className="contact-section">
           <div className="contact-container">
             <div className="contact-info">
-              <h2 className="contact-title">Contact FBI Facility Solutions</h2>
-              <p className="contact-subtitle">Get a free quote for cleaning services in Melbourne</p>
-              <div className="contact-details">
-                <p className="contact-phone">Phone: <a href="tel:1300424066">1300 424 066</a></p>
-                <p className="contact-email">Email: <a href="mailto:info@fbifacilitysolution.com.au">info@fbifacilitysolution.com.au</a></p>
-                <p className="contact-address">Address: 45 Atkinson, Chadstone VIC 3148</p>
-              </div>
+            <h2 className="contact-title">Contact SuperPro Services</h2>
+            <p className="contact-subtitle">Get a free quote for cleaning services in Melbourne</p>
+            <div className="contact-details">
+              <p className="contact-phone">Phone: <a href="tel:1300424066">1300 424 066</a></p>
+              <p className="contact-email">Email: <a href="mailto:info@superproservices.com.au">info@superproservices.com.au</a></p>
+              <p className="contact-address">Address: Melbourne, VIC</p>
             </div>
+          </div>
             <div className="contact-form-container">
               <form className="contact-form" onSubmit={handleSubmit}>
                 <div className="form-group">

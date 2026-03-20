@@ -19,7 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/apply" element={<Apply />} />
-            <Route path="/our-team" element={<OurTeam />} />
+            {/* <Route path="/our-team" element={<OurTeam />} /> */}
             
             {/* Cleaner Auth Routes */}
             <Route path="/cleaner/login" element={<CleanerLogin />} />
