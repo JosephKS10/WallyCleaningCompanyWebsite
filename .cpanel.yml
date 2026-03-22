@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/fbifacil/public_html/
+    - export DEPLOYPATH=/home/superpro/public_html/
     - /bin/cp -R dist/* $DEPLOYPATH
