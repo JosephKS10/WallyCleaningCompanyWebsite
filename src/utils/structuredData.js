@@ -125,7 +125,7 @@ export const getServiceSchema = (service) => ({
   "@type": "Service",
   "serviceType": service.title,
   "provider": {
-    "@id": "https://fbifacilitysolutions.com.au/#organization"
+    "@id": "https://superproservices.com.au/#organization"
   },
   "areaServed": {
     "@type": "City",
