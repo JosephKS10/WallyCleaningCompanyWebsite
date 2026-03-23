@@ -1871,7 +1871,6 @@
   display: grid;
   grid-template-columns: 250px 1fr;
   width: 100%;
-  min-width: 0;
 }
 
 .reports-sidebar {
@@ -1879,7 +1878,6 @@
   flex-direction: column;
   gap: 1.5rem;
 
-  width: 12.5vw;
 }
 
 .sidebar-title {
@@ -1895,11 +1893,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  width: 90%;
 }
 
 .report-item {
   display: flex;
   align-items: center;
+  width: 100%;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   background: none;
@@ -1918,6 +1918,7 @@
 .report-item.active {
   background: #22A82A;
   color: #ffffff;
+  width: 100%;
 }
 
 .report-icon {
@@ -3602,7 +3603,7 @@
   }
 
 .reports-list {
-  width: fit-content;
+  width: 100%;
   margin-bottom: 2rem;
 }
 
@@ -3756,7 +3757,7 @@
     padding-bottom: 0.5rem;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    width: 80vw;
+    width: 100%;
   }
   
   .reports-list::-webkit-scrollbar {
