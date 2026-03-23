@@ -89,6 +89,32 @@ export const cleanerAPI = {
   }
 };
 
+// Shift API functions
+export const shiftAPI = {
+  // Get shifts (pass cleanerId and date ranges in params)
+  getMyShifts: async (params = {}) => {
+    try {
+      const response = await api.get('/shifts', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching shifts:', error);
+      throw error;
+    }
+  },
+
+  // Clock In or Out
+  clockInOut: async (shiftId, action) => {
+    try {
+      // action should be 'clockIn' or 'clockOut'
+      const response = await api.put(`/shifts/${shiftId}/clock`, { action });
+      return response.data;
+    } catch (error) {
+      console.error(`Error with ${action}:`, error);
+      throw error;
+    }
+  }
+};
+
 export const auditAPI = {
   // Get cleaner profile
   getAuditsBySite: async (siteId) => {

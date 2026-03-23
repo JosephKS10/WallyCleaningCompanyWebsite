@@ -1,28 +1,99 @@
 import React, { useState, useEffect } from 'react';
 import { useCleanerAuth } from '../../contexts/CleanerAuthContext';
-import {FaEdit} from 'react-icons/fa';
+import {FaEdit, FaFileAlt,FaClock, FaCheckCircle} from 'react-icons/fa';
+import { shiftAPI, siteAPI } from '../../utils/api';
 
 const OverviewTab = ({ cleaner }) => {
   const { getProfile } = useCleanerAuth();
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [profileImage, setProfileImage] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+
+  const [allShifts, setAllShifts] = useState([]);
   const [tasksForSelectedDate, setTasksForSelectedDate] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  
-  // Mock tasks data - In production, you'll fetch this from API
-  const mockTasks = [
-    { id: 1, date: '2026-01-15', site: 'Office Building A', time: '9:00 AM', status: 'pending', type: 'cleaning' },
-    { id: 2, date: '2026-01-15', site: 'Shopping Mall', time: '2:00 PM', status: 'pending', type: 'inspection' },
-    { id: 3, date: '2026-01-16', site: 'Hospital Wing', time: '10:00 AM', status: 'completed', type: 'cleaning' },
-    { id: 4, date: '2026-01-17', site: 'School Campus', time: '11:00 AM', status: 'pending', type: 'deep_clean' },
-    { id: 5, date: '2026-01-17', site: 'Office Building B', time: '3:00 PM', status: 'pending', type: 'cleaning' },
-    { id: 6, date: '2026-01-20', site: 'Apartment Complex', time: '5:00 PM', status: 'pending', type: 'cleaning' },
-    { id: 7, date: '2026-01-20', site: 'Apartment Complex', time: '5:00 PM', status: 'pending', type: 'cleaning' },
-    { id: 8, date: '2026-01-20', site: 'Apartment Complex', time: '5:00 PM', status: 'pending', type: 'cleaning' },
-  ];
-  
+
+  const [isLoadingShifts, setIsLoadingShifts] = useState(false);
   // Mock notifications - In production, you'll fetch this from API
+
+  // Modal States
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [taskSiteDetails, setTaskSiteDetails] = useState(null);
+  const [isClocking, setIsClocking] = useState(false);
+
+  // 1. Fetch real shifts when component mounts or month changes
+  useEffect(() => {
+    const fetchShifts = async () => {
+      if (!cleaner?._id) return;
+      try {
+        setIsLoadingShifts(true);
+        // Get the start and end of the current viewed month to limit data payload
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth();
+        const startDate = new Date(year, month, 1).toISOString();
+        const endDate = new Date(year, month + 1, 0).toISOString();
+
+        // Pass cleanerId to only get THIS cleaner's shifts
+        const response = await shiftAPI.getMyShifts({ 
+          cleanerId: cleaner._id,
+          startDate,
+          endDate
+        });
+
+        if (response.success) {
+          setAllShifts(response.data);
+        }
+      } catch (error) {
+        console.error("Failed to load shifts", error);
+      } finally {
+        setIsLoadingShifts(false);
+      }
+    };
+
+    fetchShifts();
+    
+    // Mock notifications for now
+    setNotifications([
+      { id: 1, title: 'Welcome', message: 'Have a great shift today!', time: '1 hour ago', read: false }
+    ]);
+  }, [cleaner._id, selectedDate]);
+
+  // 2. Filter shifts for the currently selected date
+  useEffect(() => {
+    const dateStr = selectedDate.toISOString().split('T')[0];
+    const todaysTasks = allShifts.filter(shift => {
+      const shiftDateStr = new Date(shift.date).toISOString().split('T')[0];
+      return shiftDateStr === dateStr;
+    });
+    setTasksForSelectedDate(todaysTasks);
+  }, [selectedDate, allShifts]);
+
+  // Fetch full site details when a task is clicked to get the Scope of Work
+  useEffect(() => {
+    const fetchSiteDetailsForTask = async () => {
+      if (selectedTask && selectedTask.siteId) {
+        try {
+          // selectedTask.siteId might be an object (from populate) or just an ID string
+          const siteId = selectedTask.siteId._id || selectedTask.siteId;
+          const siteData = await siteAPI.getSite(siteId);
+          if (siteData && siteData.success !== false) {
+             // Depending on how your backend wraps it, adjust accordingly. 
+             // Assuming it returns the site object directly or { success: true, data: site }
+             setTaskSiteDetails(siteData.data || siteData);
+          }
+        } catch (error) {
+          console.error("Failed to fetch site details for modal", error);
+        }
+      }
+    };
+    if (selectedTask) {
+      fetchSiteDetailsForTask();
+    } else {
+      setTaskSiteDetails(null); // Reset when modal closes
+    }
+  }, [selectedTask]);
+
   const mockNotifications = [
     { id: 1, title: 'New Site Assigned', message: 'Office Building C has been added to your sites', time: '2 hours ago', read: false },
     { id: 2, title: 'Schedule Change', message: 'Shopping Mall cleaning rescheduled to 3:00 PM', time: '1 day ago', read: true },
@@ -52,16 +123,33 @@ const OverviewTab = ({ cleaner }) => {
   // Function to get tasks count for a specific date
   const getTaskCountForDate = (date) => {
     const dateStr = date.toISOString().split('T')[0];
-    const tasks = mockTasks.filter(task => task.date === dateStr);
-    return tasks.length;
+    return allShifts.filter(shift => new Date(shift.date).toISOString().split('T')[0] === dateStr).length;
   };
-
   // Function to get dot color based on task count
   const getDotColor = (taskCount) => {
     if (taskCount === 0) return 'transparent';
     if (taskCount <= 2) return '#10B981'; // Green
     if (taskCount <= 6) return '#F59E0B'; // Orange
     return '#EF4444'; // Red
+  };
+
+  const handleClockAction = async (action) => {
+    if (!selectedTask) return;
+    try {
+      setIsClocking(true);
+      const response = await shiftAPI.clockInOut(selectedTask._id, action);
+      if (response.success) {
+        // Update the specific task in our local state to reflect the new status
+        setAllShifts(prev => prev.map(shift => 
+          shift._id === selectedTask._id ? response.data : shift
+        ));
+        setSelectedTask(response.data); // Update modal view
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || `Failed to clock ${action === 'clockIn' ? 'in' : 'out'}.`);
+    } finally {
+      setIsClocking(false);
+    }
   };
 
   // Generate calendar days for current month
@@ -119,40 +207,28 @@ const OverviewTab = ({ cleaner }) => {
 
   // Handle day click
   const handleDayClick = (dayData) => {
-    if (dayData.isCurrentMonth && dayData.date) {
-      setSelectedDate(dayData.date);
-      // Filter tasks for selected date
-      const dateStr = dayData.date.toISOString().split('T')[0];
-      const tasks = mockTasks.filter(task => task.date === dateStr);
-      setTasksForSelectedDate(tasks);
-    }
+    if (dayData.isCurrentMonth && dayData.date) setSelectedDate(dayData.date);
   };
 
   // Mark notification as read
   const markNotificationAsRead = (id) => {
-    setNotifications(prev => prev.map(notif => 
-      notif.id === id ? { ...notif, read: true } : notif
-    ));
+    setNotifications(prev => prev.map(notif => notif.id === id ? { ...notif, read: true } : notif));
   };
 
   // Get suburbs from cleaner data
   const getSuburbs = () => {
     if (!cleaner?.siteInfo) return 'Not specified';
-    const suburbs = [...new Set(cleaner.siteInfo
-      .filter(site => site.location)
-      .map(site => {
-        // Extract suburb from location (assuming format: "123 Street, Suburb, City")
-        const parts = site.location.split(',');
-        return parts.length >= 2 ? parts[1].trim() : site.location;
-      })
-    )];
+    const suburbs = [...new Set(cleaner.siteInfo.filter(site => site.location).map(site => {
+      const parts = site.location.split(',');
+      return parts.length >= 2 ? parts[1].trim() : site.location;
+    }))];
     return suburbs.join(', ') || 'Not specified';
   };
 
   // Initialize tasks for today on component mount
   useEffect(() => {
     const todayStr = new Date().toISOString().split('T')[0];
-    const todayTasks = mockTasks.filter(task => task.date === todayStr);
+    const todayTasks = allShifts.filter(task => task.date === todayStr);
     setTasksForSelectedDate(todayTasks);
     setNotifications(mockNotifications);
   }, []);
@@ -291,33 +367,37 @@ const OverviewTab = ({ cleaner }) => {
       <div className="tasks-notifications-section">
         {/* Today's Tasks */}
         <div className="tasks-section">
-          <h3 className="section-subtitle">Today's Tasks</h3>
+          <h3 className="section-subtitle">
+            Tasks for {selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+          </h3>
           <div className="tasks-list">
-
-            {/* Will be displaying the task over here Once the Calendar is integrated very soon */}
-            
-            {/* {tasksForSelectedDate.length > 0 ? (
+            {isLoadingShifts ? (
+              <div className="empty-tasks"><p>Loading tasks...</p></div>
+            ) : tasksForSelectedDate.length > 0 ? (
               tasksForSelectedDate.map(task => (
-                <div key={task.id} className="task-card">
+                <div key={task._id} className="task-card">
                   <div className="task-header">
-                    <h4>{task.site}</h4>
+                    <h4>{task.shiftName}</h4>
                     <span className={`task-status status-${task.status}`}>
-                      {task.status}
+                      {task.status.replace('_', ' ')}
                     </span>
                   </div>
                   <div className="task-details">
                     <span className="task-time">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                       </svg>
-                      {task.time}
+                      {task.siteId?.site_name || 'Site'}
                     </span>
-                    <span className="task-type">
-                      {task.type.replace('_', ' ')}
+                    <span className="task-type" style={{ textTransform: 'capitalize' }}>
+                      {task.shiftType}
                     </span>
                   </div>
-                  <button className="task-action-btn">
-                    View Details
+                  <button 
+                    className="task-action-btn"
+                    onClick={() => setSelectedTask(task)}
+                  >
+                    View Details & Clock In
                   </button>
                 </div>
               ))
@@ -326,15 +406,9 @@ const OverviewTab = ({ cleaner }) => {
                 <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
-                <p>No tasks for today</p>
+                <p>No tasks scheduled for this day</p>
               </div>
-            )} */}
-             <div className="empty-tasks">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                </svg>
-                <p>Coming Soon</p>
-              </div>
+            )}
           </div>
         </div>
         
@@ -443,6 +517,98 @@ const OverviewTab = ({ cleaner }) => {
         
 
       </div>
+
+      {selectedTask && (
+        <div className="modal-overlay" onClick={() => setSelectedTask(null)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+            <div className="modal-header">
+              <h3>Task Details</h3>
+              <button onClick={() => setSelectedTask(null)} className="close-modal">&times;</button>
+            </div>
+            <div className="modal-body task-details-modal">
+              <div className="task-modal-header">
+                <h2>{selectedTask.shiftName}</h2>
+                <span className={`status-badge status-${selectedTask.status}`}>
+                  {selectedTask.status.replace('_', ' ')}
+                </span>
+              </div>
+
+              <div className="task-info-grid">
+                <div className="info-block">
+                  <span className="info-label">Site Name</span>
+                  <p>{selectedTask.siteId?.site_name || 'N/A'}</p>
+                </div>
+                <div className="info-block">
+                  <span className="info-label">Date</span>
+                  <p>{new Date(selectedTask.date).toLocaleDateString()}</p>
+                </div>
+                <div className="info-block">
+                  <span className="info-label">Task Type</span>
+                  <p style={{ textTransform: 'capitalize' }}>{selectedTask.shiftType}</p>
+                </div>
+              </div>
+
+              {selectedTask.internalNotes && (
+                <div className="task-notes">
+                  <span className="info-label">Notes / Instructions</span>
+                  <p>{selectedTask.internalNotes}</p>
+                </div>
+              )}
+
+              {/* SCOPE OF WORK LINK */}
+              {taskSiteDetails?.scope_of_work ? (
+                <a href={taskSiteDetails.scope_of_work} target="_blank" rel="noopener noreferrer" className="scope-of-work-link">
+                  <FaFileAlt /> View Scope of Work Document
+                </a>
+              ) : (
+                <div className="scope-of-work-link disabled">
+                  <FaFileAlt /> Loading Site Details...
+                </div>
+              )}
+
+              {/* CLOCK IN / OUT SECTION */}
+              <div className="clock-section">
+                {selectedTask.status === 'pending' && (
+                  <button 
+                    className="clock-btn clock-in" 
+                    onClick={() => handleClockAction('clockIn')}
+                    disabled={isClocking}
+                  >
+                    <FaClock /> {isClocking ? 'Processing...' : 'Clock In Now'}
+                  </button>
+                )}
+
+                {selectedTask.status === 'in_progress' && (
+                  <div className="clock-active-state">
+                    <p className="clock-time-text">
+                      Clocked in at: {new Date(selectedTask.clockInTime).toLocaleTimeString()}
+                    </p>
+                    <button 
+                      className="clock-btn clock-out" 
+                      onClick={() => handleClockAction('clockOut')}
+                      disabled={isClocking}
+                    >
+                      <FaClock /> {isClocking ? 'Processing...' : 'Clock Out & Complete'}
+                    </button>
+                  </div>
+                )}
+
+                {selectedTask.status === 'completed' && (
+                  <div className="clock-completed-state">
+                    <FaCheckCircle className="completed-icon" />
+                    <div>
+                      <p><strong>Shift Completed</strong></p>
+                      <p>In: {new Date(selectedTask.clockInTime).toLocaleTimeString()}</p>
+                      <p>Out: {new Date(selectedTask.clockOutTime).toLocaleTimeString()}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Profile Photo Upload Modal */}
       {showPhotoModal && (
