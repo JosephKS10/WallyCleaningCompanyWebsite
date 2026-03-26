@@ -388,16 +388,16 @@ const RenderTimer = ({ startTime, endTime, day }) => {
   return (
      <>
       <SEO
-        title="Careers - Join FBI Facility Solutions | Cleaning Jobs Melbourne"
-        description="Join the FBI Facility Solutions team! We're hiring cleaners across Melbourne. Family-owned business offering great opportunities in commercial and industrial cleaning. Apply now."
+        title="Careers - Join Super Pro Services | Cleaning Jobs Melbourne"
+        description="Join the Super Pro Services team! We're hiring cleaners across Melbourne. Family-owned business offering great opportunities in commercial and industrial cleaning. Apply now."
         keywords="cleaning jobs Melbourne, cleaner positions, commercial cleaning careers, cleaning job opportunities Melbourne, join cleaning team"
-        canonicalUrl="https://fbifacilitysolutions.com.au/apply"
+        canonicalUrl="https://superproservices.com.au/apply"
         ogImage="/images/careers-og.jpg"
         structuredData={breadcrumbData}
       />
     <div className="apply-container">
       <div className="apply-header">
-        <h1>FBI Facility Solutions Job Application</h1>
+        <h1>Super Pro Services Job Application</h1>
         <p>{subHeading}</p>
       </div>
       

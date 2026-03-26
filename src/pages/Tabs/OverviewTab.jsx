@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useCleanerAuth } from '../../contexts/CleanerAuthContext';
-import {FaEdit, FaFileAlt,FaClock, FaCheckCircle} from 'react-icons/fa';
-import { shiftAPI, siteAPI } from '../../utils/api';
+import {FaEdit, FaFileAlt,FaClock, FaCheckCircle, FaTrash} from 'react-icons/fa';
+import { shiftAPI, siteAPI, cleanerNotificationAPI } from '../../utils/api';
+import io from 'socket.io-client';
 
 const OverviewTab = ({ cleaner }) => {
   const { getProfile } = useCleanerAuth();
@@ -15,7 +16,7 @@ const OverviewTab = ({ cleaner }) => {
   const [notifications, setNotifications] = useState([]);
 
   const [isLoadingShifts, setIsLoadingShifts] = useState(false);
-  // Mock notifications - In production, you'll fetch this from API
+
 
   // Modal States
   const [selectedTask, setSelectedTask] = useState(null);
@@ -53,10 +54,42 @@ const OverviewTab = ({ cleaner }) => {
 
     fetchShifts();
     
-    // Mock notifications for now
-    setNotifications([
-      { id: 1, title: 'Welcome', message: 'Have a great shift today!', time: '1 hour ago', read: false }
-    ]);
+    // 1. Fetch initial historical notifications
+    const fetchNotifications = async () => {
+      try {
+        const response = await cleanerNotificationAPI.getNotifications({ limit: 15 });
+        if (response.success) {
+          setNotifications(response.notifications);
+        }
+      } catch (error) {
+        console.error("Failed to load notifications", error);
+      }
+    };
+    fetchNotifications();
+
+    const SOCKET_URL = import.meta.env.VITE_API_BASE_URL 
+      ? import.meta.env.VITE_API_BASE_URL.replace('/api', '') 
+      : 'http://localhost:5001';
+      
+    const socket = io(SOCKET_URL);
+
+    socket.on('connect', () => {
+      console.log('Cleaner connected to notification socket');
+      socket.emit('join', cleaner._id); // Join their specific room
+    });
+
+    // 3. Listen for live events
+    socket.on('newCleanerNotification', (newNotif) => {
+
+      setNotifications(prev => [newNotif, ...prev]);
+    });
+
+    // Cleanup connection when they leave the tab
+    return () => {
+      socket.disconnect();
+    };
+
+    
   }, [cleaner._id, selectedDate]);
 
   // 2. Filter shifts for the currently selected date
@@ -94,12 +127,6 @@ const OverviewTab = ({ cleaner }) => {
     }
   }, [selectedTask]);
 
-  const mockNotifications = [
-    { id: 1, title: 'New Site Assigned', message: 'Office Building C has been added to your sites', time: '2 hours ago', read: false },
-    { id: 2, title: 'Schedule Change', message: 'Shopping Mall cleaning rescheduled to 3:00 PM', time: '1 day ago', read: true },
-    { id: 3, title: 'Invoice Generated', message: 'Invoice for January 2024 has been generated', time: '2 days ago', read: false },
-    { id: 4, title: 'Leave Approved', message: 'Your leave request for Jan 20-22 has been approved', time: '3 days ago', read: true },
-  ];
 
   // Calculate stats from cleaner data
   const totalSites = cleaner?.siteInfo?.length || 0;
@@ -210,9 +237,49 @@ const OverviewTab = ({ cleaner }) => {
     if (dayData.isCurrentMonth && dayData.date) setSelectedDate(dayData.date);
   };
 
-  // Mark notification as read
-  const markNotificationAsRead = (id) => {
-    setNotifications(prev => prev.map(notif => notif.id === id ? { ...notif, read: true } : notif));
+  const markNotificationAsRead = async (id) => {
+    // Optimistic UI update for immediate feedback
+    setNotifications(prev => prev.map(notif => 
+      notif._id === id ? { ...notif, isRead: true } : notif
+    ));
+    
+    try {
+      await cleanerNotificationAPI.markAsRead(id);
+    } catch (error) {
+      console.error("Failed to mark as read", error);
+    }
+  };
+
+  const markAllAsRead = async () => {
+    setNotifications(prev => prev.map(notif => ({ ...notif, isRead: true })));
+    try {
+      await cleanerNotificationAPI.markAllAsRead();
+    } catch (error) {
+      console.error("Failed to mark all as read", error);
+    }
+  };
+
+  const handleDeleteNotification = async (e, id) => {
+    e.stopPropagation(); 
+    
+    setNotifications(prev => prev.filter(notif => notif._id !== id));
+    
+    try {
+      await cleanerNotificationAPI.deleteNotification(id);
+    } catch (error) {
+      console.error("Failed to delete notification", error);
+    }
+  };
+
+
+  const formatTimeAgo = (dateString) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInHours = Math.abs(now - date) / 36e5;
+    
+    if (diffInHours < 1) return 'Just now';
+    if (diffInHours < 24) return `${Math.floor(diffInHours)} hours ago`;
+    return date.toLocaleDateString('en-AU', { month: 'short', day: 'numeric' });
   };
 
   // Get suburbs from cleaner data
@@ -230,7 +297,6 @@ const OverviewTab = ({ cleaner }) => {
     const todayStr = new Date().toISOString().split('T')[0];
     const todayTasks = allShifts.filter(task => task.date === todayStr);
     setTasksForSelectedDate(todayTasks);
-    setNotifications(mockNotifications);
   }, []);
 
   const calendarDays = generateCalendarDays();
@@ -414,33 +480,59 @@ const OverviewTab = ({ cleaner }) => {
         
         {/* Notifications */}
         <div className="notifications-section">
-          <h3 className="section-subtitle">Notifications</h3>
-          <div className="notifications-list">
-            {/* {notifications.map(notification => (
-              <div 
-                key={notification.id} 
-                className={`notification-item ${notification.read ? 'read' : 'unread'}`}
-                onClick={() => markNotificationAsRead(notification.id)}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+            <h3 className="section-subtitle" style={{ margin: 0 }}>Notifications</h3>
+            {notifications.some(n => !n.isRead) && (
+              <button 
+                onClick={markAllAsRead}
+                style={{ background: 'none', border: 'none', color: '#22A82A', cursor: 'pointer', fontSize: '0.8rem', fontWeight: '600' }}
               >
-                <div className="notification-icon">
-                  {!notification.read && (
-                    <div className="unread-indicator"></div>
+                Mark all as read
+              </button>
+            )}
+          </div>
+          
+         <div className="notifications-list">
+            {notifications.length > 0 ? (
+              notifications.map(notification => (
+                <div 
+                  key={notification._id} 
+                  className={`notification-item ${notification.isRead ? 'read' : 'unread'}`}
+                  onClick={() => !notification.isRead && markNotificationAsRead(notification._id)}
+                  // NEW: Change cursor to default if read, pointer if unread
+                  style={{ cursor: notification.isRead ? 'default' : 'pointer' }}
+                >
+                  <div className="notification-icon">
+                    {!notification.isRead && (
+                      <div className="unread-indicator"></div>
+                    )}
+                  </div>
+                  <div className="notification-content">
+                    <h4>{notification.title}</h4>
+                    <p>{notification.message}</p>
+                    <span className="notification-time">{formatTimeAgo(notification.createdAt)}</span>
+                  </div>
+                  
+                  {/* NEW: Only show the delete button if the notification has been marked as read */}
+                  {notification.isRead && (
+                    <button 
+                      className="delete-notif-btn"
+                      onClick={(e) => handleDeleteNotification(e, notification._id)}
+                      title="Delete notification"
+                    >
+                      <FaTrash />
+                    </button>
                   )}
                 </div>
-                <div className="notification-content">
-                  <h4>{notification.title}</h4>
-                  <p>{notification.message}</p>
-                  <span className="notification-time">{notification.time}</span>
-                </div>
-              </div>
-            ))} */}
-
+              ))
+            ) : (
               <div className="empty-notifications">
                 <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>  
-                <p>No new notifications </p>
+                <p>No new notifications</p>
               </div>
+            )}
           </div>
         </div>
       </div>
@@ -568,16 +660,30 @@ const OverviewTab = ({ cleaner }) => {
 
               {/* CLOCK IN / OUT SECTION */}
               <div className="clock-section">
+                
+                {/* 1. PENDING STATE (Only allow clock in if the shift is TODAY) */}
                 {selectedTask.status === 'pending' && (
-                  <button 
-                    className="clock-btn clock-in" 
-                    onClick={() => handleClockAction('clockIn')}
-                    disabled={isClocking}
-                  >
-                    <FaClock /> {isClocking ? 'Processing...' : 'Clock In Now'}
-                  </button>
+                  new Date(selectedTask.date).toDateString() === new Date().toDateString() ? (
+                    <button 
+                      className="clock-btn clock-in" 
+                      onClick={() => handleClockAction('clockIn')}
+                      disabled={isClocking}
+                    >
+                      <FaClock /> {isClocking ? 'Processing...' : 'Clock In Now'}
+                    </button>
+                  ) : (
+                    <div className="clock-completed-state" style={{ background: '#f9fafb', borderColor: '#e5e7eb', justifyContent: 'center' }}>
+                      <p style={{ color: '#6b7280', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <FaClock />
+                        {new Date(selectedTask.date).setHours(0,0,0,0) > new Date().setHours(0,0,0,0) 
+                          ? "Clock-in will be available on the day of the shift." 
+                          : "This shift's scheduled date has passed."}
+                      </p>
+                    </div>
+                  )
                 )}
 
+                {/* 2. IN PROGRESS STATE (Always allow clock out as a safety fallback) */}
                 {selectedTask.status === 'in_progress' && (
                   <div className="clock-active-state">
                     <p className="clock-time-text">
@@ -593,6 +699,7 @@ const OverviewTab = ({ cleaner }) => {
                   </div>
                 )}
 
+                {/* 3. COMPLETED STATE (Always show historical data) */}
                 {selectedTask.status === 'completed' && (
                   <div className="clock-completed-state">
                     <FaCheckCircle className="completed-icon" />

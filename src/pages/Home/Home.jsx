@@ -70,7 +70,7 @@ const services = [
       id: 1,
       title: "Commercial Cleaning Melbourne",
       content:
-        "FBI Facility Solutions specialises in commercial cleaning services across Melbourne. Since 2002, we've provided professional cleaning solutions for offices, showrooms, medical centres, and commercial facilities throughout Victoria.",
+        "Super Pro Services specialises in commercial cleaning services across Melbourne. Since 2002, we've provided professional cleaning solutions for offices, showrooms, medical centres, and commercial facilities throughout Victoria.",
       contentPoint: [
         "Office buildings – single to multi-level",
         "Showrooms – retail and wholesale",
@@ -95,7 +95,7 @@ const services = [
       id: 2,
       title: "Industrial Cleaning Services",
       content:
-        "Professional industrial cleaning services for factories, warehouses, and production facilities across Melbourne. FBI Facility Solutions delivers comprehensive industrial cleaning solutions tailored to your operational needs.",
+        "Professional industrial cleaning services for factories, warehouses, and production facilities across Melbourne. Super Pro Services delivers comprehensive industrial cleaning solutions tailored to your operational needs.",
       contentPoint: [
         "Production facilities",
         "Food processing plants",
@@ -111,7 +111,7 @@ const services = [
       id: 3,
       title: "Specialised Cleaning Services",
       content:
-        "FBI Facility Solutions offers specialised cleaning services including COVID-19 disinfection, carpet steam cleaning, floor stripping and sealing, and high-pressure cleaning across Melbourne.",
+        "Super Pro Services offers specialised cleaning services including COVID-19 disinfection, carpet steam cleaning, floor stripping and sealing, and high-pressure cleaning across Melbourne.",
       contentPoint: [
         "Infection Control / COVID-19 Cleaning – disinfection & sanitisation as per DHHS standards",
         "Steam Cleaning – carpet, rugs, soft furnishings",
@@ -129,7 +129,7 @@ const services = [
       id: 4,
       title: "Aged Care Cleaning Melbourne",
       content:
-        "Specialized aged care cleaning services in Melbourne with focus on infection control and DHHS compliance. FBI Facility Solutions understands the critical importance of hygiene in aged care facilities.",
+        "Specialized aged care cleaning services in Melbourne with focus on infection control and DHHS compliance. Super Pro Services understands the critical importance of hygiene in aged care facilities.",
       contentPoint: [],
       contentFinishing:
         "No matter the size of your centre, we have the capacity, resources and experience to deliver the desired results. Call us now for a competitive, obligation free consultation.",
@@ -140,7 +140,7 @@ const services = [
       id: 5,
       title: "Child Care Cleaning Services",
       content:
-        "Professional childcare and kindergarten cleaning services throughout Melbourne. FBI Facility Solutions prioritizes child safety with thorough disinfection and sanitization protocols for child care centres.",
+        "Professional childcare and kindergarten cleaning services throughout Melbourne. Super Pro Services prioritizes child safety with thorough disinfection and sanitization protocols for child care centres.",
       contentPoint: [],
       contentFinishing:
         "No matter the size of your centre, we have the capacity, resources and experience to deliver the desired results. Call us now for a competitive, obligation free quotation.",
@@ -151,7 +151,7 @@ const services = [
       id: 6,
       title: "Retail Cleaning Services",
       content:
-        "Premium retail cleaning services for showrooms, dealerships, and retail spaces in Melbourne. FBI Facility Solutions ensures your retail environment makes the perfect first impression.",
+        "Premium retail cleaning services for showrooms, dealerships, and retail spaces in Melbourne. Super Pro Services ensures your retail environment makes the perfect first impression.",
       contentPoint: [
         "Prestige New Car Dealerships",
         "Contemporary Furniture Showrooms",
@@ -167,7 +167,7 @@ const services = [
       id: 7,
       title: "Consumable Products Supply",
       content:
-        "Bulk cleaning consumables and supplies for businesses across Melbourne. FBI Facility Solutions manages ordering, restocking, and delivery of essential cleaning products at competitive prices.",
+        "Bulk cleaning consumables and supplies for businesses across Melbourne. Super Pro Services manages ordering, restocking, and delivery of essential cleaning products at competitive prices.",
       contentPoint: [
         "Toilet Paper",
         "Hand Towel",
@@ -184,7 +184,7 @@ const services = [
       id: 8,
       title: "Hygiene Services Melbourne",
       content:
-        "Complete hygiene services management for Melbourne businesses. FBI Facility Solutions sources, engages, and manages professional hygiene service providers for your facility.",
+        "Complete hygiene services management for Melbourne businesses. Super Pro Services sources, engages, and manages professional hygiene service providers for your facility.",
       contentPoint: [],
       contentFinishing:
         "That's one less thing for you to worry about, leaving you more time to focus on your business.",
@@ -195,7 +195,7 @@ const services = [
       id: 9,
       title: "Waste Management Services",
       content:
-        "Professional waste management solutions for businesses in Melbourne. FBI Facility Solutions coordinates waste management and recycling services tailored to your facility's needs.",
+        "Professional waste management solutions for businesses in Melbourne. Super Pro Services coordinates waste management and recycling services tailored to your facility's needs.",
       contentPoint: [],
       contentFinishing:
         "That's one less thing for you to worry about, leaving you more time to focus on your business.",
@@ -206,7 +206,7 @@ const services = [
       id: 10,
       title: "Ground Maintenance Melbourne",
       content:
-        "Professional grounds maintenance services for commercial properties across Melbourne. FBI Facility Solutions manages trusted grounds maintenance providers for your facility.",
+        "Professional grounds maintenance services for commercial properties across Melbourne. Super Pro Services manages trusted grounds maintenance providers for your facility.",
       contentPoint: [],
       contentFinishing:
         "That's one less thing for you to worry about, leaving you more time to focus on your business.",
@@ -217,7 +217,7 @@ const services = [
       id: 11,
       title: "Building Maintenance Services",
       content:
-        "Comprehensive building maintenance solutions for Melbourne commercial properties. FBI Facility Solutions coordinates all building maintenance requirements through trusted industry partners.",
+        "Comprehensive building maintenance solutions for Melbourne commercial properties. Super Pro Services coordinates all building maintenance requirements through trusted industry partners.",
       contentPoint: [],
       contentFinishing:
         "That's one less thing for you to worry about, leaving you more time to focus on your business.",
@@ -228,7 +228,7 @@ const services = [
       id: 12,
       title: "Pest Control Services Melbourne",
       content:
-        "Professional pest control management for commercial facilities in Melbourne. FBI Facility Solutions sources and manages reliable pest control providers for your business.",
+        "Professional pest control management for commercial facilities in Melbourne. Super Pro Services sources and manages reliable pest control providers for your business.",
       contentPoint: [],
       contentFinishing:
         "That's one less thing for you to worry about, leaving you more time to focus on your business.",

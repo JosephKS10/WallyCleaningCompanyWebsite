@@ -242,6 +242,8 @@
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   min-height: calc(100vh - 10rem);
+  min-width: 0;
+  max-width: 100%;
 }
 
 .section-title {
@@ -884,6 +886,7 @@
 .tasks-list {
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: 0.75rem;
   max-height: 40vh;
   overflow-y: auto;
@@ -896,6 +899,7 @@
   border-radius: 8px;
   padding: 1rem;
   border-left: 3px solid #22A82A;
+  width: 100%;
 }
 
 .task-header {
@@ -989,6 +993,7 @@
 
 .notification-item {
   display: flex;
+  align-items: center;
   gap: 1rem;
   padding: 1rem;
   background: #f9fafb;
@@ -997,6 +1002,9 @@
   cursor: pointer;
   transition: all 0.2s;
   border-left: 3px solid transparent;
+}
+.notification-item.read {
+  opacity: 0.85; 
 }
 
 .notification-item.unread {
@@ -1007,6 +1015,25 @@
 
 .notification-item:hover {
   transform: translateX(4px);
+}
+
+.delete-notif-btn {
+  background: none;
+  border: none;
+  color: #ef4444; /* Alert Red */
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, transform 0.1s;
+  margin-left: 10px; /* Pushes it to the far right */
+}
+
+.delete-notif-btn:hover {
+  background-color: #fee2e2;
+  transform: scale(1.05);
 }
 
 .notification-icon {
@@ -1499,10 +1526,15 @@
 
 
 
+
+
 /* ===== SCHEDULE TAB ===== */
 .schedule-tab {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  min-width: 0; 
+  max-width: 100%;
 }
 
 .schedule-header {
@@ -1512,189 +1544,107 @@
   margin-bottom: 1.5rem;
 }
 
-.view-controls {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.view-btn {
-  background: none;
-  border: 2px solid #e5e7eb;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.view-btn.active {
-  border-color: #22A82A;
-  background-color: #22A82A;
-  color: white;
-}
-
-.weekly-schedule {
+.calendar-responsive-wrapper {
   width: 100%;
-
-  
-}
-
-.week-header {
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
-.week-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.nav-btn {
-  background: none;
-  border: 1px solid #e5e7eb;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.current-week h3 {
-  margin: 0;
-  font-size: 1rem;
-  color: #000;
-}
-.week-grid-wrapper {
-  width: 100%;
-}
-.week-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-/* Helper to prevent long locations from breaking the card layout */
-.truncate-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: block;
   max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto; /* Allows swiping on mobile */
+  background-color: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  margin-bottom: 2rem;
+  /* Hides scrollbar for cleaner look, but keeps functionality */
+  scrollbar-width: none; 
+}
+.calendar-responsive-wrapper::-webkit-scrollbar {
+  display: none; 
 }
 
-.day-column {
-  background: #f9fafb;
-  border-radius: 8px;
-  padding: 0.75rem;
-  min-height: 300px;
+.rbc-calendar {
+  font-family: 'Montserrat', sans-serif;
+  border: none;
 }
 
-.day-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e5e7eb;
+.rbc-time-content {
+  display: none !important; 
 }
 
-.day-name {
-  margin: 0;
-  font-size: 0.9rem;
-  font-weight: 600;
+.rbc-time-header-gutter {
+  display: none !important; 
 }
 
-.assignment-count {
-  font-size: 0.75rem;
-  color: #666;
-  background: #e5e7eb;
-  padding: 0.125rem 0.375rem;
-  border-radius: 9999px;
+.rbc-allday-cell {
+  min-height: 350px !important;
+}
+.rbc-time-header.rbc-overflowing {
+  border-right: none !important;
 }
 
-.assignments-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.rbc-toolbar button {
+  color: #555;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 6px 12px;
+  transition: all 0.2s;
+  font-family: inherit;
 }
 
-.assignment-card {
-  background: white;
-  border-radius: 6px;
-  padding: 0.75rem;
-  border-left: 3px solid #22A82A;
+/* Override the hover and active states to be GREEN */
+.rbc-toolbar button:hover, 
+.rbc-toolbar button:active, 
+.rbc-toolbar button.rbc-active {
+  background-color: #22A82A !important;
+  color: white !important;
+  border-color: #22A82A !important;
+  box-shadow: none;
 }
 
-.assignment-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 0.5rem;
+.rbc-event {
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  padding: 4px 8px !important;
+  margin-bottom: 4px !important; 
 }
 
-.assignment-header .site-name {
-  font-size: 0.85rem;
-  margin: 0;
-  font-weight: 600;
+.rbc-event:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-.assignment-price {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #059669;
+.rbc-today {
+  background-color: #f0fdf4; /* Very subtle green tint for today */
 }
 
-.assignment-details {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+/* Public Holiday Styles */
+.public-holiday-cell {
+  background-color: #22A82A !important; /* Soft yellow background */
+  position: relative;
 }
 
-.assignment-details .detail {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: 0.75rem;
-  color: #666;
-}
-
-.no-assignments {
+.public-holiday-cell::after {
+  content: 'Public Holiday';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff; 
+  font-weight: 700;
+  font-size: 1rem;
   text-align: center;
-  padding: 2rem 1rem;
-  color: #999;
-  font-size: 0.85rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
+  opacity: 0.5; 
+  pointer-events: none; 
+  white-space: pre-wrap;
+  width: 100%;
 }
-.no-assignments svg {
-  width: 40px;
-  height: 40px;
-  color: #e5e7eb;
-}
-.no-assignments p {
-  margin: 0;
-  font-size: 0.9rem;
-
+.rbc-time-view {
+  border: 1px solid #ddd !important;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-
-.schedule-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
+.rbc-time-view .public-holiday-cell::after {
+  display: none;
 }
-
-.schedule-stats .stat-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-}
-
 
 .profile-tab {
   display: flex;

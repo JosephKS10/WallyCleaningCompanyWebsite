@@ -93,7 +93,7 @@ const RectificationModal = ({ isOpen, onClose, audit, site, cleaner, onSuccess }
       const usableWidth = pageWidth - (margin * 2);
       
       // Colors based on your theme
-      const primaryColor = [200, 25, 30]; // #C8191E Red
+      const primaryColor = [34, 168, 42]; // #22A82A Green
       const darkText = [51, 51, 51];
       const lightGray = [248, 249, 250];
       const borderColor = [220, 220, 220];
@@ -118,7 +118,7 @@ const RectificationModal = ({ isOpen, onClose, audit, site, cleaner, onSuccess }
         pdf.setTextColor(255, 255, 255);
         pdf.setFontSize(16);
         pdf.setFont('helvetica', 'bold');
-        pdf.text("FBI Facility Solutions - Rectification Report", margin, 17);
+        pdf.text("Super Pro Services - Rectification Report", margin, 17);
 
         if (logoBase64) {
           // Adjust these dimensions based on your actual logo ratio

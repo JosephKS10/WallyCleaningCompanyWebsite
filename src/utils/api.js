@@ -249,4 +249,50 @@ export const leaveAPI = {
   }
 };
 
+// Cleaner Notification API functions
+export const cleanerNotificationAPI = {
+  // Get notifications
+  getNotifications: async (params = {}) => {
+    try {
+      const response = await api.get('/cleaner-notifications', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching cleaner notifications:', error);
+      throw error;
+    }
+  },
+
+  // Mark single notification as read
+  markAsRead: async (id) => {
+    try {
+      const response = await api.patch(`/cleaner-notifications/${id}/read`);
+      return response.data;
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+      throw error;
+    }
+  },
+
+  // Mark all notifications as read
+  markAllAsRead: async () => {
+    try {
+      const response = await api.patch('/cleaner-notifications/read-all');
+      return response.data;
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+      throw error;
+    }
+  },
+
+  deleteNotification: async (id) => {
+    try {
+      const response = await api.delete(`/cleaner-notifications/${id}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+      throw error;
+    }
+  }
+};
+
 export default api;

@@ -57,10 +57,10 @@ const OurTeam = () => {
   return (
     <>
       <SEO
-        title="Our Team - FBI Facility Solutions | Family-Owned Cleaning Company Melbourne"
-        description="Meet the FBI Facility Solutions team. A family-owned cleaning business established in 2002, providing professional commercial and industrial cleaning services across Melbourne with care and commitment."
-        keywords="cleaning team Melbourne, family owned cleaning business, commercial cleaning team, professional cleaners Melbourne, FBI Facility Solutions team"
-        canonicalUrl="https://fbifacilitysolutions.com.au/our-team"
+        title="Our Team - Super Pro Services | Family-Owned Cleaning Company Melbourne"
+        description="Meet the Super Pro Services team. A family-owned cleaning business established in 2002, providing professional commercial and industrial cleaning services across Melbourne with care and commitment."
+        keywords="cleaning team Melbourne, family owned cleaning business, commercial cleaning team, professional cleaners Melbourne, Super Pro Services team"
+        canonicalUrl="https://superproservices.com.au/our-team"
         ogImage="/images/team/our-team.jpg"
         structuredData={structuredData}
       />
@@ -94,7 +94,7 @@ const OurTeam = () => {
         <div className="team-container">
           <h2 className="team-title">Melbourne's Trusted Commercial Cleaning Team</h2>
           <p className="team-description">
-            FBI Facility Solutions is a family-owned cleaning company serving Melbourne since 2002. 
+            Super Pro Services is a family-owned cleaning company serving Melbourne since 2002. 
             Our professional cleaning team shares a unified vision: delivering exceptional commercial 
             and industrial cleaning services with minimal disruption to your business operations. We 
             prioritize safety, sustainability, and competitive pricing while maintaining the highest 
