@@ -628,7 +628,7 @@ const OverviewTab = ({ cleaner }) => {
               <div className="task-info-grid">
                 <div className="info-block">
                   <span className="info-label">Site Name</span>
-                  <p>{selectedTask.siteId?.site_name || 'N/A'}</p>
+                  <p>{taskSiteDetails?.site_name || 'N/A'}</p>
                 </div>
                 <div className="info-block">
                   <span className="info-label">Date</span>

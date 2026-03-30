@@ -57,8 +57,8 @@ const ScheduleTab = ({ cleaner }) => {
         // Fetch slightly wider range to cover the whole calendar view
         const year = calendarDate.getFullYear();
         const month = calendarDate.getMonth();
-        const startDate = new Date(year, month, 1).toISOString();
-        const endDate = new Date(year, month + 1, 0).toISOString();
+        const startDate = format(new Date(year, month, 1), 'yyyy-MM-dd');
+        const endDate = format(new Date(year, month + 1, 0), 'yyyy-MM-dd');
 
         const response = await shiftAPI.getMyShifts({ 
           cleanerId: cleaner._id,
