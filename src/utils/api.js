@@ -295,4 +295,29 @@ export const cleanerNotificationAPI = {
   }
 };
 
+// Invoice / Payment Statement API functions
+export const invoiceAPI = {
+  // Fetch cleaner's payment statements (POs)
+  getMyInvoices: async () => {
+    try {
+      const response = await api.get('/pos/my-invoices');
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching invoices:', error);
+      throw error;
+    }
+  },
+
+  // Approve a payment statement
+  approveInvoice: async (poId) => {
+    try {
+      const response = await api.patch(`/pos/${poId}/status/approve`, { status: 'approved' });
+      return response.data;
+    } catch (error) {
+      console.error('Error approving invoice:', error);
+      throw error;
+    }
+  }
+};
+
 export default api;

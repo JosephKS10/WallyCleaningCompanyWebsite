@@ -2200,7 +2200,6 @@
 .history-table table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
 }
 
 .history-table th {
@@ -3282,86 +3281,42 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  width: 100%;
+  max-width: 100%;
 }
 
 .invoice-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.invoice-controls {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.month-selector {
-  display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 0.5rem;
-}
-
-.month-selector label {
-  font-weight: 500;
-  color: #000;
-  font-size: 0.9rem;
-}
-
-.month-selector select {
-  padding: 0.5rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 6px;
-  background: white;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.9rem;
-}
-
-.generate-all-btn {
-  padding: 0.5rem 1.5rem;
-  background: linear-gradient(
-    135deg,
-    rgb(200, 25, 30) 0%,
-    rgb(210, 72, 45) 100%
-  );
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 500;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.generate-all-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(200, 25, 30, 0.2);
 }
 
 .invoice-summary {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
 }
 
 .summary-card {
-  background: #f9fafb;
+  background: white;
   border-radius: 8px;
   padding: 1.5rem;
   text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
 }
 
 .summary-card h3 {
   margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .summary-value {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  color: #22A82A;
   margin: 0;
 }
 
@@ -3369,186 +3324,160 @@
   background: white;
   border-radius: 8px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+/* Make tables scrollable on mobile */
 .invoices-table {
+  width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   margin-top: 1rem;
+  border-radius: 6px;
 }
 
 .invoices-table table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 500px; /* Forces scroll on tiny screens instead of squishing */
 }
 
 .invoices-table th {
-  background: #e5e7eb;
-  padding: 0.75rem 1rem;
+  background: #f3f4f6;
+  padding: 0.85rem 1rem;
   text-align: left;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #666;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .invoices-table td {
-  padding: 0.75rem 1rem;
+  padding: 1rem;
   font-size: 0.9rem;
-  color: #000;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
 }
+
 .invoices-table tr:hover {
-  background: #f3f4f6;
+  background: #f9fafb;
 }
 
 .invoice-number {
   font-family: 'Courier New', monospace;
   font-weight: 600;
-  color: #22A82A;
 }
 
 .amount {
   font-weight: 600;
-  color: #000;
 }
 
+/* Actions */
 .actions {
   display: flex;
   gap: 0.5rem;
-  margin-top: 1rem;  
 }
 
-.action-btn.preview,
-.action-btn.download,
-.action-btn.print,
-.action-btn.close {
-  padding: 0.25rem 0.75rem;
-  border: 1px solid #e5e7eb;
-  background: white;
-  color: #666;
-  border-radius: 4px;
+.action-btn {
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   font-weight: 500;
   font-family: 'Montserrat', sans-serif;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
 }
 
 .action-btn.preview {
   border-color: #22A82A;
   color: #22A82A;
+  background: transparent;
 }
 
-.action-btn.download {
-  border-color: #22A82A;
-  color: #22A82A;
-}
-
-.action-btn.print {
-  border-color: #666;
-  color: #666;
+.action-btn.preview:hover {
+  background: #22A82A;
+  color: white;
 }
 
 .action-btn.close {
-  border-color: #dc2626;
-  color: #dc2626;
+  border-color: #d1d5db;
+  color: #4b5563;
+  background: transparent;
 }
 
-.action-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+.action-btn.close:hover {
+  background: #f3f4f6;
 }
 
+/* Modal Styling */
 .invoice-preview-modal {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
+  z-index: 1000;
   padding: 1rem;
+  backdrop-filter: blur(4px);
 }
 
-.modal-content {
+.invoice-preview-modal .modal-content {
   background: white;
-  border-radius: 8px;
-  max-width: 1000px;
+  border-radius: 12px;
+  max-width: 900px;
   width: 100%;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-.modal-header {
+.invoice-preview-modal .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
   border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  border-radius: 12px 12px 0 0;
 }
 
-.modal-header h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #000;
-  margin: 0;
-}
-
-.close-modal {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #666;
-  padding: 0;
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  line-height: 1;
-}
-
-.close-modal:hover {
-  background-color: #f3f4f6;
-}
-
-.modal-body {
+.invoice-preview-modal .modal-body {
   padding: 1.5rem;
   overflow-y: auto;
+  flex: 1;
 }
 
 .invoice-template {
   background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 2rem;
 }
 
 .invoice-header-preview {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
   border-bottom: 2px solid #22A82A;
 }
 
 .company-info h2 {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  color: #000;
-  margin-bottom: 0.5rem;
+  color: #111827;
+  margin: 0 0 0.5rem 0;
 }
 
-.company-info p {
-  color: #666;
-  font-size: 0.875rem;
-  margin-bottom: 0.25rem;
+.company-info p, .invoice-details p {
+  color: #4b5563;
+  font-size: 0.9rem;
+  margin: 0 0 0.25rem 0;
 }
 
 .invoice-info {
@@ -3556,139 +3485,134 @@
 }
 
 .invoice-info h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: 800;
   color: #22A82A;
-  margin-bottom: 1rem;
-}
-
-.invoice-details p {
-  margin-bottom: 0.25rem;
-  color: #000;
-  font-size: 0.875rem;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.05em;
 }
 
 .invoice-parties {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  gap: 1.5rem;
   margin-bottom: 2rem;
-  padding: 1rem;
+  padding: 1.5rem;
   background: #f9fafb;
   border-radius: 8px;
+  border: 1px solid #e5e7eb;
 }
 
 .invoice-parties h3 {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #666;
-  margin-bottom: 0.5rem;
+  color: #6b7280;
+  margin: 0 0 0.75rem 0;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+}
+
+.invoice-parties p {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.invoice-items {
+  margin-top: 2rem;
+  overflow-x: auto; /* Protects modal from blowing out on mobile */
 }
 
 .invoice-items table {
   width: 100%;
-  margin: 2rem 0;
   border-collapse: collapse;
+  min-width: 500px;
 }
 
 .invoice-items th {
-  background: #e5e7eb;
+  background: #f3f4f6;
   padding: 0.75rem 1rem;
   text-align: left;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  color: #4b5563;
 }
 
 .invoice-items td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #e5e7eb;
-  font-size: 0.9rem;
-  color: #000;
+  font-size: 0.95rem;
+  color: #111827;
 }
 
 .invoice-totals {
   display: flex;
   justify-content: flex-end;
-  margin: 2rem 0;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
 }
 
 .totals-table {
-  width: 300px;
+  width: 100%;
+  max-width: 300px;
 }
 
 .total-row {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 0;
-  border-bottom: 1px solid #e5e7eb;
 }
 
 .total-row.grand-total {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #000;
   border-top: 2px solid #e5e7eb;
-  border-bottom: none;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
 }
 
-.invoice-footer {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin: 2rem 0;
-  padding-top: 2rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.payment-instructions h4,
-.terms h4 {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #000;
-  margin-bottom: 0.5rem;
-}
-
-.payment-instructions p,
-.terms p {
-  font-size: 0.875rem;
-  color: #666;
-  margin-bottom: 0.25rem;
-}
-
-.signature-section {
-  padding-top: 2rem;
-  border-top: 1px solid #e5e7eb;
-}
-
-.signature {
-  float: right;
-  text-align: center;
-}
-
-.signature-line {
-  width: 200px;
-  height: 1px;
-  background: #000;
-  margin: 0.5rem 0 0.25rem;
-}
-
-.modal-actions {
+.invoice-preview-modal .modal-actions {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 1rem;
-  padding: 1.5rem;
+  padding: 1.25rem 1.5rem;
   border-top: 1px solid #e5e7eb;
+  background: #f9fafb;
+  border-radius: 0 0 12px 12px;
 }
 
-.modal-actions .action-btn {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+/* ===== MOBILE RESPONSIVENESS SPECIFIC TO INVOICES ===== */
+@media (max-width: 768px) {
+  .invoice-header-preview {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .invoice-info {
+    text-align: left;
+  }
+  
+  .invoice-parties {
+    grid-template-columns: 1fr; /* Stack "From" and "To" boxes */
+    gap: 1.5rem;
+  }
+  
+  .invoice-totals {
+    justify-content: stretch;
+  }
+  
+  .totals-table {
+    max-width: 100%; /* Make total bar span full width on mobile */
+  }
+  
+  .invoice-preview-modal .modal-actions {
+    flex-direction: column-reverse; /* Stack buttons, put "Approve" on top */
+  }
+  
+  .invoice-preview-modal .modal-actions .action-btn {
+    width: 100%;
+    padding: 0.75rem;
+    text-align: center;
+  }
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
