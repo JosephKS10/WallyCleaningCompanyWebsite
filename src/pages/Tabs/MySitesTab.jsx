@@ -353,7 +353,7 @@ const MySitesTab = ({ cleaner }) => {
               {/* Cleaning Schedule */}
               {!selectedSite?.removedDate && selectedSite.everydayValuation && (
                 <div className="detail-section">
-                  <h4 className="detail-title">Cleaning Schedule & Pricing</h4>
+                  <h4 className="detail-title">Cleaning Schedule</h4>
                   <div className="schedule-grid">
                     {Object.entries(selectedSite.everydayValuation)
                       .filter(([day, data]) => day !== '_id' && day !== '__v' && data)
@@ -384,7 +384,7 @@ const MySitesTab = ({ cleaner }) => {
                 </div>
               </div>)}
 
-              {/* Contractor & Invoice Information */}
+              {/* Contractor & Invoice Information
                  {!selectedSite?.removedDate && (<div className="detail-section">
                 <h4 className="detail-title">Invoice Details</h4>
                 <div className="detail-grid">
@@ -397,7 +397,7 @@ const MySitesTab = ({ cleaner }) => {
                     <p>{selectedSite.invoice_recipient_email || 'N/A'}</p>
                   </div>
                 </div>
-              </div>)}
+              </div>)} */}
 
               {/* Additional Information */}
                {!selectedSite?.removedDate && (<div className="detail-section">
