@@ -1,5 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { siteAPI, leaveAPI } from '../../utils/api';
+
+// Helper to safely format dates to YYYY-MM-DD without UTC timezone drift
+const toLocalYMD = (dateInput) => {
+  if (!dateInput) return '';
+  const d = new Date(dateInput);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// Helper to get exactly 00:00:00 in the local timezone for a given date
+const getLocalMidnight = (dateInput) => {
+  const ymd = toLocalYMD(dateInput);
+  const [year, month, day] = ymd.split('-').map(Number);
+  return new Date(year, month - 1, day);
+};
 
 const LeaveRequestTab = ({ cleaner }) => {
   const [formData, setFormData] = useState({
@@ -9,7 +26,6 @@ const LeaveRequestTab = ({ cleaner }) => {
     totalDays: 0,
     reason: '',
     emergencyContactNumber: ''
-
   });
 
   const [availableSites, setAvailableSites] = useState([]);
@@ -19,6 +35,10 @@ const LeaveRequestTab = ({ cleaner }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [leaveHistory, setLeaveHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  
+  // Refs and state for the auto-scroll error highlighting
+  const alertBoxRef = useRef(null);
+  const [pulseError, setPulseError] = useState(false);
 
   // Fetch cleaner's sites
   useEffect(() => {
@@ -32,8 +52,7 @@ const LeaveRequestTab = ({ cleaner }) => {
             return null;
           })
           .filter(id => id && id.match(/^[0-9a-fA-F]{24}$/));
-          // Assuming cleaner.sites contains site IDs
-          console.log(siteIds);
+          
           const response = await siteAPI.getSitesByIds(siteIds);
           setAvailableSites(response.sites || []);
         } catch (error) {
@@ -54,11 +73,7 @@ const LeaveRequestTab = ({ cleaner }) => {
     const fetchLeaveHistory = async () => {
       try {
         setLoadingHistory(true);
-        const response = await leaveAPI.getCleanerLeaves({
-          limit: 10,
-          page: 1
-        });
-        
+        const response = await leaveAPI.getCleanerLeaves({ limit: 10, page: 1 });
         if (response.success) {
           setLeaveHistory(response.data.leaves || []);
         }
@@ -72,31 +87,33 @@ const LeaveRequestTab = ({ cleaner }) => {
     fetchLeaveHistory();
   }, []);
 
-  // Calculate if leave is emergency based on start date
+  // Calculate if leave is emergency based on start date (TIMEZONE SAFE)
   useEffect(() => {
     if (formData.startDate) {
-      const startDate = new Date(formData.startDate);
-      const today = new Date();
-      const timeDiff = startDate.getTime() - today.getTime();
+      const localStart = getLocalMidnight(formData.startDate);
+      const localToday = getLocalMidnight(new Date());
+      
+      const timeDiff = localStart.getTime() - localToday.getTime();
       const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
       
       setIsEmergency(dayDiff <= 5 && dayDiff >= 0);
       
       // Check 14-day advance notice for non-emergency
       if (dayDiff > 5 && dayDiff < 14) {
-        setValidationError('Leave requests must be submitted at least 14 days in advance for non-emergency leave.');
+        setValidationError('Standard leave requests MUST be submitted at least 14 days in advance.');
       } else {
         setValidationError('');
       }
     }
   }, [formData.startDate]);
 
-  // Calculate total days
+  // Calculate total days (TIMEZONE SAFE)
   useEffect(() => {
     if (formData.startDate && formData.endDate) {
-      const start = new Date(formData.startDate);
-      const end = new Date(formData.endDate);
-      const timeDiff = end.getTime() - start.getTime();
+      const localStart = getLocalMidnight(formData.startDate);
+      const localEnd = getLocalMidnight(formData.endDate);
+      
+      const timeDiff = localEnd.getTime() - localStart.getTime();
       const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24)) + 1;
       
       setFormData(prev => ({
@@ -130,10 +147,8 @@ const LeaveRequestTab = ({ cleaner }) => {
     if (availableSites.length === 0) return;
     
     if (formData.selectedSites.length === availableSites.length) {
-      // Deselect all
       setFormData(prev => ({ ...prev, selectedSites: [] }));
     } else {
-      // Select all
       setFormData(prev => ({
         ...prev,
         selectedSites: availableSites.map(site => site._id)
@@ -141,41 +156,38 @@ const LeaveRequestTab = ({ cleaner }) => {
     }
   };
 
-   const handleSubmit = async (e) => {
+  // Trigger error highlight and scroll
+  const triggerErrorHighlight = () => {
+    alertBoxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setPulseError(true);
+    setTimeout(() => setPulseError(false), 1500); // Remove pulse after 1.5s
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validation
+    // Check validation error first so we can scroll to the top!
+    if (validationError) {
+      triggerErrorHighlight();
+      return;
+    }
+
+    // Standard Validation
     if (formData.selectedSites.length === 0) {
       alert('Please select at least one site');
       return;
     }
-
     if (!formData.startDate || !formData.endDate) {
       alert('Please select start and end dates');
       return;
     }
-
-    if (new Date(formData.endDate) < new Date(formData.startDate)) {
+    
+    // SAFE STRING COMPARISON
+    if (toLocalYMD(formData.endDate) < toLocalYMD(formData.startDate)) {
       alert('End date cannot be before start date');
       return;
     }
-
-    // Check 14-day rule for non-emergency leave
-    if (!isEmergency) {
-      const startDate = new Date(formData.startDate);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      
-      const timeDiff = startDate.getTime() - today.getTime();
-      const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-      
-      if (dayDiff < 14) {
-        alert('Non-emergency leave must be submitted at least 14 days in advance');
-        return;
-      }
-    }
-
-    // For emergency leave, require emergency contact
+    
     if (isEmergency && !formData.emergencyContactNumber) {
       alert('Please provide an emergency contact number for emergency leave');
       return;
@@ -184,7 +196,6 @@ const LeaveRequestTab = ({ cleaner }) => {
     setIsSubmitting(true);
 
     try {
-      // Prepare leave request data
       const leaveRequestData = {
         selectedSites: formData.selectedSites,
         startDate: formData.startDate,
@@ -193,7 +204,6 @@ const LeaveRequestTab = ({ cleaner }) => {
         emergencyContactNumber: isEmergency ? formData.emergencyContactNumber : undefined
       };
 
-      // Submit to backend
       const response = await leaveAPI.submitLeaveRequest(leaveRequestData);
       
       if (response.success) {
@@ -202,7 +212,6 @@ const LeaveRequestTab = ({ cleaner }) => {
           : 'Leave request submitted successfully!'
         );
         
-        // Reset form
         setFormData({
           selectedSites: [],
           startDate: '',
@@ -212,12 +221,7 @@ const LeaveRequestTab = ({ cleaner }) => {
           emergencyContactNumber: ''
         });
 
-        // Refresh leave history
-        const historyResponse = await leaveAPI.getCleanerLeaves({
-          limit: 10,
-          page: 1
-        });
-        
+        const historyResponse = await leaveAPI.getCleanerLeaves({ limit: 10, page: 1 });
         if (historyResponse.success) {
           setLeaveHistory(historyResponse.data.leaves || []);
         }
@@ -232,7 +236,7 @@ const LeaveRequestTab = ({ cleaner }) => {
     }
   };
 
-   const handleCancelLeave = async (leaveId) => {
+  const handleCancelLeave = async (leaveId) => {
     if (!window.confirm('Are you sure you want to cancel this leave request?')) {
       return;
     }
@@ -242,13 +246,7 @@ const LeaveRequestTab = ({ cleaner }) => {
       
       if (response.success) {
         alert('Leave request cancelled successfully');
-        
-        // Refresh leave history
-        const historyResponse = await leaveAPI.getCleanerLeaves({
-          limit: 10,
-          page: 1
-        });
-        
+        const historyResponse = await leaveAPI.getCleanerLeaves({ limit: 10, page: 1 });
         if (historyResponse.success) {
           setLeaveHistory(historyResponse.data.leaves || []);
         }
@@ -261,29 +259,21 @@ const LeaveRequestTab = ({ cleaner }) => {
     }
   };
 
-  // Calculate minimum date for date input (tomorrow for emergency, 14 days from now for normal)
+  // TIMEZONE SAFE: Replaced setHours(0) with toLocalYMD
   const getMinDate = () => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return today.toISOString().split('T')[0];
+    return toLocalYMD(new Date());
   };
 
   const getMaxDate = () => {
     const maxDate = new Date();
     maxDate.setFullYear(maxDate.getFullYear() + 1);
-    return maxDate.toISOString().split('T')[0];
+    return toLocalYMD(maxDate);
   };
 
-   // Format date for display
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-AU', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric'
-    });
+    return new Date(dateString).toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
-  // Get status badge class
   const getStatusBadgeClass = (status) => {
     switch(status) {
       case 'approved': return 'status-approved';
@@ -294,7 +284,6 @@ const LeaveRequestTab = ({ cleaner }) => {
     }
   };
 
-  // Get status text
   const getStatusText = (status) => {
     switch(status) {
       case 'approved': return 'Approved';
@@ -309,33 +298,42 @@ const LeaveRequestTab = ({ cleaner }) => {
     <div className="leave-request-tab">
       <h2 className="section-title">Leave Request Form</h2>
       
-      {/* Disclaimer Note */}
-      <div className="emergency-alert" style={{ 
-        backgroundColor: isEmergency ? '#fef2f2' : '#f0f9ff',
-        borderColor: isEmergency ? '#fecaca' : '#bae6fd'
-      }}>
+      {/* Disclaimer / Error Note */}
+      <div 
+        ref={alertBoxRef}
+        className="emergency-alert" 
+        style={{ 
+          backgroundColor: (isEmergency || validationError) ? '#fff5f5' : '#f0fdf4',
+          borderColor: (isEmergency || validationError) ? '#fecaca' : '#bbf7d0',
+          transition: 'all 0.3s ease',
+          boxShadow: pulseError ? '0 0 0 4px rgba(220, 38, 38, 0.4)' : 'none',
+          transform: pulseError ? 'scale(1.02)' : 'scale(1)'
+        }}
+      >
         <div className="alert-icon">
-          {isEmergency ? (
-            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          {(isEmergency || validationError) ? (
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="#dc2626" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.196 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           ) : (
-            <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8 text-green-600" fill="none" stroke="#22A82A" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           )}
         </div>
         <div className="alert-content">
-          <h3 style={{ color: isEmergency ? '#991b1b' : '#075985' }}>
-            {isEmergency ? 'Emergency Leave Request' : 'Important Notice'}
+          <h3 style={{ color: (isEmergency || validationError) ? '#991b1b' : '#166534', transition: 'color 0.3s', margin: '0 0 0.5rem 0' }}>
+            {validationError ? 'Invalid Date Selection' : isEmergency ? 'Emergency Leave Request' : 'Important Notice'}
           </h3>
-          <p style={{ color: isEmergency ? '#7f1d1d' : '#075985' }}>
+          <p style={{ color: (isEmergency || validationError) ? '#7f1d1d' : '#166534', margin: 0 }}>
             {isEmergency 
               ? 'This is being processed as an emergency leave request. Management has been notified.' 
               : 'All leave requests must be submitted at least 14 days (2 weeks) in advance. Approval is subject to work coverage and management confirmation.'
             }
             {validationError && (
-              <><br /><strong style={{ color: '#dc2626' }}>{validationError}</strong></>
+              <span style={{ display: 'block', marginTop: '8px', color: '#dc2626', fontWeight: '700', fontSize: '1rem' }}>
+                {validationError}
+              </span>
             )}
           </p>
         </div>
@@ -352,9 +350,7 @@ const LeaveRequestTab = ({ cleaner }) => {
               className="secondary-btn"
               style={{ padding: '0.25rem 0.75rem', fontSize: '0.8rem' }}
             >
-              {formData.selectedSites.length === availableSites.length 
-                ? 'Deselect All' 
-                : 'Select All'}
+              {formData.selectedSites.length === availableSites.length ? 'Deselect All' : 'Select All'}
             </button>
           </div>
           
@@ -390,7 +386,6 @@ const LeaveRequestTab = ({ cleaner }) => {
                       </svg>
                       <span>{site.location}</span>
                     </div>
-                    
                   </div>
                 </div>
               ))}
@@ -419,10 +414,13 @@ const LeaveRequestTab = ({ cleaner }) => {
                 required
                 min={getMinDate()}
                 max={getMaxDate()}
+                style={{ borderColor: validationError ? '#ef4444' : '#e5e7eb' }}
               />
+              
+              {/* Contextual Warnings */}
               {isEmergency && formData.startDate && (
-                <p style={{ color: '#dc2626', fontSize: '0.8rem', marginTop: '0.25rem', width: '30vw' }}>
-                  ⚠️ This is an emergency leave request
+                <p style={{ color: '#dc2626', fontSize: '0.85rem', marginTop: '0.5rem', fontWeight: '600', width: "50vw" }}>
+                  ⚠️ This is an emergency leave request 
                 </p>
               )}
             </div>
@@ -457,11 +455,10 @@ const LeaveRequestTab = ({ cleaner }) => {
           </div>
         </div>
 
-        {/* Emergency Contact Section (only for emergency leave) */}
+        {/* Emergency Contact Section */}
         {isEmergency && (
           <div className="leave-form-section">
             <h3 className="leave-form-title">Emergency Contact</h3>
-            
             <div className="leave-form-group">
               <label htmlFor="emergencyContactNumber">
                 Emergency Contact Number *
@@ -485,7 +482,6 @@ const LeaveRequestTab = ({ cleaner }) => {
         {/* Reason Section */}
         <div className="leave-form-section">
           <h3 className="leave-form-title">Reason for Leave</h3>
-          
           <div className="leave-form-group">
             <label htmlFor="reason">
               Reason (Optional)
@@ -502,12 +498,7 @@ const LeaveRequestTab = ({ cleaner }) => {
               placeholder="Please provide a short explanation for your leave request..."
               maxLength="500"
             />
-            <div style={{
-              textAlign: 'right',
-              fontSize: '0.75rem',
-              color: '#666',
-              marginTop: '0.25rem'
-            }}>
+            <div style={{ textAlign: 'right', fontSize: '0.75rem', color: '#666', marginTop: '0.25rem' }}>
               {formData.reason.length}/500 characters
             </div>
           </div>
@@ -515,15 +506,15 @@ const LeaveRequestTab = ({ cleaner }) => {
 
         {/* Summary Section */}
         {formData.selectedSites.length > 0 && formData.startDate && formData.endDate && (
-          <div className="leave-form-section" style={{ backgroundColor: isEmergency ? '#fff5f5' : '#f0f9ff' }}>
-            <h3 className="leave-form-title" style={{ color: isEmergency ? '#991b1b' : '#075985' }}>
+          <div className="leave-form-section" style={{ backgroundColor: isEmergency ? '#fff5f5' : '#f0fdf4' }}>
+            <h3 className="leave-form-title" style={{ color: isEmergency ? '#991b1b' : '#166534' }}>
               Leave Request Summary
             </h3>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
               <div>
                 <h4 style={{ fontSize: '0.8rem', color: '#666', marginBottom: '0.25rem' }}>Type</h4>
-                <p style={{ fontWeight: '600', color: isEmergency ? '#dc2626' : '#065f46' }}>
+                <p style={{ fontWeight: '600', color: isEmergency ? '#dc2626' : '#22A82A' }}>
                   {isEmergency ? 'Emergency Leave' : 'Standard Leave'}
                 </p>
               </div>
@@ -549,10 +540,11 @@ const LeaveRequestTab = ({ cleaner }) => {
         )}
 
        <div className="leave-form-actions">
+          {/* Submit button is enabled even with validation errors so clicking it triggers the scroll */}
           <button 
             type="submit" 
             className="leave-submit-btn"
-            disabled={isSubmitting || validationError || !formData.selectedSites.length || !formData.startDate || !formData.endDate || (isEmergency && !formData.emergencyContactNumber)}
+            disabled={isSubmitting || !formData.selectedSites.length || !formData.startDate || !formData.endDate || (isEmergency && !formData.emergencyContactNumber)}
           >
             {isSubmitting ? (
               <>
@@ -563,12 +555,8 @@ const LeaveRequestTab = ({ cleaner }) => {
               isEmergency ? 'Submit Emergency Leave Request' : 'Submit Leave Request'
             )}
           </button>
-          <p style={{ 
-            textAlign: 'center', 
-            fontSize: '0.75rem', 
-            color: '#666',
-            marginTop: '0.5rem'
-          }}>
+          
+          <p style={{ textAlign: 'center', fontSize: '0.75rem', color: '#666', marginTop: '0.5rem' }}>
             {isEmergency 
               ? 'Emergency leave requests are processed immediately and management will contact you shortly.'
               : 'Standard leave requests are processed within 2-3 business days.'
@@ -618,12 +606,12 @@ const LeaveRequestTab = ({ cleaner }) => {
                     </td>
                     <td>
                       <span style={{
-                        backgroundColor: leave.isEmergency ? '#fee2e2' : '#dbeafe',
-                        color: leave.isEmergency ? '#991b1b' : '#1C3B9A',
-                        padding: '2px 8px',
+                        backgroundColor: leave.isEmergency ? '#fee2e2' : '#dcfce7',
+                        color: leave.isEmergency ? '#991b1b' : '#166534',
+                        padding: '4px 10px',
                         borderRadius: '9999px',
                         fontSize: '0.7rem',
-                        fontWeight: '500',
+                        fontWeight: '600',
                         textTransform: 'uppercase'
                       }}>
                         {leave.isEmergency ? 'Emergency' : 'Standard'}
@@ -644,7 +632,7 @@ const LeaveRequestTab = ({ cleaner }) => {
                         <button
                           onClick={() => handleCancelLeave(leave._id)}
                           className="task-action-btn"
-                          style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem' }}
+                          style={{ fontSize: '0.75rem', padding: '0.25rem 0.5rem', borderColor: '#166534', color: '#166534' }}
                         >
                           Cancel
                         </button>
