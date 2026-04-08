@@ -240,7 +240,7 @@ const ReportsTab = ({ cleaner }) => {
                             </strong>
                           </td>
                           <td>
-                            <div title={audit.notes} style={{ maxWidth: '150px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontSize: '0.85rem', color: '#666' }}>
+                            <div title={audit.notes} style={{ maxWidth: '100px', fontSize: '0.85rem', color: '#666' }}>
                               {audit.notes || 'No notes'}
                             </div>
                           </td>

@@ -83,6 +83,13 @@ const OrderDetailsModal = ({ isOpen, onClose, order }) => {
             </div>
           </div>
 
+          {order.cleaner_notes && (
+            <div className="driver-note-section">
+              <h4>Cleaner Notes</h4>
+              <p>{order.cleaner_notes}</p>
+            </div>
+          )}
+
           {order.driver_note && (
             <div className="driver-note-section">
               <h4>Driver Note</h4>
