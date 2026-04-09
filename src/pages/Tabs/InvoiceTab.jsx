@@ -169,7 +169,7 @@ const InvoiceTab = ({ cleaner }) => {
                     <td className="invoice-number" style={{ color: '#666' }}>{invoice.poNumber}</td>
                     <td className="amount">${invoice.summary.grandTotal.toFixed(2)}</td>
                     <td style={{textAlign:"center"}}>{getStatusBadge(invoice.status)}</td>
-                    <td className="actions">
+                    <td className="actions" style={{border: "none", marginTop: "0.5rem"}}>
                       <button className="action-btn preview" onClick={() => setSelectedInvoice(invoice)}>
                         View Breakdown
                       </button>
