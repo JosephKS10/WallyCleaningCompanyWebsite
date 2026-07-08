@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import { jsPDF } from 'jspdf';
 import { invoiceAPI } from '../../utils/api'; // Make sure the path matches your project structure!
 
 const InvoiceTab = ({ cleaner }) => {
@@ -55,6 +56,201 @@ const InvoiceTab = ({ cleaner }) => {
 
   const getMonthName = (monthNum, year) => {
     return format(new Date(year, monthNum - 1, 1), 'MMMM yyyy');
+  };
+
+  // Build and download a PDF version of the invoice preview using jsPDF.
+  // We draw everything manually (no autotable dependency) so it mirrors the
+  // on-screen "Statement Details" modal layout.
+  const handleDownloadInvoice = (invoice) => {
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const marginX = 40;
+    const contentRight = pageWidth - marginX;
+    let y = 50;
+
+    const green = [34, 168, 42]; // #22A82A brand green
+    const grey = [102, 102, 102];
+    const dark = [17, 24, 39];
+
+    // Guard against a page overflow while drawing rows.
+    const ensureSpace = (needed) => {
+      if (y + needed > pageHeight - 50) {
+        doc.addPage();
+        y = 50;
+      }
+    };
+
+    // --- Header ---
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(...dark);
+    doc.text('Tax Invoice', marginX, y);
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(...grey);
+    const headerLines = [
+      `Invoice No: ${invoice.poNumber}`,
+      `Date Issued: ${format(new Date(invoice.createdAt), 'dd MMM yyyy')}`,
+      `Status: ${invoice.status.replace(/_/g, ' ').toUpperCase()}`,
+    ];
+    headerLines.forEach((line, i) => {
+      doc.text(line, contentRight, y - 24 + i * 14, { align: 'right' });
+    });
+
+    y += 20;
+    doc.setDrawColor(...green);
+    doc.setLineWidth(1.5);
+    doc.line(marginX, y, contentRight, y);
+    y += 30;
+
+    // --- Parties (From / Bill To) ---
+    const colWidth = (contentRight - marginX) / 2;
+    const fromX = marginX;
+    const toX = marginX + colWidth;
+    const partyTop = y;
+
+    const drawParty = (x, title, lines) => {
+      let py = partyTop;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(...dark);
+      doc.text(title, x, py);
+      py += 16;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(...grey);
+      lines.forEach((line) => {
+        doc.text(String(line), x, py);
+        py += 14;
+      });
+      return py;
+    };
+
+    const fromEnd = drawParty(fromX, 'Contractor (From):', [
+      cleaner.name || '',
+      `ABN: ${cleaner.contractorDetails?.personalInfo?.abn || 'N/A'}`,
+      cleaner.email || '',
+      cleaner.contactNumber || '',
+    ]);
+    const toEnd = drawParty(toX, 'Recipient (Bill To):', [
+      'Super Pro Services',
+      'Melbourne, VIC',
+      'Phone: 1300 424 066',
+      'Email: info@superproservices.com.au',
+    ]);
+
+    y = Math.max(fromEnd, toEnd) + 20;
+
+    // --- Shifts table ---
+    const colX = {
+      date: marginX,
+      site: marginX + 100,
+      type: marginX + 300,
+      amount: contentRight,
+    };
+
+    const drawTableHeader = () => {
+      doc.setFillColor(243, 244, 246);
+      doc.rect(marginX, y - 12, contentRight - marginX, 22, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(...dark);
+      doc.text('Date', colX.date + 4, y + 3);
+      doc.text('Site Location', colX.site, y + 3);
+      doc.text('Work Type', colX.type, y + 3);
+      doc.text('Amount', colX.amount - 4, y + 3, { align: 'right' });
+      y += 22;
+    };
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(...dark);
+    doc.text('Shifts Details', marginX, y);
+    y += 20;
+    drawTableHeader();
+
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(...dark);
+
+    const sortedShifts = [...(invoice.shifts || [])].sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+
+    sortedShifts.forEach((shift) => {
+      ensureSpace(20);
+      const rowY = y + 2;
+      doc.setTextColor(...dark);
+      doc.text(format(new Date(shift.date), 'dd MMM yyyy'), colX.date + 4, rowY);
+
+      const siteName = doc.splitTextToSize(shift.siteName || '', colX.type - colX.site - 8);
+      doc.text(siteName, colX.site, rowY);
+
+      const shiftType = (shift.shiftType || '')
+        .replace(/^\w/, (c) => c.toUpperCase());
+      doc.text(shiftType, colX.type, rowY);
+
+      doc.text(`$${(shift.price || 0).toFixed(2)}`, colX.amount - 4, rowY, { align: 'right' });
+
+      const rowHeight = Math.max(16, siteName.length * 12);
+      y += rowHeight;
+      doc.setDrawColor(230, 230, 230);
+      doc.setLineWidth(0.5);
+      doc.line(marginX, y - 6, contentRight, y - 6);
+    });
+
+    // --- Adjustments ---
+    if (invoice.adjustments && invoice.adjustments.length > 0) {
+      y += 20;
+      ensureSpace(40);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(...dark);
+      doc.text('Adjustments & Bonuses', marginX, y);
+      y += 18;
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      invoice.adjustments.forEach((adj) => {
+        ensureSpace(20);
+        const rowY = y + 2;
+        doc.setTextColor(...dark);
+        const desc = doc.splitTextToSize(adj.description || '', colX.type - marginX);
+        doc.text(desc, marginX + 4, rowY);
+
+        const isNegative = adj.amount < 0;
+        const amountText = isNegative
+          ? `-$${Math.abs(adj.amount).toFixed(2)}`
+          : `+$${adj.amount.toFixed(2)}`;
+        doc.setTextColor(...(isNegative ? [239, 68, 68] : green));
+        doc.text(amountText, colX.amount - 4, rowY, { align: 'right' });
+
+        y += Math.max(16, desc.length * 12);
+        doc.setDrawColor(230, 230, 230);
+        doc.setLineWidth(0.5);
+        doc.line(marginX, y - 6, contentRight, y - 6);
+      });
+    }
+
+    // --- Total ---
+    y += 24;
+    ensureSpace(40);
+    doc.setDrawColor(...dark);
+    doc.setLineWidth(1);
+    doc.line(marginX, y, contentRight, y);
+    y += 24;
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(13);
+    doc.setTextColor(...dark);
+    doc.text('Total Payable', marginX, y);
+    doc.setTextColor(...green);
+    doc.text(`$${invoice.summary.grandTotal.toFixed(2)}`, colX.amount, y, { align: 'right' });
+
+    const fileName = `Invoice_${invoice.poNumber}_${getMonthName(invoice.month, invoice.year).replace(/\s+/g, '_')}.pdf`;
+    doc.save(fileName);
   };
 
   const getStatusBadge = (status) => {
@@ -199,16 +395,13 @@ const InvoiceTab = ({ cleaner }) => {
               <div className="invoice-template">
                 <div className="invoice-header-preview">
                   <div className="company-info">
-                    <h2>Super Pro Services</h2>
-                    <p>Melbourne, VIC</p>
-                    <p>Phone: 1300 424 066</p>
-                    <p>Email: info@superproservices.com.au</p>
+                    
                   </div>
                   
                   <div className="invoice-info">
-                    <h1>RCTI</h1>
+                    <h1>Tax Invoice</h1>
                     <div className="invoice-details">
-                      <p><strong>Statement #:</strong> {selectedInvoice.poNumber}</p>
+                      <p><strong>Invoice No:</strong> {selectedInvoice.poNumber}</p>
                       <p><strong>Date Issued:</strong> {format(new Date(selectedInvoice.createdAt), 'dd MMM yyyy')}</p>
                       <p><strong>Status:</strong> {selectedInvoice.status.replace(/_/g, ' ').toUpperCase()}</p>
                     </div>
@@ -226,7 +419,9 @@ const InvoiceTab = ({ cleaner }) => {
                   <div className="bill-to">
                     <h3>Recipient (Bill To):</h3>
                     <p><strong>Super Pro Services</strong></p>
-                    <p>Recipient Created Tax Invoice</p>
+                    <p>Melbourne, VIC</p>
+                    <p>Phone: 1300 424 066</p>
+                    <p>Email: info@superproservices.com.au</p>
                   </div>
                 </div>
                 
@@ -300,7 +495,14 @@ const InvoiceTab = ({ cleaner }) => {
               <button className="action-btn close" onClick={() => setSelectedInvoice(null)}>
                 Close Window
               </button>
-              
+
+              <button
+                className="action-btn preview"
+                onClick={() => handleDownloadInvoice(selectedInvoice)}
+              >
+                Download PDF
+              </button>
+
               {selectedInvoice.status === 'pending_cleaner_approval' && (
                 <button 
                   className="action-btn preview" 
