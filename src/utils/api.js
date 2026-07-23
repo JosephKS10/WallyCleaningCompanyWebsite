@@ -311,10 +311,21 @@ export const invoiceAPI = {
   // Approve a payment statement
   approveInvoice: async (poId) => {
     try {
-      const response = await api.patch(`/pos/${poId}/status/approve`, { status: 'approved' });
+      const response = await api.patch(`/pos/${poId}/status/approve`);
       return response.data;
     } catch (error) {
       console.error('Error approving invoice:', error);
+      throw error;
+    }
+  },
+
+  // Dispute a payment statement (flag an error for admin to fix)
+  disputeInvoice: async (poId, reason) => {
+    try {
+      const response = await api.patch(`/pos/${poId}/status/dispute`, { reason });
+      return response.data;
+    } catch (error) {
+      console.error('Error disputing invoice:', error);
       throw error;
     }
   }

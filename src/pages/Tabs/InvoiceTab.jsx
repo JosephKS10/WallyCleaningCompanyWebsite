@@ -3,11 +3,64 @@ import { format } from 'date-fns';
 import { jsPDF } from 'jspdf';
 import { invoiceAPI } from '../../utils/api'; // Make sure the path matches your project structure!
 
+// Turn a statement's shifts into display rows. When `consolidated` is true we
+// group the same way the admin/Xero side does: every regular `job` shift for a
+// site collapses into ONE line ("Regular Jobs (N shifts)") with the summed
+// amount, while task/event shifts stay as individual dated lines. When false we
+// return every shift as its own dated row (the full day-by-day breakdown).
+// Both modes return the same row shape so the table and PDFs can share it.
+const buildShiftRows = (shifts = [], consolidated) => {
+  const toDetailedRow = (s) => ({
+    dateLabel: format(new Date(s.date), 'dd MMM yyyy'),
+    siteName: s.siteName || '',
+    typeLabel: (s.shiftType || '').replace(/^\w/, (c) => c.toUpperCase()),
+    amount: s.price || 0,
+  });
+
+  if (!consolidated) {
+    return [...shifts]
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .map(toDetailedRow);
+  }
+
+  const siteJobSummaries = {};
+  const individual = [];
+  shifts.forEach((s) => {
+    if (s.shiftType === 'job') {
+      if (!siteJobSummaries[s.siteName]) siteJobSummaries[s.siteName] = { count: 0, total: 0 };
+      siteJobSummaries[s.siteName].count += 1;
+      siteJobSummaries[s.siteName].total += (s.price || 0);
+    } else {
+      individual.push(s);
+    }
+  });
+
+  const rows = Object.entries(siteJobSummaries).map(([siteName, d]) => ({
+    dateLabel: 'Consolidated',
+    siteName,
+    typeLabel: 'Regular Jobs',
+    amount: d.total,
+  }));
+
+  individual
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .forEach((s) => rows.push(toDetailedRow(s)));
+
+  return rows;
+};
+
 const InvoiceTab = ({ cleaner }) => {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [approvingId, setApprovingId] = useState(null);
+
+  // Dispute flow: a cleaner can flag an error on a pending statement instead of
+  // approving it. `disputeOpen` toggles the reason box inside the modal.
+  const [disputeOpen, setDisputeOpen] = useState(false);
+  const [disputeReason, setDisputeReason] = useState('');
+  const [disputingId, setDisputingId] = useState(null);
 
   useEffect(() => {
     fetchMyInvoices();
@@ -15,17 +68,34 @@ const InvoiceTab = ({ cleaner }) => {
 
   const fetchMyInvoices = async () => {
     setLoading(true);
+    setFetchError(null);
     try {
       // Using your clean Axios API instance
       const result = await invoiceAPI.getMyInvoices();
       if (result.success) {
         setInvoices(result.data);
+      } else {
+        setFetchError(result.message || "Failed to load your statements.");
       }
     } catch (error) {
       console.error("Error fetching invoices:", error);
+      setFetchError(error.response?.data?.message || "We couldn't load your statements. Please try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  // Reset the dispute box whenever a different statement is opened/closed.
+  const openInvoice = (invoice) => {
+    setSelectedInvoice(invoice);
+    setDisputeOpen(false);
+    setDisputeReason('');
+  };
+
+  const closeInvoice = () => {
+    setSelectedInvoice(null);
+    setDisputeOpen(false);
+    setDisputeReason('');
   };
 
   const handleApproveInvoice = async (poId) => {
@@ -54,14 +124,44 @@ const InvoiceTab = ({ cleaner }) => {
     }
   };
 
+  const handleDisputeInvoice = async (poId) => {
+    const reason = disputeReason.trim();
+    if (!reason) {
+      alert("Please describe what's wrong so our team can fix it.");
+      return;
+    }
+
+    setDisputingId(poId);
+    try {
+      const result = await invoiceAPI.disputeInvoice(poId, reason);
+
+      if (result.success) {
+        alert("Thanks — your statement has been flagged and our team has been notified. We'll review it and get back to you.");
+        fetchMyInvoices(); // Refresh the list
+        // Update the open modal so it reflects the new disputed state.
+        setSelectedInvoice(result.data);
+        setDisputeOpen(false);
+        setDisputeReason('');
+      } else {
+        alert(result.message || "Failed to submit your dispute.");
+      }
+    } catch (error) {
+      const errorMsg = error.response?.data?.message || error.message;
+      alert("Error submitting dispute: " + errorMsg);
+    } finally {
+      setDisputingId(null);
+    }
+  };
+
   const getMonthName = (monthNum, year) => {
     return format(new Date(year, monthNum - 1, 1), 'MMMM yyyy');
   };
 
-  // Build and download a PDF version of the invoice preview using jsPDF.
-  // We draw everything manually (no autotable dependency) so it mirrors the
-  // on-screen "Statement Details" modal layout.
-  const handleDownloadInvoice = (invoice) => {
+  // Build and download a PDF for a statement using jsPDF. We draw everything
+  // manually (no autotable dependency) so it mirrors the on-screen modal layout.
+  //  - Tax Invoice  -> `consolidated: true`  (grouped shifts, one line per site)
+  //  - Purchase Order -> `consolidated: false` (full day-by-day shift breakdown)
+  const buildStatementPdf = (invoice, { consolidated, docTitle, numberLabel, filePrefix }) => {
     const doc = new jsPDF({ unit: 'pt', format: 'a4' });
 
     const pageWidth = doc.internal.pageSize.getWidth();
@@ -86,13 +186,13 @@ const InvoiceTab = ({ cleaner }) => {
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(22);
     doc.setTextColor(...dark);
-    doc.text('Tax Invoice', marginX, y);
+    doc.text(docTitle, marginX, y);
 
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(10);
     doc.setTextColor(...grey);
     const headerLines = [
-      `Invoice No: ${invoice.poNumber}`,
+      `${numberLabel}: ${invoice.poNumber}`,
       `Date Issued: ${format(new Date(invoice.createdAt), 'dd MMM yyyy')}`,
       `Status: ${invoice.status.replace(/_/g, ' ').toUpperCase()}`,
     ];
@@ -176,30 +276,28 @@ const InvoiceTab = ({ cleaner }) => {
     doc.setFontSize(9);
     doc.setTextColor(...dark);
 
-    const sortedShifts = [...(invoice.shifts || [])].sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
+    const shiftRows = buildShiftRows(invoice.shifts, consolidated);
 
-    sortedShifts.forEach((shift) => {
+    shiftRows.forEach((row) => {
       ensureSpace(20);
       const rowY = y + 2;
       doc.setTextColor(...dark);
-      doc.text(format(new Date(shift.date), 'dd MMM yyyy'), colX.date + 4, rowY);
+      doc.text(row.dateLabel, colX.date + 4, rowY);
 
-      const siteName = doc.splitTextToSize(shift.siteName || '', colX.type - colX.site - 8);
+      const siteName = doc.splitTextToSize(row.siteName, colX.type - colX.site - 8);
       doc.text(siteName, colX.site, rowY);
 
-      const shiftType = (shift.shiftType || '')
-        .replace(/^\w/, (c) => c.toUpperCase());
-      doc.text(shiftType, colX.type, rowY);
+      const typeLines = doc.splitTextToSize(row.typeLabel, colX.amount - colX.type - 8);
+      doc.text(typeLines, colX.type, rowY);
 
-      doc.text(`$${(shift.price || 0).toFixed(2)}`, colX.amount - 4, rowY, { align: 'right' });
+      doc.text(`$${row.amount.toFixed(2)}`, colX.amount - 4, rowY, { align: 'right' });
 
-      const rowHeight = Math.max(16, siteName.length * 12);
+      // Extra breathing room between line items (+10pt padding per row).
+      const rowHeight = Math.max(16, siteName.length * 12, typeLines.length * 12) + 10;
       y += rowHeight;
       doc.setDrawColor(230, 230, 230);
       doc.setLineWidth(0.5);
-      doc.line(marginX, y - 6, contentRight, y - 6);
+      doc.line(marginX, y - 8, contentRight, y - 8);
     });
 
     // --- Adjustments ---
@@ -249,9 +347,25 @@ const InvoiceTab = ({ cleaner }) => {
     doc.setTextColor(...green);
     doc.text(`$${invoice.summary.grandTotal.toFixed(2)}`, colX.amount, y, { align: 'right' });
 
-    const fileName = `Invoice_${invoice.poNumber}_${getMonthName(invoice.month, invoice.year).replace(/\s+/g, '_')}.pdf`;
+    const fileName = `${filePrefix}_${invoice.poNumber}_${getMonthName(invoice.month, invoice.year).replace(/\s+/g, '_')}.pdf`;
     doc.save(fileName);
   };
+
+  // Tax Invoice: consolidated shifts (one line per site for regular jobs).
+  const handleDownloadInvoice = (invoice) => buildStatementPdf(invoice, {
+    consolidated: true,
+    docTitle: 'Tax Invoice',
+    numberLabel: 'Invoice No',
+    filePrefix: 'Invoice',
+  });
+
+  // Purchase Order: the full day-by-day breakdown of every shift.
+  const handleDownloadPO = (invoice) => buildStatementPdf(invoice, {
+    consolidated: false,
+    docTitle: 'Purchase Order',
+    numberLabel: 'PO No',
+    filePrefix: 'PO',
+  });
 
   const getStatusBadge = (status) => {
     switch(status) {
@@ -264,6 +378,10 @@ const InvoiceTab = ({ cleaner }) => {
         return <span className="status-badge status-completed">Processing Payment</span>;
       case 'paid':
         return <span className="status-badge status-paid">Paid</span>;
+      case 'disputed':
+        return <span className="status-badge status-disputed" style={{ backgroundColor: '#fef2f2', color: '#b91c1c' }}>Under Review</span>;
+      case 'cancelled':
+        return <span className="status-badge status-cancelled" style={{ backgroundColor: '#f3f4f6', color: '#6b7280' }}>Cancelled</span>;
       default:
         return <span className="status-badge">{status.replace(/_/g, ' ')}</span>;
     }
@@ -271,6 +389,15 @@ const InvoiceTab = ({ cleaner }) => {
 
   if (loading) {
     return <div className="loading-state"><div className="spinner"></div><p>Loading your statements...</p></div>;
+  }
+
+  if (fetchError) {
+    return (
+      <div className="empty-state" style={{ textAlign: 'center' }}>
+        <p style={{ color: '#b91c1c', marginBottom: '1rem' }}>{fetchError}</p>
+        <button className="action-btn preview" onClick={fetchMyInvoices}>Try Again</button>
+      </div>
+    );
   }
 
   // Split invoices into Action Required and History
@@ -331,7 +458,7 @@ const InvoiceTab = ({ cleaner }) => {
                     <td className="amount">${invoice.summary.grandTotal.toFixed(2)}</td>
                     <td>{getStatusBadge(invoice.status)}</td>
                     <td className="actions">
-                      <button className="action-btn preview" onClick={() => setSelectedInvoice(invoice)}>
+                      <button className="action-btn preview" onClick={() => openInvoice(invoice)}>
                         Review & Approve
                       </button>
                     </td>
@@ -366,7 +493,7 @@ const InvoiceTab = ({ cleaner }) => {
                     <td className="amount">${invoice.summary.grandTotal.toFixed(2)}</td>
                     <td style={{textAlign:"center"}}>{getStatusBadge(invoice.status)}</td>
                     <td className="actions" style={{border: "none", marginTop: "0.5rem"}}>
-                      <button className="action-btn preview" onClick={() => setSelectedInvoice(invoice)}>
+                      <button className="action-btn preview" onClick={() => openInvoice(invoice)}>
                         View Breakdown
                       </button>
                     </td>
@@ -388,17 +515,14 @@ const InvoiceTab = ({ cleaner }) => {
           <div className="modal-content">
             <div className="modal-header">
               <h3>Statement Details: {getMonthName(selectedInvoice.month, selectedInvoice.year)}</h3>
-              <button className="close-modal" onClick={() => setSelectedInvoice(null)}>&times;</button>
+              <button className="close-modal" onClick={closeInvoice}>&times;</button>
             </div>
             
             <div className="modal-body">
               <div className="invoice-template">
                 <div className="invoice-header-preview">
-                  <div className="company-info">
-                    
-                  </div>
-                  
-                  <div className="invoice-info">
+                  {/* Push the title/details block to the right of the header. */}
+                  <div className="invoice-info" style={{ marginLeft: 'auto' }}>
                     <h1>Tax Invoice</h1>
                     <div className="invoice-details">
                       <p><strong>Invoice No:</strong> {selectedInvoice.poNumber}</p>
@@ -437,15 +561,21 @@ const InvoiceTab = ({ cleaner }) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {/* Sort shifts chronologically so the cleaner can trace their whole month */}
-                      {[...selectedInvoice.shifts]
-                        .sort((a, b) => new Date(a.date) - new Date(b.date))
-                        .map((shift, index) => (
+                      {/*
+                        While a statement is awaiting approval we show every shift
+                        day-by-day so the cleaner can verify each one. Once it's
+                        approved (View Breakdown), we show the consolidated view —
+                        regular jobs grouped per site — like the admin/Tax Invoice.
+                      */}
+                      {buildShiftRows(
+                        selectedInvoice.shifts,
+                        selectedInvoice.status !== 'pending_cleaner_approval'
+                      ).map((row, index) => (
                         <tr key={index}>
-                          <td>{format(new Date(shift.date), 'dd MMM yyyy')}</td>
-                          <td>{shift.siteName}</td>
-                          <td style={{ textTransform: 'capitalize' }}>{shift.shiftType}</td>
-                          <td style={{ textAlign: 'right' }}>${(shift.price || 0).toFixed(2)}</td>
+                          <td>{row.dateLabel}</td>
+                          <td>{row.siteName}</td>
+                          <td>{row.typeLabel}</td>
+                          <td style={{ textAlign: 'right' }}>${row.amount.toFixed(2)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -482,36 +612,100 @@ const InvoiceTab = ({ cleaner }) => {
                 {selectedInvoice.status === 'pending_cleaner_approval' && (
                   <div style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#fffbeb', borderLeft: '4px solid #f59e0b', borderRadius: '4px' }}>
                     <h4 style={{ color: '#92400e', margin: '0 0 0.5rem 0' }}>Approval Required</h4>
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#b45309' }}>Please verify that all shifts and adjustments are correct. If you find an error, please contact accounts@superproservices.com.au before approving.</p>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#b45309' }}>Please verify that all shifts and adjustments are correct. If you find an error, use the <strong>Report an Issue</strong> button below to flag it for our team before approving.</p>
                     <br />
                     <p style={{ margin: 0, fontSize: '0.9rem', color: '#b45309' }}>Please note that this RCTI would be approved automatically within 3 days if not approved by you.</p>
+                  </div>
+                )}
 
+                {selectedInvoice.status === 'disputed' && (
+                  <div style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#fef2f2', borderLeft: '4px solid #ef4444', borderRadius: '4px' }}>
+                    <h4 style={{ color: '#991b1b', margin: '0 0 0.5rem 0' }}>Under Review</h4>
+                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#b91c1c' }}>You reported an issue with this statement and our team has been notified. We'll review it and get back to you.</p>
+                    {selectedInvoice.disputeReason && (
+                      <p style={{ margin: '0.75rem 0 0 0', fontSize: '0.9rem', color: '#7f1d1d' }}>
+                        <strong>Your note:</strong> {selectedInvoice.disputeReason}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Report-an-issue form: only for statements still awaiting approval. */}
+                {selectedInvoice.status === 'pending_cleaner_approval' && disputeOpen && (
+                  <div style={{ marginTop: '1.5rem', padding: '1.5rem', backgroundColor: '#fff7ed', border: '1px solid #fdba74', borderRadius: '4px' }}>
+                    <h4 style={{ color: '#9a3412', margin: '0 0 0.5rem 0' }}>What's wrong with this statement?</h4>
+                    <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.85rem', color: '#9a3412' }}>Tell us which shift or amount looks incorrect. Our team will review and correct it.</p>
+                    <textarea
+                      value={disputeReason}
+                      onChange={(e) => setDisputeReason(e.target.value)}
+                      placeholder="e.g. The shift on 12 July at Melbourne Central is missing, or the amount for..."
+                      rows="4"
+                      style={{ width: '100%', padding: '0.75rem', borderRadius: '4px', border: '1px solid #d1d5db', fontFamily: 'inherit', fontSize: '0.9rem', boxSizing: 'border-box' }}
+                    />
                   </div>
                 )}
               </div>
             </div>
             
             <div className="modal-actions">
-              <button className="action-btn close" onClick={() => setSelectedInvoice(null)}>
+              <button className="action-btn close" onClick={closeInvoice}>
                 Close Window
               </button>
 
               <button
                 className="action-btn preview"
                 onClick={() => handleDownloadInvoice(selectedInvoice)}
+                title="Tax Invoice with shifts consolidated per site"
               >
-                Download PDF
+                Download Invoice
+              </button>
+
+              <button
+                className="action-btn preview"
+                onClick={() => handleDownloadPO(selectedInvoice)}
+                title="Purchase Order with the full day-by-day shift breakdown"
+              >
+                Download PO
               </button>
 
               {selectedInvoice.status === 'pending_cleaner_approval' && (
-                <button 
-                  className="action-btn preview" 
-                  style={{ backgroundColor: '#22A82A', color: 'white', borderColor: '#22A82A' }}
-                  onClick={() => handleApproveInvoice(selectedInvoice._id)}
-                  disabled={approvingId === selectedInvoice._id}
-                >
-                  {approvingId === selectedInvoice._id ? 'Approving...' : 'I Confirm & Approve this Statement'}
-                </button>
+                disputeOpen ? (
+                  <>
+                    <button
+                      className="action-btn close"
+                      onClick={() => { setDisputeOpen(false); setDisputeReason(''); }}
+                      disabled={disputingId === selectedInvoice._id}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="action-btn preview"
+                      style={{ backgroundColor: '#dc2626', color: 'white', borderColor: '#dc2626' }}
+                      onClick={() => handleDisputeInvoice(selectedInvoice._id)}
+                      disabled={disputingId === selectedInvoice._id || !disputeReason.trim()}
+                    >
+                      {disputingId === selectedInvoice._id ? 'Submitting...' : 'Submit Issue'}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="action-btn preview"
+                      style={{ color: '#b91c1c', borderColor: '#fca5a5' }}
+                      onClick={() => setDisputeOpen(true)}
+                    >
+                      Report an Issue
+                    </button>
+                    <button
+                      className="action-btn preview"
+                      style={{ backgroundColor: '#22A82A', color: 'white', borderColor: '#22A82A' }}
+                      onClick={() => handleApproveInvoice(selectedInvoice._id)}
+                      disabled={approvingId === selectedInvoice._id}
+                    >
+                      {approvingId === selectedInvoice._id ? 'Approving...' : 'I Confirm & Approve this Statement'}
+                    </button>
+                  </>
+                )
               )}
             </div>
           </div>
