@@ -136,7 +136,7 @@ const InvoiceTab = ({ cleaner }) => {
       const result = await invoiceAPI.disputeInvoice(poId, reason);
 
       if (result.success) {
-        alert("Thanks — your statement has been flagged and our team has been notified. We'll review it and get back to you.");
+        alert("Thanks! your statement has been flagged and our team has been notified. We'll review it and get back to you.");
         fetchMyInvoices(); // Refresh the list
         // Update the open modal so it reflects the new disputed state.
         setSelectedInvoice(result.data);
@@ -613,8 +613,6 @@ const InvoiceTab = ({ cleaner }) => {
                   <div style={{ marginTop: '2rem', padding: '1.5rem', backgroundColor: '#fffbeb', borderLeft: '4px solid #f59e0b', borderRadius: '4px' }}>
                     <h4 style={{ color: '#92400e', margin: '0 0 0.5rem 0' }}>Approval Required</h4>
                     <p style={{ margin: 0, fontSize: '0.9rem', color: '#b45309' }}>Please verify that all shifts and adjustments are correct. If you find an error, use the <strong>Report an Issue</strong> button below to flag it for our team before approving.</p>
-                    <br />
-                    <p style={{ margin: 0, fontSize: '0.9rem', color: '#b45309' }}>Please note that this RCTI would be approved automatically within 3 days if not approved by you.</p>
                   </div>
                 )}
 
